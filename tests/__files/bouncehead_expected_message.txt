@@ -1,0 +1,12 @@
+Received: by mta65117.example.com id h66sts0sv5ku for <recipient@example.com>; Mon, 20 Aug 2012 05:15:25 +0100 (envelope-from <bounce-1149-42342-20831917-live@mail.example.com>)
+X-Mailer: MXM-v5-MailEngine
+To: recipient@example.com
+From: "Renewals" <renewal@mail.example.com>
+Reply-To: noreply@example.com
+Subject: John, your car renewal
+Return-Path: bounce-1149-42342-20831917-live@mail.example.com
+Content-Type: multipart/alternative; charset="UTF-8";
+ boundary="=_b803d5cd7531f5ace2ee4c0f54853e01"
+MIME-Version: 1.0
+Message-ID: <0.0.F4.2A1.1CD7E8A6CA8E85C.0@mta65117.example.com>
+Date: Mon, 20 Aug 2012 05:15:25 +0100

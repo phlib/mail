@@ -1,0 +1,60 @@
+From MAILER-DAEMON  Mon Aug 20 05:17:28 2012
+Return-Path: <>
+X-Original-To: bounce-1149-42342-20831917-live@mail.example.com
+Delivered-To: bounce@mail.example.com
+Received: from mta65117.example.com (mta65117.example.com [109.68.65.117])
+        by mail.example.com (Postfix) with ESMTP id 413291A0374
+        for <bounce-1149-42342-20831917-live@mail.example.com>; Mon, 20 Aug 2012 05:17:28 +0100 (BST)
+Date: Mon, 20 Aug 2012 05:15:26 +0100
+From: postmaster@mta65117.example.com
+Subject: Delivery report
+To: bounce-1149-42342-20831917-live@mail.example.com
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+    boundary="report5031B9DE@mta65117.example.com"
+
+
+--report5031B9DE@mta65117.example.com
+
+Hello, this is the mail server on mta65117.example.com.
+
+I am sending you this message to inform you on the delivery status of a
+message you previously sent.  Immediately below you will find a list of
+the affected recipients;  also attached is a Delivery Status Notification
+(DSN) report in standard format, as well as the headers of the original
+message.
+
+  <recipient@example.com>  delivery failed; will not continue trying
+
+--report5031B9DE@mta65117.example.com
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns;mta65117.example.com
+X-PowerMTA-VirtualMTA: default
+Received-From-MTA: dns;localhost (10.1.3.3)
+Arrival-Date: Mon, 20 Aug 2012 05:15:25 +0100
+
+Final-Recipient: rfc822;recipient@example.com
+Action: failed
+Status: 5.0.0 (undefined status)
+Remote-MTA: dns;mx4.example.com (65.54.188.72)
+Diagnostic-Code: smtp;550 Requested action not taken: mailbox unavailable
+X-PowerMTA-BounceCategory: bad-mailbox
+
+--report5031B9DE@mta65117.example.com
+Content-Type: text/rfc822-headers
+
+Received: by mta65117.example.com id h66sts0sv5ku for <recipient@example.com>; Mon, 20 Aug 2012 05:15:25 +0100 (envelope-from <bounce-1149-42342-20831917-live@mail.example.com>)
+X-Mailer: MXM-v5-MailEngine
+To: recipient@example.com
+From: "Renewals" <renewal@mail.example.com>
+Reply-To: noreply@example.com
+Subject: John, your car renewal
+Return-Path: bounce-1149-42342-20831917-live@mail.example.com
+Content-Type: multipart/alternative; charset="UTF-8";
+ boundary="=_b803d5cd7531f5ace2ee4c0f54853e01"
+MIME-Version: 1.0
+Message-ID: <0.0.F4.2A1.1CD7E8A6CA8E85C.0@mta65117.example.com>
+Date: Mon, 20 Aug 2012 05:15:25 +0100
+
+--report5031B9DE@mta65117.example.com--

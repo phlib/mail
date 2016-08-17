@@ -1,0 +1,13 @@
+From: postmaster@example.com
+Subject: Undeliverable: Julie, your home renewal is due
+To: bounce-1149-42363-11284257-live@mail.example.com
+MIME-Version: 1.0
+X-Original-To: bounce-1149-42363-11284257-live@mail.example.com
+Delivered-To: bounce@mail.example.com
+Received: from smtp1.example.com (smtp2.example.com [205.149.24.12]) by mail.example.com (Postfix) with ESMTP id A2E901A0374 for <bounce-1149-42363-11284257-live@mail.example.com>; Mon, 20 Aug 2012 12:02:25 +0100 (BST)
+Received: from uspexhub02.example.com (10.50.51.21) by smtp2.example.com (192.168.50.12) with Microsoft SMTP Server (TLS) id 8.3.245.1; Mon, 20 Aug 2012 07:02:33 -0400
+Date: Mon, 20 Aug 2012 07:02:24 -0400
+Content-Language: en-US
+Message-Id: <2b2c1a86-066f-47e6-a318-6a206ce97d78>
+In-Reply-To: <0.0.F4.BD6.1CD7EC2FB28D3A2.0@mta65117.example.com>
+References: <0.0.F4.BD6.1CD7EC2FB28D3A2.0@mta65117.example.com>

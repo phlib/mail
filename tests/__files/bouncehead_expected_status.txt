@@ -1,0 +1,11 @@
+Reporting-MTA: dns;mta65117.example.com
+X-PowerMTA-VirtualMTA: default
+Received-From-MTA: dns;localhost (10.1.3.3)
+Arrival-Date: Mon, 20 Aug 2012 05:15:25 +0100
+
+Final-Recipient: rfc822;recipient@example.com
+Action: failed
+Status: 5.0.0 (undefined status)
+Remote-MTA: dns;mx4.example.com (65.54.188.72)
+Diagnostic-Code: smtp;550 Requested action not taken: mailbox unavailable
+X-PowerMTA-BounceCategory: bad-mailbox

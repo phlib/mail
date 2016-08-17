@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.=
+w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+<title>Magento Next Purchase</title>
+
+<!-- fw issued 8th word aug 644 september 792 reloc ui cc6 hi converted ad =
+gimas blockquote fid blockquote https ad rtf statement converted 5f 792 hi =
+emoticons reloc cursive cc6 gimas bill shtml nbsp september ui password ari=
+al bottom miles convenience  -->
+<style type=3D"text/css">
+.ReadMsgBody {
+=09width: 100%;
+}
+.ExternalClass {
+=09width: 100%;
+}
+
+body {
+=09background-color:#FFFFFF;"
+=09}
+</style>
+
+</head>
+
+<body>
+
+<table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"0">
+  <tr>
+    <td>
+   =20
+    <!-- OUTER FRAME START -->
+   =20
+    <table width=3D"600" border=3D"0" cellspacing=3D"0" cellpadding=3D"0" a=
+lign=3D"center">
+  <tr>
+    <td><a href=3D"http://shop.example.com/"><img src=3D"http://cdn.example=
+.com/Demo/Basket-Abandonment/images/wishentertainmentbanner.png" width=3D"6=
+00" height=3D"85" border=3D"0" /></a></td>
+  </tr>
+ =20
+    <tr>
+    <td bgcolor=3D"#005783">
+   =20
+    <!-- INNER FRAME START -->
+   =20
+    <table width=3D"100%" border=3D"0" cellspacing=3D"30" cellpadding=3D"24=
+" align=3D"center">
+  <tr>
+    <td bgcolor=3D"#f0f5f8">
+
+<!-- CONTENT AREA START -->
+
+<table width=3D"100%" border=3D"0" cellspacing=3D"1" cellpadding=3D"9" alig=
+n=3D"center" style=3D"font-family:Verdana, Geneva, sans-serif;">
+
+  <tr>
+    <td bgcolor=3D"#cbe4ef" align=3D"center" colspan=3D"2" style=3D"font-si=
+ze:14px; color:#005783; font-weight:bold;">What's next after [product_name]=
+?</td>
+  </tr>
+ =20
+   <tr>
+    <td bgcolor=3D"#FFFFFF" align=3D"left" valign=3D"top" style=3D"font-siz=
+e:11px; color:#000000;">Hi Name,
+<br /><br />
+Hopefully you have enjoyed playing [product_name] that you purchased from u=
+s a few weeks ago.
+<br /><br />
+We thought you might be interested in hearing our recommendations for your =
+next purchase, so based upon [product_name] here are some options below for=
+ what we think you would enjoy.<br /><br /><br /></td>
+<td width=3D"150" bgcolor=3D"#FFFFFF" valign=3D"top" align=3D"center"><img =
+src=3D"http://shop.example.com/media/catalog/product/cache/1/small_image/13=
+5x/9df78eab33525d08d6e5fb8d27136e95/r/a/rayman-legends.png" width=3D"135" h=
+eight=3D"135" alt=3D"" /></td>
+  </tr>
+ =20
+ =20
+    <tr>
+    <td bgcolor=3D"#cbe4ef" align=3D"left" colspan=3D"2" style=3D"font-size=
+:12px; color:#005783; font-weight:bold; border-top:15px solid #f0f5f8;">Oth=
+er similar games to [product_name]</td>
+  </tr>
+ =20
+      <tr>
+    <td bgcolor=3D"#FFFFFF" align=3D"center" colspan=3D"2">
+   =20
+    <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"5" =
+bgcolor=3D"#FFFFFF">
+  <tr>
+    <td width=3D"135" align=3D"center" valign=3D"middle"><a href=3D"#"><img=
+ src=3D"http://shop.example.com/media/catalog/product/cache/1/small_image/1=
+35x/9df78eab33525d08d6e5fb8d27136e95/r/a/rayman-legends.png" alt=3D"" width=
+=3D"135" height=3D"135" border=3D"0" /></a></td>
+    <td align=3D"left" valign=3D"top">
+   =20
+    <table width=3D"100%" border=3D"0" cellspacing=3D"1" cellpadding=3D"5" =
+style=3D"font-family:Verdana, Geneva, sans-serif;">
+  <tr>
+    <td colspan=3D"2" bgcolor=3D"#cbe4ef" align=3D"left" style=3D"font-size=
+:12px; color:#005783; font-weight:bold;"><a href=3D"#" style=3D"color:#0057=
+83; text-decoration:none;">Rayman Legends</a></td>
+  </tr>
+ =20
+    <tr>
+    <td colspan=3D"2" bgcolor=3D"#f0f5f8" align=3D"left" style=3D"font-size=
+:11px; color:#000000;">Rayman Legends is a platform game in development by =
+Ubisoft Montpellier to be published by Ubisoft. It is the fifth main title =
+in the Rayman series and the direct sequel to 2011's Rayman Origins.<br /><=
+br /></td>
+  </tr>
+ =20
+      <tr>
+    <td bgcolor=3D"#005783" align=3D"center" width=3D"50%" style=3D"font-si=
+ze:11px; color:#FFFFFF; font-weight:bold;">=C2=A340.00</td>
+   =20
+        <td bgcolor=3D"#36CE2D" align=3D"center" valign=3D"middle" width=3D=
+"50%" style=3D"font-size:11px; color:#FFFFFF; font-weight:bold;" ><a href=
+=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></td>
+  </tr>
+ =20
+</table>
+
+   =20
+    </td>
+  </tr>
+
+<tr>
+    <td width=3D"135" align=3D"center" valign=3D"middle"><a href=3D"#"><img=
+ src=3D"http://shop.example.com/media/catalog/product/cache/1/small_image/1=
+35x/9df78eab33525d08d6e5fb8d27136e95/r/a/rayman-legends.png" alt=3D"" width=
+=3D"135" height=3D"135" border=3D"0" /></a></td>
+    <td align=3D"left" valign=3D"top">
+   =20
+    <table width=3D"100%" border=3D"0" cellspacing=3D"1" cellpadding=3D"5" =
+style=3D"font-family:Verdana, Geneva, sans-serif;">
+  <tr>
+    <td colspan=3D"2" bgcolor=3D"#cbe4ef" align=3D"left" style=3D"font-size=
+:12px; color:#005783; font-weight:bold;"><a href=3D"#" style=3D"color:#0057=
+83; text-decoration:none;">Rayman Legends</a></td>
+  </tr>
+ =20
+    <tr>
+    <td colspan=3D"2" bgcolor=3D"#f0f5f8" align=3D"left" style=3D"font-size=
+:11px; color:#000000;">Rayman Legends is a platform game in development by =
+Ubisoft Montpellier to be published by Ubisoft. It is the fifth main title =
+in the Rayman series and the direct sequel to 2011's Rayman Origins.<br /><=
+br /></td>
+  </tr>
+ =20
+      <tr>
+    <td bgcolor=3D"#005783" align=3D"center" width=3D"50%" style=3D"font-si=
+ze:11px; color:#FFFFFF; font-weight:bold;">=C2=A340.00</td>
+   =20
+        <td bgcolor=3D"#36CE2D" align=3D"center" valign=3D"middle" width=3D=
+"50%" style=3D"font-size:11px; color:#FFFFFF; font-weight:bold;" ><a href=
+=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></td>
+  </tr>
+ =20
+</table>
+
+   =20
+    </td>
+  </tr>
+ =20
+  <tr>
+    <td width=3D"135" align=3D"center" valign=3D"middle"><a href=3D"#"><img=
+ src=3D"http://shop.example.com/media/catalog/product/cache/1/small_image/1=
+35x/9df78eab33525d08d6e5fb8d27136e95/r/a/rayman-legends.png" alt=3D"" width=
+=3D"135" height=3D"135" border=3D"0" /></a></td>
+    <td align=3D"left" valign=3D"top">
+   =20
+    <table width=3D"100%" border=3D"0" cellspacing=3D"1" cellpadding=3D"5" =
+style=3D"font-family:Verdana, Geneva, sans-serif;">
+  <tr>
+    <td colspan=3D"2" bgcolor=3D"#cbe4ef" align=3D"left" style=3D"font-size=
+:12px; color:#005783; font-weight:bold;"><a href=3D"#" style=3D"color:#0057=
+83; text-decoration:none;">Rayman Legends</a></td>
+  </tr>
+ =20
+    <tr>
+    <td colspan=3D"2" bgcolor=3D"#f0f5f8" align=3D"left" style=3D"font-size=
+:11px; color:#000000;">Rayman Legends is a platform game in development by =
+Ubisoft Montpellier to be published by Ubisoft. It is the fifth main title =
+in the Rayman series and the direct sequel to 2011's Rayman Origins.<br /><=
+br /></td>
+  </tr>
+ =20
+      <tr>
+    <td bgcolor=3D"#005783" align=3D"center" width=3D"50%" style=3D"font-si=
+ze:11px; color:#FFFFFF; font-weight:bold;">=C2=A340.00</td>
+   =20
+        <td bgcolor=3D"#36CE2D" align=3D"center" valign=3D"middle" width=3D=
+"50%" style=3D"font-size:11px; color:#FFFFFF; font-weight:bold;" ><a href=
+=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></td>
+  </tr>
+ =20
+</table>
+
+   =20
+    </td>
+  </tr>
+
+</table>
+
+   =20
+    </td>
+  </tr>
+ =20
+ =20
+  <tr>
+  <td bgcolor=3D"#FFFFFF" align=3D"center" colspan=3D"2" style=3D"border-to=
+p:15px solid #f0f5f8;">
+ =20
+
+ =20
+  <table width=3D"100%" border=3D"0" cellspacing=3D"0" cellpadding=3D"10" b=
+gcolor=3D"#f0f5f8" style=3D"font-family:Verdana, Geneva, sans-serif;">
+ =20
+  <tr>
+  <td colspan=3D"4" style=3D"font-size:11px; color:#FFFFFF; font-weight:bol=
+d;" bgcolor=3D"#FF6600">Customers who bought [product_name] also bought...
+  </td>
+  </tr>
+ =20
+  <tr>
+    <td width=3D"25%">
+   =20
+    <table width=3D"100%" border=3D"0" cellspacing=3D"1" cellpadding=3D"5" =
+style=3D"font-family:Verdana, Geneva, sans-serif; font-size:11px; font-weig=
+ht:bold;" bgcolor=3D"#FFFFFF">
+  <tr>
+    <td bgcolor=3D"#cbe4ef" align=3D"center" style=3D"color:#005783;">Rayma=
+n Legends</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FFFFFF" align=3D"center"><a href=3D"#"><img src=3D"http=
+://shop.example.com/media/catalog/product/cache/1/small_image/135x/9df78eab=
+33525d08d6e5fb8d27136e95/b/a/batman-arkham-city.png" alt=3D"" width=3D"75" =
+height=3D"75" border=3D"0" /></a></td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#005783" align=3D"center" style=3D"color:#FFFFFF;">=
+=C2=A340.00</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FF6600" align=3D"center" style=3D"color:#FFFFFF;"><a hr=
+ef=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></t=
+d>
+  </tr>
+</table>
+
+   =20
+    </td>
+    <td width=3D"25%"><table width=3D"100%" border=3D"0" cellspacing=3D"1" =
+cellpadding=3D"5" style=3D"font-family:Verdana, Geneva, sans-serif; font-si=
+ze:11px; font-weight:bold;" bgcolor=3D"#FFFFFF">
+  <tr>
+    <td bgcolor=3D"#cbe4ef" align=3D"center" style=3D"color:#005783;">Rayma=
+n Legends</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FFFFFF" align=3D"center"><a href=3D"#"><img src=3D"http=
+://shop.example.com/media/catalog/product/cache/1/small_image/135x/9df78eab=
+33525d08d6e5fb8d27136e95/b/a/batman-arkham-city.png" alt=3D"" width=3D"75" =
+height=3D"75" border=3D"0" /></a></td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#005783" align=3D"center" style=3D"color:#FFFFFF;">=
+=C2=A340.00</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FF6600" align=3D"center" style=3D"color:#FFFFFF;"><a hr=
+ef=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></t=
+d>
+  </tr>
+</table></td>
+    <td width=3D"25%"><table width=3D"100%" border=3D"0" cellspacing=3D"1" =
+cellpadding=3D"5" style=3D"font-family:Verdana, Geneva, sans-serif; font-si=
+ze:11px; font-weight:bold;" bgcolor=3D"#FFFFFF">
+  <tr>
+    <td bgcolor=3D"#cbe4ef" align=3D"center" style=3D"color:#005783;">Rayma=
+n Legends</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FFFFFF" align=3D"center"><a href=3D"#"><img src=3D"http=
+://shop.example.com/media/catalog/product/cache/1/small_image/135x/9df78eab=
+33525d08d6e5fb8d27136e95/b/a/batman-arkham-city.png" alt=3D"" width=3D"75" =
+height=3D"75" border=3D"0" /></a></td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#005783" align=3D"center" style=3D"color:#FFFFFF;">=
+=C2=A340.00</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FF6600" align=3D"center" style=3D"color:#FFFFFF;"><a hr=
+ef=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></t=
+d>
+  </tr>
+</table></td>
+    <td width=3D"25%"><table width=3D"100%" border=3D"0" cellspacing=3D"1" =
+cellpadding=3D"5" style=3D"font-family:Verdana, Geneva, sans-serif; font-si=
+ze:11px; font-weight:bold;" bgcolor=3D"#FFFFFF">
+  <tr>
+    <td bgcolor=3D"#cbe4ef" align=3D"center" style=3D"color:#005783;">Rayma=
+n Legends</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FFFFFF" align=3D"center"><a href=3D"#"><img src=3D"http=
+://shop.example.com/media/catalog/product/cache/1/small_image/135x/9df78eab=
+33525d08d6e5fb8d27136e95/b/a/batman-arkham-city.png" alt=3D"" width=3D"75" =
+height=3D"75" border=3D"0" /></a></td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#005783" align=3D"center" style=3D"color:#FFFFFF;">=
+=C2=A340.00</td>
+  </tr>
+  <tr>
+    <td bgcolor=3D"#FF6600" align=3D"center" style=3D"color:#FFFFFF;"><a hr=
+ef=3D"#" style=3D"color:#FFFFFF; text-decoration:underline;">Buy Now</a></t=
+d>
+  </tr>
+</table></td>
+  </tr>
+</table>
+
+ =20
+  </td>
+  </tr>
+ =20
+</table>
+
+   =20
+
+    </td>
+  </tr>
+
+</table>
+
+   =20
+    </td>
+  </tr>
+
+ =20
+</table>
+
+   =20
+    </td>
+  </tr>
+</table>
+
+
+</body>
+</html>

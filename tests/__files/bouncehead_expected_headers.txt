@@ -1,0 +1,8 @@
+From: postmaster@mta65117.example.com
+Subject: Delivery report
+To: bounce-1149-42342-20831917-live@mail.example.com
+MIME-Version: 1.0
+X-Original-To: bounce-1149-42342-20831917-live@mail.example.com
+Delivered-To: bounce@mail.example.com
+Received: from mta65117.example.com (mta65117.example.com [109.68.65.117])        by mail.example.com (Postfix) with ESMTP id 413291A0374        for <bounce-1149-42342-20831917-live@mail.example.com>; Mon, 20 Aug 2012 05:17:28 +0100 (BST)
+Date: Mon, 20 Aug 2012 05:15:26 +0100

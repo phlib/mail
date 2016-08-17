@@ -1,0 +1,10 @@
+Reporting-MTA: dns;example.com
+Received-From-MTA: dns;smtp1.example.com
+Arrival-Date: Mon, 20 Aug 2012 11:02:24 +0000
+
+Original-Recipient: rfc822;recipient@example.com
+Final-Recipient: rfc822;recipient@example.com
+Action: failed
+Status: 5.1.1
+Diagnostic-Code: smtp;550 5.1.1 RESOLVER.ADR.RecipNotFound; not found
+

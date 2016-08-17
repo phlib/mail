@@ -1,0 +1,73 @@
+Delivery has failed to these recipients or distribution lists:
+
+recipient@example.com<mailto:recipient@example.com>
+The recipient's e-mail address was not found in the recipient's e-mail syst=
+em. Microsoft Exchange will not try to redeliver this message for you. Plea=
+se check the e-mail address and try resending this message, or provide the =
+following diagnostic text to your system administrator.
+
+________________________________
+Sent by Microsoft Exchange Server 2007
+
+
+
+
+
+
+Diagnostic information for administrators:
+
+Generating server: example.com
+
+recipient@example.com
+#550 5.1.1 RESOLVER.ADR.RecipNotFound; not found ##rfc822;recipient@example=
+.com
+
+Original message headers:
+
+Received: from smtp1.example.com (192.168.50.11) by uspexhub02.example.com
+ (10.50.51.21) with Microsoft SMTP Server (TLS) id 8.3.245.1; Mon, 20 Aug 2=
+012
+ 07:02:24 -0400
+Received: from mail69-co1-R.bigfish.com (216.32.180.179) by smtp1.EXAMPLE.C=
+OM
+ (192.168.50.11) with Microsoft SMTP Server (TLS) id 8.3.245.1; Mon, 20 Aug
+ 2012 07:02:26 -0400
+Received: from mail69-co1 (localhost [127.0.0.1])       by mail69-co1-R.big=
+fish.com
+ (Postfix) with ESMTP id D3D93C601B7    for <recipient@example.com>; Mon, 2=
+0
+ Aug 2012 11:02:22 +0000 (UTC)
+X-Forefront-Antispam-Report: CIP:109.68.65.117;KIP:(null);UIP:(null);IPV:NL=
+I;H:mta65117.example.com;RD:mta65117.example.com;EFVD:NLI
+X-SpamScore: -11
+X-BigFish: vps-11(zzc89bhec5Ic857hzz1202hzz8275ch8275bhb22Rz2fh668h839h93fh=
+d25h10d2h)
+Received-SPF: pass (mail69-co1: domain of mail.example.com designates 109.6=
+8.65.117 as permitted sender) client-ip=3D109.68.65.117; envelope-from=3Dbo=
+unce-1149-42363-11284257-live@mail.example.com; helo=3Dmta65117.example.com=
+ ;17.example.com ;
+Received: from mail69-co1 (localhost.localdomain [127.0.0.1]) by mail69-co1
+ (MessageSwitch) id 1345460540248299_23907; Mon, 20 Aug 2012 11:02:20 +0000
+ (UTC)
+Received: from CO1EHSMHS004.bigfish.com (unknown [10.243.78.227])       by
+ mail69-co1.bigfish.com (Postfix) with ESMTP id 3B04968004C     for
+ <recipient@example.com>; Mon, 20 Aug 2012 11:02:20 +0000 (UTC)
+Received: from mta65117.example.com (109.68.65.117) by CO1EHSMHS004.bigfish=
+.com
+ (10.243.66.14) with Microsoft SMTP Server id 14.1.225.23; Mon, 20 Aug 2012
+ 11:02:19 +0000
+Received: by mta65117.example.com id h68cc20sv5kf for
+ <recipient@example.com>; Mon, 20 Aug 2012 12:00:16 +0100 (envelope-from
+ <bounce-1149-42363-11284257-live@mail.example.com>)
+X-Mailer: MXM-v5-MailEngine
+To: <recipient@example.com>
+From: Renewals <renewal@mail.example.com>
+Reply-To: <noreply@example.com>
+Subject: Julie, your home renewal is due
+Content-Type: multipart/alternative; charset=3D"UTF-8";
+        boundary=3D"=3D_d873e82840801b21facc7670edf03d54"
+MIME-Version: 1.0
+Message-ID: <0.0.F4.BD6.1CD7EC2FB28D3A2.0@mta65117.example.com>
+Date: Mon, 20 Aug 2012 12:00:16 +0100
+Return-Path: bounce-1149-42363-11284257-live@mail.example.com
+
