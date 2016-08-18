@@ -111,7 +111,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $factory = new Factory();
 
         $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?=' . "\r\n"
-            . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqPhlibDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
+            . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqMxMDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
 
         $expected = [
             'toCharset' => 'UTF-8',
