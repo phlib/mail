@@ -172,6 +172,16 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $factory->decodeHeader($header));
     }
 
+    /**
+     * @expectedException \Phlib\Mail\Exception\InvalidArgumentException
+     */
+    public function testDecodeHeaderFailure()
+    {
+        $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?=' . "\r\n"
+            . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqPhlibDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
+        (new Factory())->decodeHeader($header);
+    }
+
     public function testParseEmailAddresses()
     {
         $factory = new Factory();
