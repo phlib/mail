@@ -2,10 +2,11 @@ language: php
 
 php:
   - 5.6
+  - 7.0
 
 before_script:
   - pecl channel-update pecl.php.net
-  - pecl install -f mailparse-2.1.6
+  - pecl install mailparse
   - composer self-update
   - composer install --no-interaction
 
