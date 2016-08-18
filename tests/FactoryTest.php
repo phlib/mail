@@ -13,14 +13,6 @@ use Phlib\Mail\Mime\MultipartReport;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
-    protected function setUp()
-    {
-        if (!extension_loaded('mailparse')) {
-            $this->markTestSkipped('The MailParse extension is not loaded.');
-        }
-        parent::setUp();
-    }
-
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
