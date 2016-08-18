@@ -2,6 +2,7 @@
 
 namespace Phlib\Mail;
 
+use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
 
 class Factory
@@ -371,7 +372,10 @@ class Factory
                 $toCharset = $matches[1];
             }
             $result['toCharset'] = $toCharset;
-            $result['text'] = iconv_mime_decode($header, 0, $toCharset);
+            $result['text'] = @iconv_mime_decode($header, 0, $toCharset);
+            if ($result['text'] === false) {
+                throw new InvalidArgumentException('Failed to decode header, header is not valid.');
+            }
         }
 
         return $result;
