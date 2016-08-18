@@ -342,6 +342,19 @@ class Factory
         return $mailPart;
     }
 
+    /**
+     *
+     * array(
+     *   'fromCharset' => string,
+     *   'toCharset' => string,
+     *   'encoding' => string,
+     *   'text' => string // decoded header
+     * )
+     *
+     * @param string $header
+     * @param string $toCharset
+     * @return array
+     */
     public function decodeHeader($header, $toCharset = null)
     {
         $result = [
