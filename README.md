@@ -13,12 +13,6 @@ Via Composer
 ``` bash
 $ composer require phlib/mail
 ```
-or
-``` JSON
-"require": {
-    "phlib/mail": "*"
-}
-```
 
 ## Usage
 
