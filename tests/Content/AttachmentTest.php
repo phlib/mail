@@ -85,7 +85,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         $encoding = 'base64';
         $filename = basename($this->testFile);
 
-        $expected = "Content-Type: $type; charset=\"UTF-8\"; name=\"$filename\"\r\n"
+        $expected = "Content-Type: $type; name=\"$filename\"\r\n"
             . "Content-Transfer-Encoding: $encoding\r\n"
             . "Content-Disposition: attachment; filename=\"$filename\"\r\n";
 

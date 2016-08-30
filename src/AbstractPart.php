@@ -36,12 +36,12 @@ abstract class AbstractPart
     /**
      * @var string
      */
-    protected $type     = null;
+    protected $type;
 
     /**
      * @var string
      */
-    private $charset  = 'UTF-8';
+    protected $charset;
 
     /**
      * Add header
