@@ -3,6 +3,7 @@
 namespace Phlib\Mail\Content;
 
 use Phlib\Mail\Exception\RuntimeException;
+use Phlib\Mail\SetTypeTrait;
 
 /**
  * Attachment class used to represent attachments as Mail content
@@ -11,6 +12,8 @@ use Phlib\Mail\Exception\RuntimeException;
  */
 class Attachment extends AbstractContent
 {
+    use SetTypeTrait;
+
     /**
      * @var string
      */
