@@ -92,26 +92,13 @@ class Factory
     }
 
     /**
-     * Get a new mail part
-     *
-     * @param string $partType eg. 'Mail', 'Content\Html'
-     * @return AbstractPart
-     */
-    public function getPart($partType)
-    {
-        $partType = __NAMESPACE__ . '\\' . $partType;
-        return new $partType();
-    }
-
-    /**
      * Parse the email
      *
      * @throws RuntimeException
      */
     private function parseEmail()
     {
-        /** @var Mail $mail */
-        $mail = $this->getPart('Mail');
+        $mail = new Mail();
 
         // Headers and meta info
         $mimeData = mailparse_msg_get_part_data($this->mimeMail);
@@ -254,25 +241,23 @@ class Factory
         if (stripos($type, 'multipart') === 0) {
             switch ($type) {
                 case 'multipart/alternative':
-                    $mailPart = $this->getPart('Mime\MultipartAlternative');
+                    $mailPart = new Mime\MultipartAlternative();
                     break;
                 case 'multipart/mixed':
-                    $mailPart = $this->getPart('Mime\MultipartMixed');
+                    $mailPart = new Mime\MultipartMixed;
                     break;
                 case 'multipart/related':
-                    $mailPart = $this->getPart('Mime\MultipartRelated');
+                    $mailPart = new Mime\MultipartRelated();
                     break;
                 case 'multipart/report':
-                    /** @var Mime\MultipartReport $mailPart */
-                    $mailPart = $this->getPart('Mime\MultipartReport');
+                    $mailPart = new Mime\MultipartReport();
                     $contentType = $type;
                     if (array_key_exists('content-report-type', $partData)) {
                         $mailPart->setReportType($partData['content-report-type']);
                     }
                     break;
                 default:
-                    /** @var Mime\Mime $mailPart */
-                    $mailPart = $this->getPart('Mime\Mime');
+                    $mailPart = new Mime\Mime();
                     $mailPart->setType($type);
                     break;
             }
@@ -292,8 +277,7 @@ class Factory
             if ($name != '1' && $disposition !== false) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
-                /** @var Content\Content $mailPart */
-                $mailPart = $this->getPart('Content\Content');
+                $mailPart = new Content\Content();
                 $mailPart->setEncoding('base64');
                 // Use the original type, as it contains the attachment name
                 $mailPart->setType($partData['headers']['content-type']);
@@ -301,18 +285,15 @@ class Factory
                 // Basic content
                 switch ($type) {
                     case 'text/html':
-                        /** @var Content\Html $mailPart */
-                        $mailPart = $this->getPart('Content\Html');
+                        $mailPart = new Content\Html();
                         break;
                     case 'text/plain':
-                        /** @var Content\Text $mailPart */
-                        $mailPart = $this->getPart('Content\Text');
+                        $mailPart = new Content\Text();
                         break;
                     default:
                         // It's not HTML or text, so we class it as an attachment
                         $mail->incrementAttachmentCount();
-                        /** @var Content\Content $mailPart */
-                        $mailPart = $this->getPart('Content\Content');
+                        $mailPart = new Content\Content();
                         $mailPart->setType($type);
                         $mailPart->setEncoding($partData['transfer-encoding']);
                         break;
