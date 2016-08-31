@@ -212,8 +212,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
+        /** @var \Phlib\Mail\Mime\MultipartMixed $primaryPart */
         $primaryPart = $mail->getPart();
-        /** @var $primaryPart \Phlib\Mail\Mime\MultipartMixed */
         $this->assertInstanceOf(MultipartMixed::class, $primaryPart);
 
         /** @var \Phlib\Mail\Mime\AbstractMime[] $mixedParts */
@@ -283,7 +283,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $details) {
-            /** @var $part \Phlib\Mail\Content\AbstractContent */
+            /** @var \Phlib\Mail\Content\AbstractContent $part */
             $part = $details['part'];
 
             // Test part content
@@ -320,8 +320,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
+        /** @var \Phlib\Mail\Mime\Mime $primaryPart */
         $primaryPart = $mail->getPart();
-        /* @var $primaryPart \Phlib\Mail\Mime\Mime */
         $this->assertInstanceOf(MultipartReport::class, $primaryPart);
         $this->assertEquals('multipart/report', $primaryPart->getType());
         $this->assertContains('; report-type=delivery-status', $primaryPart->getEncodedHeaders());
@@ -335,6 +335,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text/rfc822-headers', $reportParts[2]->getType());
 
         // Check part content
+        /** @var \Phlib\Mail\Content\AbstractContent[] $content */
         $content = [
             'text' => $reportParts[0],
             'status' => $reportParts[1],
@@ -342,7 +343,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $part) {
-            /* @var $part \Phlib\Mail\Content\AbstractContent */
             $expectedContent = __DIR__ . "/__files/bouncehead_expected_$name.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
@@ -357,8 +357,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
+        /** @var \Phlib\Mail\Mime\Mime $primaryPart */
         $primaryPart = $mail->getPart();
-        /* @var $primaryPart \Phlib\Mail\Mime\Mime */
         $this->assertInstanceOf(MultipartReport::class, $primaryPart);
         $this->assertEquals('multipart/report', $primaryPart->getType());
         $this->assertContains('; report-type=delivery-status', $primaryPart->getEncodedHeaders());
@@ -378,6 +378,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('message/rfc822', $reportParts[2]->getType());
 
         // Check part content
+        /** @var \Phlib\Mail\Content\AbstractContent[] $content */
         $content = [
             'text' => $alternateParts[0],
             'html' => $alternateParts[1],
@@ -386,7 +387,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $part) {
-            /* @var $part \Phlib\Mail\Content\AbstractContent */
             $expectedContent = __DIR__ . "/__files/bouncemsg_expected_$name.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
@@ -401,8 +401,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
+        /** @var \Phlib\Mail\Mime\MultipartMixed $primaryPart */
         $primaryPart = $mail->getPart();
-        /* @var $primaryPart \Phlib\Mail\Mime\MultipartMixed */
         $this->assertInstanceOf(Html::class, $primaryPart);
 
         // Check content
@@ -419,8 +419,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
+        /** @var \Phlib\Mail\Content\Html $primaryPart */
         $primaryPart = $mail->getPart();
-        /* @var $primaryPart \Phlib\Mail\Content\Html */
         $this->assertInstanceOf(Html::class, $primaryPart);
 
         // Check content
