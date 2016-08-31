@@ -42,11 +42,12 @@ class AttachmentLocalTest extends \PHPUnit_Framework_TestCase
     public function testNameIsSet()
     {
         $this->part->setFile($this->testFile);
+        $this->part->setDisposition('attachment');
         $filename = basename($this->testFile);
 
-        $expected = "Content-Type: application/octet-stream; name=\"$filename\"\r\n"
+        $expected = "Content-Type: application/octet-stream; name=\"{$filename}\"\r\n"
             . "Content-Transfer-Encoding: base64\r\n"
-            . "Content-Disposition: attachment; filename=\"$filename\"\r\n";
+            . "Content-Disposition: attachment; filename=\"{$filename}\"\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);

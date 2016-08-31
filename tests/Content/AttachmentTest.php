@@ -55,16 +55,57 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testGetEncodedHeaders()
+    public function testSetName()
     {
-        $type     = 'application/octet-stream';
-        $encoding = 'base64';
         $filename = 'example-file-name.png';
         $this->part->setName($filename);
+        // Need to set disposition, so can check the name appears there too
+        $this->part->setDisposition('attachment');
 
-        $expected = "Content-Type: $type; name=\"$filename\"\r\n"
-            . "Content-Transfer-Encoding: $encoding\r\n"
-            . "Content-Disposition: attachment; filename=\"$filename\"\r\n";
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
+        $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
+    }
+
+    /**
+     * @expectedException \Phlib\Mail\Exception\RuntimeException
+     * @expectedExceptionMessage name must be defined
+     */
+    public function testNoSetName()
+    {
+        $this->part->getEncodedHeaders();
+    }
+
+    public function testSetDisposition()
+    {
+        $disposition = 'example-disposition';
+        $this->part->setDisposition($disposition);
+        // Need to set name, to avoid validation exception
+        $this->part->setName('example-file-name.png');
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertContains("Content-Disposition: {$disposition}", $actual);
+    }
+
+    public function testNoSetDisposition()
+    {
+        // Need to set name, to avoid validation exception
+        $this->part->setName('example-file-name.png');
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertNotContains('Content-Disposition:', $actual);
+    }
+
+    public function testGetEncodedHeaders()
+    {
+        $filename = 'example-file-name.png';
+        $disposition = 'attachment';
+        $this->part->setName($filename);
+        $this->part->setDisposition($disposition);
+
+        $expected = "Content-Type: application/octet-stream; name=\"{$filename}\"\r\n"
+            . "Content-Transfer-Encoding: base64\r\n"
+            . "Content-Disposition: {$disposition}; filename=\"{$filename}\"\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);

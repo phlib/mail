@@ -2,6 +2,8 @@
 
 namespace Phlib\Mail\Content;
 
+use Phlib\Mail\Exception\RuntimeException;
+
 /**
  * Attachment class used to represent attachments as Mail content
  *
@@ -25,6 +27,11 @@ class Attachment extends AbstractContent
     private $name;
 
     /**
+     * @var string
+     */
+    private $disposition;
+
+    /**
      * Set encoding
      *
      * @param string $encoding
@@ -36,6 +43,7 @@ class Attachment extends AbstractContent
         if ($encoding !== 'base64') {
             throw new \InvalidArgumentException('Will only accept base64 for attachment encoding');
         }
+
         return $this;
     }
 
@@ -53,6 +61,19 @@ class Attachment extends AbstractContent
     }
 
     /**
+     * Set disposition (eg. inline, attachment)
+     *
+     * @param string $disposition
+     * @return $this
+     */
+    public function setDisposition($disposition)
+    {
+        $this->disposition = $disposition;
+
+        return $this;
+    }
+
+    /**
      * Get encoded headers
      *
      * @return string
@@ -60,7 +81,12 @@ class Attachment extends AbstractContent
     public function getEncodedHeaders()
     {
         $headers = parent::getEncodedHeaders();
-        $headers .= "Content-Disposition: attachment; filename=\"{$this->name}\"\r\n";
+        if ($this->disposition) {
+            if (!$this->name) {
+                throw new RuntimeException('Attachment name must be defined');
+            }
+            $headers .= "Content-Disposition: {$this->disposition}; filename=\"{$this->name}\"\r\n";
+        }
 
         return $headers;
     }
@@ -73,9 +99,10 @@ class Attachment extends AbstractContent
      */
     protected function addContentTypeParameters($contentType)
     {
-        if ($this->name) {
-            $contentType .= "; name=\"{$this->name}\"";
+        if (!$this->name) {
+            throw new RuntimeException('Attachment name must be defined');
         }
+        $contentType .= "; name=\"{$this->name}\"";
 
         return parent::addContentTypeParameters($contentType);
     }
