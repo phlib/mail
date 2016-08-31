@@ -110,7 +110,7 @@ class Factory
      */
     private function parseEmail()
     {
-        /** @type Mail $mail */
+        /** @var Mail $mail */
         $mail = $this->getPart('Mail');
 
         // Headers and meta info
@@ -263,7 +263,7 @@ class Factory
                     $mailPart = $this->getPart('Mime\MultipartRelated');
                     break;
                 case 'multipart/report':
-                    /** @type Mime\MultipartReport $mailPart */
+                    /** @var Mime\MultipartReport $mailPart */
                     $mailPart = $this->getPart('Mime\MultipartReport');
                     $contentType = $type;
                     if (array_key_exists('content-report-type', $partData)) {
@@ -271,7 +271,7 @@ class Factory
                     }
                     break;
                 default:
-                    /** @type Mime\Mime $mailPart */
+                    /** @var Mime\Mime $mailPart */
                     $mailPart = $this->getPart('Mime\Mime');
                     $mailPart->setType($type);
                     break;
@@ -292,7 +292,7 @@ class Factory
             if ($name != '1' && $disposition !== false) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
-                /** @type Content\Content $mailPart */
+                /** @var Content\Content $mailPart */
                 $mailPart = $this->getPart('Content\Content');
                 $mailPart->setEncoding('base64');
                 // Use the original type, as it contains the attachment name
@@ -301,17 +301,17 @@ class Factory
                 // Basic content
                 switch ($type) {
                     case 'text/html':
-                        /** @type Content\Html $mailPart */
+                        /** @var Content\Html $mailPart */
                         $mailPart = $this->getPart('Content\Html');
                         break;
                     case 'text/plain':
-                        /** @type Content\Text $mailPart */
+                        /** @var Content\Text $mailPart */
                         $mailPart = $this->getPart('Content\Text');
                         break;
                     default:
                         // It's not HTML or text, so we class it as an attachment
                         $mail->incrementAttachmentCount();
-                        /** @type Content\Content $mailPart */
+                        /** @var Content\Content $mailPart */
                         $mailPart = $this->getPart('Content\Content');
                         $mailPart->setType($type);
                         $mailPart->setEncoding($partData['transfer-encoding']);

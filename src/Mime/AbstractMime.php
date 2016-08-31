@@ -7,12 +7,12 @@ use Phlib\Mail\AbstractPart;
 abstract class AbstractMime extends AbstractPart
 {
     /**
-     * @type \Phlib\Mail\AbstractPart[]
+     * @var \Phlib\Mail\AbstractPart[]
      */
     private $parts = array();
 
     /**
-     * @type string
+     * @var string
      */
     private $boundary;
 

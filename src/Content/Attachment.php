@@ -5,22 +5,22 @@ namespace Phlib\Mail\Content;
 class Attachment extends AbstractContent
 {
     /**
-     * @type string
+     * @var string
      */
     protected $encoding = 'base64';
 
     /**
-     * @type string
+     * @var string
      */
     protected $type = 'application/octet-stream';
 
     /**
-     * @type string
+     * @var string
      */
     private $filename;
 
     /**
-     * @type string
+     * @var string
      */
     private $name;
 

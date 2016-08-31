@@ -5,12 +5,12 @@ namespace Phlib\Mail\Mime;
 class MultipartReport extends AbstractMime
 {
     /**
-     * @type string
+     * @var string
      */
     protected $type = 'multipart/report';
 
     /**
-     * @type string
+     * @var string
      */
     private $reportType;
 
