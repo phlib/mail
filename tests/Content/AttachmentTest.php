@@ -9,18 +9,11 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Attachment
      */
-    protected $part;
-
-    /**
-     * @var string
-     */
-    protected $testFile = '';
+    private $part;
 
     protected function setUp()
     {
         $this->part = new Attachment();
-
-        $this->testFile = realpath(__DIR__ . '/../__files/attachments_expected_attch1.txt');
     }
 
     public function testGetTypeDefault()
@@ -62,28 +55,12 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testSetFileGetContent()
-    {
-        $this->part->setFile($this->testFile);
-
-        $expected = file_get_contents($this->testFile);
-        $this->assertEquals($expected, $this->part->getContent());
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testGetContentNoFile()
-    {
-        $this->assertEquals(false, $this->part->getContent());
-    }
-
     public function testGetEncodedHeaders()
     {
-        $this->part->setFile($this->testFile);
         $type     = 'application/octet-stream';
         $encoding = 'base64';
-        $filename = basename($this->testFile);
+        $filename = 'example-file-name.png';
+        $this->part->setName($filename);
 
         $expected = "Content-Type: $type; name=\"$filename\"\r\n"
             . "Content-Transfer-Encoding: $encoding\r\n"

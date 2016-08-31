@@ -2,6 +2,11 @@
 
 namespace Phlib\Mail\Content;
 
+/**
+ * Attachment class used to represent attachments as Mail content
+ *
+ * @package Phlib\Mail
+ */
 class Attachment extends AbstractContent
 {
     /**
@@ -13,11 +18,6 @@ class Attachment extends AbstractContent
      * @var string
      */
     protected $type = 'application/octet-stream';
-
-    /**
-     * @var string
-     */
-    private $filename;
 
     /**
      * @var string
@@ -40,29 +40,16 @@ class Attachment extends AbstractContent
     }
 
     /**
-     * Set file
+     * Set attachment name
      *
-     * @param string $filename
-     * @return \Phlib\Mail\Content\Content
+     * @param string $name
+     * @return $this
      */
-    public function setFile($filename)
+    public function setName($name)
     {
-        $this->filename = $filename;
-        $this->name = basename($filename);
-    }
+        $this->name = $name;
 
-    /**
-     * Get content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        if (empty($this->filename)) {
-            throw new \RuntimeException('Filename has not been defined');
-        }
-
-        return file_get_contents($this->filename);
+        return $this;
     }
 
     /**
