@@ -5,19 +5,12 @@ namespace Phlib\Mail\Content;
 class Content extends AbstractContent
 {
     /**
-     * @var string
-     */
-    protected $type = 'application/octet-stream';
-
-    /**
-     * Set type
+     * Constructor to set immutable values
      *
      * @param string $type
-     * @return \Phlib\Mail\Content\Content
      */
-    public function setType($type)
+    public function __construct($type = 'application/octet-stream')
     {
         $this->type = $type;
-        return $this;
     }
 }

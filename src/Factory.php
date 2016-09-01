@@ -257,8 +257,7 @@ class Factory
                     }
                     break;
                 default:
-                    $mailPart = new Mime\Mime();
-                    $mailPart->setType($type);
+                    $mailPart = new Mime\Mime($type);
                     break;
             }
 
@@ -277,10 +276,9 @@ class Factory
             if ($name != '1' && $disposition !== false) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
-                $mailPart = new Content\Content();
-                $mailPart->setEncoding('base64');
                 // Use the original type, as it contains the attachment name
-                $mailPart->setType($partData['headers']['content-type']);
+                $mailPart = new Content\Content($partData['headers']['content-type']);
+                $mailPart->setEncoding('base64');
             } else {
                 // Basic content
                 switch ($type) {
@@ -293,8 +291,7 @@ class Factory
                     default:
                         // It's not HTML or text, so we class it as an attachment
                         $mail->incrementAttachmentCount();
-                        $mailPart = new Content\Content();
-                        $mailPart->setType($type);
+                        $mailPart = new Content\Content($type);
                         $mailPart->setEncoding($partData['transfer-encoding']);
                         break;
                 }
