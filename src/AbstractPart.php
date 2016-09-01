@@ -36,7 +36,7 @@ abstract class AbstractPart
     /**
      * @var string
      */
-    protected $type     = null;
+    protected $type;
 
     /**
      * @var string

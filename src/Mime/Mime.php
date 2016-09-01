@@ -5,14 +5,12 @@ namespace Phlib\Mail\Mime;
 class Mime extends AbstractMime
 {
     /**
-     * Set type
+     * Constructor to set immutable values
      *
      * @param string $type
-     * @return \Phlib\Mail\Mime\Mime
      */
-    public function setType($type)
+    public function __construct($type)
     {
         $this->type = $type;
-        return $this;
     }
 }

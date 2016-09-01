@@ -6,27 +6,16 @@ use Phlib\Mail\Content\Content;
 
 class ContentTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Content
-     */
-    protected $part;
-
-    protected function setUp()
-    {
-        $this->part = new Content();
-    }
-
     public function testGetTypeDefault()
     {
-        $type = "application/octet-stream";
-        $this->assertEquals($type, $this->part->getType());
+        $part = new Content();
+        $this->assertEquals('application/octet-stream', $part->getType());
     }
 
     public function testSetGetType()
     {
-        $type = "text/plain";
-        $this->part->setType($type);
-
-        $this->assertEquals($type, $this->part->getType());
+        $type = 'text/plain';
+        $part = new Content($type);
+        $this->assertEquals($type, $part->getType());
     }
 }
