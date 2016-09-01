@@ -18,8 +18,15 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeDefault()
     {
-        $type = "application/octet-stream";
-        $this->assertEquals($type, $this->part->getType());
+        $part = new Attachment();
+        $this->assertEquals('application/octet-stream', $part->getType());
+    }
+
+    public function testSetGetType()
+    {
+        $type = 'text/plain';
+        $part = new Attachment($type);
+        $this->assertEquals($type, $part->getType());
     }
 
     public function testSetEncoding()

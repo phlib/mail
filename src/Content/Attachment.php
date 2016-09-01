@@ -3,7 +3,6 @@
 namespace Phlib\Mail\Content;
 
 use Phlib\Mail\Exception\RuntimeException;
-use Phlib\Mail\SetTypeTrait;
 
 /**
  * Attachment class used to represent attachments as Mail content
@@ -12,17 +11,10 @@ use Phlib\Mail\SetTypeTrait;
  */
 class Attachment extends AbstractContent
 {
-    use SetTypeTrait;
-
     /**
      * @var string
      */
     protected $encoding = 'base64';
-
-    /**
-     * @var string
-     */
-    protected $type = 'application/octet-stream';
 
     /**
      * @var string
@@ -33,6 +25,16 @@ class Attachment extends AbstractContent
      * @var string
      */
     private $disposition;
+
+    /**
+     * Constructor to set immutable values
+     *
+     * @param string $type
+     */
+    public function __construct($type = 'application/octet-stream')
+    {
+        $this->type = $type;
+    }
 
     /**
      * Set encoding
