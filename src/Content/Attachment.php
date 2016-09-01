@@ -39,8 +39,7 @@ class Attachment extends AbstractContent
             throw new InvalidArgumentException('Attachment file cannot be read');
         }
 
-        $attachment = new self(mime_content_type($filename));
-        $attachment->setName(basename($filename));
+        $attachment = new self(basename($filename), mime_content_type($filename));
         $attachment->setContent(file_get_contents($filename));
 
         return $attachment;
@@ -49,10 +48,12 @@ class Attachment extends AbstractContent
     /**
      * Constructor to set immutable values
      *
+     * @var string $name
      * @param string $type
      */
-    public function __construct($type = 'application/octet-stream')
+    public function __construct($name, $type = 'application/octet-stream')
     {
+        $this->name = $name;
         $this->type = $type;
     }
 
@@ -60,7 +61,7 @@ class Attachment extends AbstractContent
      * Set encoding
      *
      * @param string $encoding
-     * @return \Phlib\Mail\Content\Attachment
+     * @return Attachment
      * @throws \InvalidArgumentException
      */
     public function setEncoding($encoding)
@@ -107,9 +108,6 @@ class Attachment extends AbstractContent
     {
         $headers = parent::getEncodedHeaders();
         if ($this->disposition) {
-            if (!$this->name) {
-                throw new RuntimeException('Attachment name must be defined');
-            }
             $headers .= "Content-Disposition: {$this->disposition}; filename=\"{$this->name}\"\r\n";
         }
 
@@ -124,9 +122,6 @@ class Attachment extends AbstractContent
      */
     protected function addContentTypeParameters($contentType)
     {
-        if (!$this->name) {
-            throw new RuntimeException('Attachment name must be defined');
-        }
         $contentType .= "; name=\"{$this->name}\"";
 
         return parent::addContentTypeParameters($contentType);

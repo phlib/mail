@@ -6,16 +6,6 @@ use Phlib\Mail\Content\Attachment;
 
 class AttachmentTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Attachment
-     */
-    private $part;
-
-    protected function setUp()
-    {
-        $this->part = new Attachment();
-    }
-
     public function testCreateFromFile()
     {
         $filename = realpath(__DIR__ . '/../__files/attachments_expected_attch1.txt');
@@ -41,31 +31,42 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @expectedException \Phlib\Mail\Exception\InvalidArgumentException
+     * @expectedExceptionMessage file cannot be read
+     */
+    public function testCreateFromFileInvalid()
+    {
+        Attachment::createFromFile('path/to/invalid/file.txt');
+    }
+
     public function testGetTypeDefault()
     {
-        $part = new Attachment();
+        $part = new Attachment('example-file-name.png');
         $this->assertEquals('application/octet-stream', $part->getType());
     }
 
     public function testSetGetType()
     {
         $type = 'text/plain';
-        $part = new Attachment($type);
+        $part = new Attachment('example-file-name.png', $type);
         $this->assertEquals($type, $part->getType());
     }
 
     public function testSetEncoding()
     {
         $encoding = 'base64';
-        $this->part->setEncoding($encoding);
+        $part = new Attachment('example-file-name.png');
+        $part->setEncoding($encoding);
 
-        $this->assertEquals($encoding, $this->part->getEncoding());
+        $this->assertEquals($encoding, $part->getEncoding());
     }
 
     public function testSetEncodingDefault()
     {
         $encoding = 'base64';
-        $this->assertEquals($encoding, $this->part->getEncoding());
+        $part = new Attachment('example-file-name.png');
+        $this->assertEquals($encoding, $part->getEncoding());
     }
 
     /**
@@ -74,7 +75,8 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetGetEncodingInvalid($encoding)
     {
-        $this->part->setEncoding($encoding);
+        $part = new Attachment('example-file-name.png');
+        $part->setEncoding($encoding);
     }
 
     public function dataSetGetEncodingInvalid()
@@ -87,44 +89,48 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testSetName()
+    public function testConstructName()
     {
         $filename = 'example-file-name.png';
-        $this->part->setName($filename);
-        // Need to set disposition, so can check the name appears there too
-        $this->part->setDisposition('attachment');
+        $part = new Attachment($filename);
 
-        $actual = $this->part->getEncodedHeaders();
+        // Need to set disposition, so can check the name appears there too
+        $part->setDisposition('attachment');
+
+        $actual = $part->getEncodedHeaders();
         $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
         $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
     }
 
-    /**
-     * @expectedException \Phlib\Mail\Exception\RuntimeException
-     * @expectedExceptionMessage name must be defined
-     */
-    public function testNoSetName()
+    public function testSetName()
     {
-        $this->part->getEncodedHeaders();
+        $part = new Attachment('original-file-name.png');
+        $filename = 'example-file-name.png';
+        $part->setName($filename);
+
+        // Need to set disposition, so can check the name appears there too
+        $part->setDisposition('attachment');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
+        $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
     }
 
     public function testSetDisposition()
     {
         $disposition = 'example-disposition';
-        $this->part->setDisposition($disposition);
-        // Need to set name, to avoid validation exception
-        $this->part->setName('example-file-name.png');
+        $part = new Attachment('example-file-name.png');
+        $part->setDisposition($disposition);
 
-        $actual = $this->part->getEncodedHeaders();
+        $actual = $part->getEncodedHeaders();
         $this->assertContains("Content-Disposition: {$disposition}", $actual);
     }
 
     public function testNoSetDisposition()
     {
-        // Need to set name, to avoid validation exception
-        $this->part->setName('example-file-name.png');
+        $part = new Attachment('example-file-name.png');
 
-        $actual = $this->part->getEncodedHeaders();
+        $actual = $part->getEncodedHeaders();
         $this->assertNotContains('Content-Disposition:', $actual);
     }
 
@@ -132,14 +138,15 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     {
         $filename = 'example-file-name.png';
         $disposition = 'attachment';
-        $this->part->setName($filename);
-        $this->part->setDisposition($disposition);
+
+        $part = new Attachment($filename);
+        $part->setDisposition($disposition);
 
         $expected = "Content-Type: application/octet-stream; name=\"{$filename}\"\r\n"
             . "Content-Transfer-Encoding: base64\r\n"
             . "Content-Disposition: {$disposition}; filename=\"{$filename}\"\r\n";
 
-        $actual = $this->part->getEncodedHeaders();
+        $actual = $part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
     }
 }
