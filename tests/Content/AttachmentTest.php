@@ -16,6 +16,31 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         $this->part = new Attachment();
     }
 
+    public function testCreateFromFile()
+    {
+        $filename = realpath(__DIR__ . '/../__files/attachments_expected_attch1.txt');
+        $basename = basename($filename);
+        $part = Attachment::createFromFile($filename);
+
+        // Type
+        $expectedType = 'text/plain';
+        $this->assertEquals($expectedType, $part->getType());
+
+        // Content
+        $content = file_get_contents($filename);
+        $this->assertEquals($content, $part->getContent());
+
+        // Name
+        $expected = "Content-Type: {$expectedType}; name=\"{$basename}\"\r\n"
+                    . "Content-Transfer-Encoding: base64\r\n"
+                    . "Content-Disposition: attachment; filename=\"{$basename}\"\r\n";
+        // Need to set disposition, so can check the name appears there too
+        $part->setDisposition('attachment');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testGetTypeDefault()
     {
         $part = new Attachment();

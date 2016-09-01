@@ -2,6 +2,7 @@
 
 namespace Phlib\Mail\Content;
 
+use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
 
 /**
@@ -25,6 +26,25 @@ class Attachment extends AbstractContent
      * @var string
      */
     private $disposition;
+
+    /**
+     * Create a new Attachment part from a local file
+     *
+     * @param string $filename
+     * @return Attachment
+     */
+    public static function createFromFile($filename)
+    {
+        if (!is_readable($filename)) {
+            throw new InvalidArgumentException('Attachment file cannot be read');
+        }
+
+        $attachment = new self(mime_content_type($filename));
+        $attachment->setName(basename($filename));
+        $attachment->setContent(file_get_contents($filename));
+
+        return $attachment;
+    }
 
     /**
      * Constructor to set immutable values
