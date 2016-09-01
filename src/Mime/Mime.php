@@ -6,5 +6,13 @@ use Phlib\Mail\SetTypeTrait;
 
 class Mime extends AbstractMime
 {
-    use SetTypeTrait;
+    /**
+     * Constructor to set immutable values
+     *
+     * @param string $type
+     */
+    public function __construct($type)
+    {
+        $this->type = $type;
+    }
 }

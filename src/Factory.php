@@ -253,8 +253,7 @@ class Factory
                     }
                     break;
                 default:
-                    $mailPart = new Mime\Mime();
-                    $mailPart->setType($type);
+                    $mailPart = new Mime\Mime($type);
                     break;
             }
 
@@ -291,8 +290,7 @@ class Factory
                     default:
                         // It's not HTML or text, so we count it as an attachment
                         $mail->incrementAttachmentCount();
-                        $mailPart = new Content\Content();
-                        $mailPart->setType($type);
+                        $mailPart = new Content\Content($type);
                         $mailPart->setEncoding($partData['transfer-encoding']);
                         break;
                 }

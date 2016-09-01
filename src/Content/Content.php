@@ -6,10 +6,13 @@ use Phlib\Mail\SetTypeTrait;
 
 class Content extends AbstractContent
 {
-    use SetTypeTrait;
-
     /**
-     * @var string
+     * Constructor to set immutable values
+     *
+     * @param string $type
      */
-    protected $type = 'application/octet-stream';
+    public function __construct($type = 'application/octet-stream')
+    {
+        $this->type = $type;
+    }
 }

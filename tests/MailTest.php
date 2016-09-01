@@ -59,7 +59,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetEncodedHeadersWithData()
     {
-        $part = new Mime();
+        $part = new Mime('multipart/other');
         $this->mail->setPart($part);
 
         $expected = $this->addHeaders();
