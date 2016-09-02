@@ -2,8 +2,6 @@
 
 namespace Phlib\Mail\Content;
 
-use Phlib\Mail\SetTypeTrait;
-
 class Content extends AbstractContent
 {
     /**
