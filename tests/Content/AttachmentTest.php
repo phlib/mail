@@ -6,41 +6,67 @@ use Phlib\Mail\Content\Attachment;
 
 class AttachmentTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Attachment
-     */
-    protected $part;
-
-    /**
-     * @var string
-     */
-    protected $testFile = '';
-
-    protected function setUp()
+    public function testCreateFromFile()
     {
-        $this->part = new Attachment();
+        $filename = realpath(__DIR__ . '/../__files/attachments_expected_attch1.txt');
+        $basename = basename($filename);
+        $part = Attachment::createFromFile($filename);
 
-        $this->testFile = realpath(__DIR__ . '/../__files/attachments_expected_attch1.txt');
+        // Type
+        $expectedType = 'text/plain';
+        $this->assertEquals($expectedType, $part->getType());
+
+        // Content
+        $content = file_get_contents($filename);
+        $this->assertEquals($content, $part->getContent());
+
+        // Name
+        $expected = "Content-Type: {$expectedType}; name=\"{$basename}\"\r\n"
+                    . "Content-Transfer-Encoding: base64\r\n"
+                    . "Content-Disposition: attachment; filename=\"{$basename}\"\r\n";
+        // Need to set disposition, so can check the name appears there too
+        $part->setDisposition('attachment');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @expectedException \Phlib\Mail\Exception\InvalidArgumentException
+     * @expectedExceptionMessage file cannot be read
+     */
+    public function testCreateFromFileInvalid()
+    {
+        Attachment::createFromFile('path/to/invalid/file.txt');
     }
 
     public function testGetTypeDefault()
     {
-        $type = "application/octet-stream";
-        $this->assertEquals($type, $this->part->getType());
+        $part = new Attachment('example-file-name.png');
+        $this->assertEquals('application/octet-stream', $part->getType());
+    }
+
+    public function testSetGetType()
+    {
+        $type = 'text/plain';
+        $part = new Attachment('example-file-name.png', $type);
+        $this->assertEquals($type, $part->getType());
     }
 
     public function testSetEncoding()
     {
         $encoding = 'base64';
-        $this->part->setEncoding($encoding);
+        $part = new Attachment('example-file-name.png');
+        $part->setEncoding($encoding);
 
-        $this->assertEquals($encoding, $this->part->getEncoding());
+        $this->assertEquals($encoding, $part->getEncoding());
     }
 
     public function testSetEncodingDefault()
     {
         $encoding = 'base64';
-        $this->assertEquals($encoding, $this->part->getEncoding());
+        $part = new Attachment('example-file-name.png');
+        $this->assertEquals($encoding, $part->getEncoding());
     }
 
     /**
@@ -49,7 +75,8 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetGetEncodingInvalid($encoding)
     {
-        $this->part->setEncoding($encoding);
+        $part = new Attachment('example-file-name.png');
+        $part->setEncoding($encoding);
     }
 
     public function dataSetGetEncodingInvalid()
@@ -62,34 +89,64 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testSetFileGetContent()
+    public function testConstructName()
     {
-        $this->part->setFile($this->testFile);
+        $filename = 'example-file-name.png';
+        $part = new Attachment($filename);
 
-        $expected = file_get_contents($this->testFile);
-        $this->assertEquals($expected, $this->part->getContent());
+        // Need to set disposition, so can check the name appears there too
+        $part->setDisposition('attachment');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
+        $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testGetContentNoFile()
+    public function testSetName()
     {
-        $this->assertEquals(false, $this->part->getContent());
+        $part = new Attachment('original-file-name.png');
+        $filename = 'example-file-name.png';
+        $part->setName($filename);
+
+        // Need to set disposition, so can check the name appears there too
+        $part->setDisposition('attachment');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
+        $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
+    }
+
+    public function testSetDisposition()
+    {
+        $disposition = 'example-disposition';
+        $part = new Attachment('example-file-name.png');
+        $part->setDisposition($disposition);
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertContains("Content-Disposition: {$disposition}", $actual);
+    }
+
+    public function testNoSetDisposition()
+    {
+        $part = new Attachment('example-file-name.png');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertNotContains('Content-Disposition:', $actual);
     }
 
     public function testGetEncodedHeaders()
     {
-        $this->part->setFile($this->testFile);
-        $type     = 'application/octet-stream';
-        $encoding = 'base64';
-        $filename = basename($this->testFile);
+        $filename = 'example-file-name.png';
+        $disposition = 'attachment';
 
-        $expected = "Content-Type: $type; charset=\"UTF-8\"; name=\"$filename\"\r\n"
-            . "Content-Transfer-Encoding: $encoding\r\n"
-            . "Content-Disposition: attachment; filename=\"$filename\"\r\n";
+        $part = new Attachment($filename);
+        $part->setDisposition($disposition);
 
-        $actual = $this->part->getEncodedHeaders();
+        $expected = "Content-Type: application/octet-stream; name=\"{$filename}\"\r\n"
+            . "Content-Transfer-Encoding: base64\r\n"
+            . "Content-Disposition: {$disposition}; filename=\"{$filename}\"\r\n";
+
+        $actual = $part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
     }
 }

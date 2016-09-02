@@ -196,6 +196,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeHeaderValue($encoding, $value, $expected)
     {
+        $this->part->setCharset('UTF-8');
         $this->part->setEncoding($encoding);
         $actual = $this->part->encodeHeaderValue($value);
         $this->assertEquals($expected, $actual);

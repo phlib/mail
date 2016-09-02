@@ -296,6 +296,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $content = 'test content';
         $part = new Content();
         $part->setContent($content);
+        $part->setCharset('UTF-8');
         $this->mail->setPart($part);
         $expectedContent =
             "Content-Type: application/octet-stream; charset=\"UTF-8\"\r\n"

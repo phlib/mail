@@ -12,6 +12,11 @@ class Mail extends AbstractPart
     private $part;
 
     /**
+     * @type string
+     */
+    protected $charset = 'UTF-8';
+
+    /**
      * @var array
      */
     private $prohibitedHeaders = [

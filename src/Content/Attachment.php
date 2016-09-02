@@ -2,6 +2,14 @@
 
 namespace Phlib\Mail\Content;
 
+use Phlib\Mail\Exception\InvalidArgumentException;
+use Phlib\Mail\Exception\RuntimeException;
+
+/**
+ * Attachment class used to represent attachments as Mail content
+ *
+ * @package Phlib\Mail
+ */
 class Attachment extends AbstractContent
 {
     /**
@@ -12,23 +20,48 @@ class Attachment extends AbstractContent
     /**
      * @var string
      */
-    protected $type = 'application/octet-stream';
-
-    /**
-     * @var string
-     */
-    private $filename;
-
-    /**
-     * @var string
-     */
     private $name;
+
+    /**
+     * @var string
+     */
+    private $disposition;
+
+    /**
+     * Create a new Attachment part from a local file
+     *
+     * @param string $filename
+     * @return Attachment
+     */
+    public static function createFromFile($filename)
+    {
+        if (!is_readable($filename)) {
+            throw new InvalidArgumentException('Attachment file cannot be read');
+        }
+
+        $attachment = new self(basename($filename), mime_content_type($filename));
+        $attachment->setContent(file_get_contents($filename));
+
+        return $attachment;
+    }
+
+    /**
+     * Constructor to set immutable values
+     *
+     * @var string $name
+     * @param string $type
+     */
+    public function __construct($name, $type = 'application/octet-stream')
+    {
+        $this->name = $name;
+        $this->type = $type;
+    }
 
     /**
      * Set encoding
      *
      * @param string $encoding
-     * @return \Phlib\Mail\Content\Attachment
+     * @return Attachment
      * @throws \InvalidArgumentException
      */
     public function setEncoding($encoding)
@@ -36,33 +69,34 @@ class Attachment extends AbstractContent
         if ($encoding !== 'base64') {
             throw new \InvalidArgumentException('Will only accept base64 for attachment encoding');
         }
+
         return $this;
     }
 
     /**
-     * Set file
+     * Set attachment name
      *
-     * @param string $filename
-     * @return \Phlib\Mail\Content\Content
+     * @param string $name
+     * @return $this
      */
-    public function setFile($filename)
+    public function setName($name)
     {
-        $this->filename = $filename;
-        $this->name = basename($filename);
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
-     * Get content
+     * Set disposition (eg. inline, attachment)
      *
-     * @return string
+     * @param string $disposition
+     * @return $this
      */
-    public function getContent()
+    public function setDisposition($disposition)
     {
-        if (empty($this->filename)) {
-            throw new \RuntimeException('Filename has not been defined');
-        }
+        $this->disposition = $disposition;
 
-        return file_get_contents($this->filename);
+        return $this;
     }
 
     /**
@@ -73,7 +107,9 @@ class Attachment extends AbstractContent
     public function getEncodedHeaders()
     {
         $headers = parent::getEncodedHeaders();
-        $headers .= "Content-Disposition: attachment; filename=\"{$this->name}\"\r\n";
+        if ($this->disposition) {
+            $headers .= "Content-Disposition: {$this->disposition}; filename=\"{$this->name}\"\r\n";
+        }
 
         return $headers;
     }
@@ -86,9 +122,7 @@ class Attachment extends AbstractContent
      */
     protected function addContentTypeParameters($contentType)
     {
-        if ($this->name) {
-            $contentType .= "; name=\"{$this->name}\"";
-        }
+        $contentType .= "; name=\"{$this->name}\"";
 
         return parent::addContentTypeParameters($contentType);
     }

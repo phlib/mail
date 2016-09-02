@@ -229,13 +229,9 @@ class Factory
         $partData = mailparse_msg_get_part_data($part);
 
         // Create correct Mail part object
-        $type        = false;
-        $disposition = false;
+        $type = false;
         if (array_key_exists('content-type', $partData)) {
             $type = $partData['content-type'];
-        }
-        if (array_key_exists('content-disposition', $partData)) {
-            $disposition = $partData['content-disposition'];
         }
 
         if (stripos($type, 'multipart') === 0) {
@@ -273,12 +269,13 @@ class Factory
             }
         } else {
             // Must be some sort of content, can't be an attachment for the primary part
-            if ($name != '1' && $disposition !== false) {
+            if ($name != '1' && isset($partData['content-name'])) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
-                // Use the original type, as it contains the attachment name
-                $mailPart = new Content\Content($partData['headers']['content-type']);
-                $mailPart->setEncoding('base64');
+                $mailPart = new Content\Attachment($partData['content-name'], $type);
+                if (isset($partData['content-charset'])) {
+                    $mailPart->setCharset($partData['content-charset']);
+                }
             } else {
                 // Basic content
                 switch ($type) {
@@ -289,7 +286,7 @@ class Factory
                         $mailPart = new Content\Text();
                         break;
                     default:
-                        // It's not HTML or text, so we class it as an attachment
+                        // It's not HTML or text, so we count it as an attachment
                         $mail->incrementAttachmentCount();
                         $mailPart = new Content\Content($type);
                         $mailPart->setEncoding($partData['transfer-encoding']);
