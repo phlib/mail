@@ -4,6 +4,11 @@ namespace Phlib\Mail;
 
 abstract class AbstractPart
 {
+    const ENCODING_BASE64     = 'base64';
+    const ENCODING_QPRINTABLE = 'quoted-printable';
+    const ENCODING_7BIT       = '7bit';
+    const ENCODING_8BIT       = '8bit';
+
     /**
      * @var array
      */
@@ -22,16 +27,16 @@ abstract class AbstractPart
      * @var array
      */
     private $validEncodings = [
-        'base64',
-        'quoted-printable',
-        '7bit',
-        '8bit',
+        self::ENCODING_BASE64,
+        self::ENCODING_QPRINTABLE,
+        self::ENCODING_7BIT,
+        self::ENCODING_8BIT,
     ];
 
     /**
      * @var string
      */
-    protected $encoding = 'quoted-printable';
+    protected $encoding = self::ENCODING_QPRINTABLE;
 
     /**
      * @var string
@@ -298,7 +303,7 @@ abstract class AbstractPart
     {
         if (preg_match('/[\x80-\xFF]/', $value)) {
             switch ($this->encoding) {
-                case 'quoted-printable':
+                case self::ENCODING_QPRINTABLE:
                     $prefix = "=?{$this->charset}?Q?";
                     $suffix = '?=';
 
@@ -307,7 +312,7 @@ abstract class AbstractPart
                     $encoded = $prefix . $encoded . $suffix;
                     break;
 
-                case 'base64':
+                case self::ENCODING_BASE64:
                     $prefix = "=?{$this->charset}?B?";
                     $suffix = '?=';
                     $length = 76 - strlen($prefix) - strlen($suffix);
@@ -317,8 +322,8 @@ abstract class AbstractPart
                     $encoded = $prefix . $encoded . $suffix;
                     break;
 
-                case '7bit':
-                case '8bit':
+                case self::ENCODING_7BIT:
+                case self::ENCODING_8BIT:
                 default:
                     return filter_var($value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH);
                     break;

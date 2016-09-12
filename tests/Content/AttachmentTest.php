@@ -2,6 +2,7 @@
 
 namespace Phlib\Tests\Mail\Content;
 
+use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Content\Attachment;
 
 class AttachmentTest extends \PHPUnit_Framework_TestCase
@@ -82,9 +83,9 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     public function dataSetGetEncodingInvalid()
     {
         return [
-            ['quoted-printable'],
-            ['7bit'],
-            ['8bit'],
+            [AbstractPart::ENCODING_QPRINTABLE],
+            [AbstractPart::ENCODING_7BIT],
+            [AbstractPart::ENCODING_8BIT],
             ['invalid-encoding']
         ];
     }

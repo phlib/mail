@@ -2,6 +2,7 @@
 
 namespace Phlib\Tests\Mail\Content;
 
+use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Content\AbstractContent;
 
 class AbstractContentTest extends \PHPUnit_Framework_TestCase
@@ -59,10 +60,10 @@ class AbstractContentTest extends \PHPUnit_Framework_TestCase
             . "line2, high ascii >  <\r\n";
 
         return [
-            ['base64', $value, $b64],
-            ['quoted-printable', $value, $qp],
-            ['7bit', $value, $bit7],
-            ['8bit', $value, $bit8]
+            [AbstractPart::ENCODING_BASE64, $value, $b64],
+            [AbstractPart::ENCODING_QPRINTABLE, $value, $qp],
+            [AbstractPart::ENCODING_7BIT, $value, $bit7],
+            [AbstractPart::ENCODING_8BIT, $value, $bit8]
         ];
     }
 

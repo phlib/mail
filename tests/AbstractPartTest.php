@@ -162,10 +162,10 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
     public function dataSetGetEncodingValid()
     {
         return [
-            ['base64'],
-            ['quoted-printable'],
-            ['7bit'],
-            ['8bit']
+            [AbstractPart::ENCODING_BASE64],
+            [AbstractPart::ENCODING_QPRINTABLE],
+            [AbstractPart::ENCODING_7BIT],
+            [AbstractPart::ENCODING_8BIT]
         ];
     }
 
@@ -219,10 +219,10 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
             . "line2, high ascii >  <\r\n";
 
         return [
-            ['base64', $value, $b64],
-            ['quoted-printable', $value, $qp],
-            ['7bit', $value, $bit7],
-            ['8bit', $value, $bit8]
+            [AbstractPart::ENCODING_BASE64, $value, $b64],
+            [AbstractPart::ENCODING_QPRINTABLE, $value, $qp],
+            [AbstractPart::ENCODING_7BIT, $value, $bit7],
+            [AbstractPart::ENCODING_8BIT, $value, $bit8]
         ];
     }
 
