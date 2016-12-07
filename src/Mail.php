@@ -237,6 +237,7 @@ class Mail extends AbstractPart
      * Set reply to
      *
      * @param string $address
+     * @param string $name
      * @return $this
      * @throws InvalidArgumentException
      */
