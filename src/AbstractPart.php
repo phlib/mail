@@ -2,6 +2,8 @@
 
 namespace Phlib\Mail;
 
+use Phlib\Mail\Exception\InvalidArgumentException;
+
 abstract class AbstractPart
 {
     const ENCODING_BASE64     = 'base64';
@@ -53,16 +55,16 @@ abstract class AbstractPart
      *
      * @param string $name
      * @param string $value
-     * @throws \InvalidArgumentException
      * @return AbstractPart
+     * @throws InvalidArgumentException
      */
     public function addHeader($name, $value)
     {
         $name = strtolower($name);
         if (in_array($name, $this->prohibitedHeaders)) {
-            throw new \InvalidArgumentException("Header name is prohibited ($name)");
+            throw new InvalidArgumentException("Header name is prohibited ($name)");
         } elseif (!preg_match('/^[a-z]+[a-z0-9-]+$/i', $name)) {
-            throw new \InvalidArgumentException("Name doesn't match expected format ($name)");
+            throw new InvalidArgumentException("Name doesn't match expected format ($name)");
         }
 
         $rule = [
@@ -269,12 +271,13 @@ abstract class AbstractPart
      *
      * @param string $encoding
      * @return AbstractPart
+     * @throws InvalidArgumentException
      */
     public function setEncoding($encoding)
     {
         $encoding = strtolower($encoding);
         if (!in_array($encoding, $this->validEncodings)) {
-            throw new \InvalidArgumentException("Invalid encoding '$encoding'");
+            throw new InvalidArgumentException("Invalid encoding '$encoding'");
         }
         $this->encoding = $encoding;
 
