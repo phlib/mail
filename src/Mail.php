@@ -35,22 +35,22 @@ class Mail extends AbstractPart
     /**
      * @var string
      */
-    private $subject    = null;
+    private $subject = null;
 
     /**
      * @var array
      */
-    private $to         = [];
+    private $to = [];
 
     /**
      * @var string
      */
-    private $from       = null;
+    private $from = null;
 
     /**
      * @var array
      */
-    private $cc         = [];
+    private $cc = [];
 
     /**
      * @var string
