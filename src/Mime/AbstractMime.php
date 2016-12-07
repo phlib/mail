@@ -7,7 +7,7 @@ use Phlib\Mail\AbstractPart;
 abstract class AbstractMime extends AbstractPart
 {
     /**
-     * @var \Phlib\Mail\AbstractPart[]
+     * @var AbstractPart[]
      */
     private $parts = array();
 
@@ -20,7 +20,7 @@ abstract class AbstractMime extends AbstractPart
      * Set boundary
      *
      * @param string $boundary
-     * @return \Phlib\Mail\Mime\AbstractMime
+     * @return AbstractMime
      */
     private function setBoundary($boundary)
     {
@@ -41,10 +41,10 @@ abstract class AbstractMime extends AbstractPart
     /**
      * Add part
      *
-     * @param \Phlib\Mail\AbstractPart $part
-     * @return \Phlib\Mail\AbstractPart
+     * @param AbstractPart $part
+     * @return AbstractPart
      */
-    public function addPart(\Phlib\Mail\AbstractPart $part)
+    public function addPart(AbstractPart $part)
     {
         $this->parts[] = $part;
         return $part;
@@ -54,7 +54,7 @@ abstract class AbstractMime extends AbstractPart
      * Set parts
      *
      * @param array $parts
-     * @return \Phlib\Mail\Mime\AbstractMime
+     * @return AbstractMime
      */
     public function setParts(array $parts)
     {
@@ -68,7 +68,7 @@ abstract class AbstractMime extends AbstractPart
     /**
      * Clear parts
      *
-     * @return \Phlib\Mail\Mime\AbstractMime
+     * @return AbstractMime
      */
     public function clearParts()
     {
@@ -79,7 +79,7 @@ abstract class AbstractMime extends AbstractPart
     /**
      * Get parts
      *
-     * @return \Phlib\Mail\AbstractPart[]
+     * @return AbstractPart[]
      */
     public function getParts()
     {
@@ -113,7 +113,7 @@ abstract class AbstractMime extends AbstractPart
     }
 
     /**
-     * Add additional content type parameters to the base value
+     * Add additional content type parameters to the base value.
      *
      * @param string $contentType
      * @return string
