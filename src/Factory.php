@@ -124,10 +124,10 @@ class Factory
     /**
      * Add headers to the Mail object
      *
-     * @param \Phlib\Mail\Mail $mail
+     * @param Mail $mail
      * @param array $headers
      */
-    private function addMailHeaders(\Phlib\Mail\Mail $mail, array $headers)
+    private function addMailHeaders(Mail $mail, array $headers)
     {
         $charset = null;
 
@@ -247,7 +247,6 @@ class Factory
                     break;
                 case 'multipart/report':
                     $mailPart = new Mime\MultipartReport();
-                    $contentType = $type;
                     if (array_key_exists('content-report-type', $partData)) {
                         $mailPart->setReportType($partData['content-report-type']);
                     }
@@ -330,6 +329,7 @@ class Factory
      * @param string $header
      * @param string $toCharset
      * @return array
+     * @throws InvalidArgumentException
      */
     public function decodeHeader($header, $toCharset = null)
     {
@@ -361,7 +361,8 @@ class Factory
      *
      * @see mailparse_rfc822_parse_addresses()
      * @param string $addresses
-     * @return array
+     * @return array 'display', 'address' and 'is_group'
+     * @see mailparse_rfc822_parse_addresses
      */
     public function parseEmailAddresses($addresses)
     {
