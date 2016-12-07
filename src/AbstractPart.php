@@ -19,7 +19,7 @@ abstract class AbstractPart
     /**
      * @var array
      */
-    private $prohibitedHeaders = [
+    protected $prohibitedHeaders = [
         'content-type',
         'content-transfer-encoding',
         'mime-version'
