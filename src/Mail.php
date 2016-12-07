@@ -55,7 +55,7 @@ class Mail extends AbstractPart
     /**
      * @var string
      */
-    private $replyto    = null;
+    private $replyTo = null;
 
     /**
      * @var string
@@ -131,8 +131,8 @@ class Mail extends AbstractPart
             $headers[] = 'Cc: ' . rtrim(implode(",\r\n ", $cc));
         }
 
-        if ($this->replyto) {
-            list($address, $name) = $this->replyto;
+        if ($this->replyTo) {
+            list($address, $name) = $this->replyTo;
             $headers[] = 'Reply-To: ' . $this->formatAddress($address, $name);
         }
 
@@ -248,7 +248,7 @@ class Mail extends AbstractPart
         if ($name) {
             $name = $this->filterName($name);
         }
-        $this->replyto = [
+        $this->replyTo = [
             $address,
             $name
         ];
@@ -262,7 +262,7 @@ class Mail extends AbstractPart
      */
     public function getReplyTo()
     {
-        return $this->replyto;
+        return $this->replyTo;
     }
 
     /**
