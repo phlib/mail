@@ -3,7 +3,6 @@
 namespace Phlib\Mail\Content;
 
 use Phlib\Mail\Exception\InvalidArgumentException;
-use Phlib\Mail\Exception\RuntimeException;
 
 /**
  * Attachment class used to represent attachments as Mail content
