@@ -53,8 +53,8 @@ abstract class AbstractPart
      *
      * @param string $name
      * @param string $value
-     * @return \Phlib\Mail\AbstractPart
      * @throws \InvalidArgumentException
+     * @return AbstractPart
      */
     public function addHeader($name, $value)
     {
@@ -85,8 +85,7 @@ abstract class AbstractPart
      *
      * @param string $name
      * @param string $value
-     * @return \Phlib\Mail\AbstractPart
-     * @throws \InvalidArgumentException
+     * @return AbstractPart
      */
     public function setHeader($name, $value)
     {
@@ -99,7 +98,7 @@ abstract class AbstractPart
     /**
      * Clear headers
      *
-     * @return \Phlib\Mail\AbstractPart
+     * @return AbstractPart
      */
     public function clearHeaders()
     {
@@ -111,7 +110,7 @@ abstract class AbstractPart
      * Clear header
      *
      * @param string $name
-     * @return \Phlib\Mail\AbstractPart
+     * @return AbstractPart
      */
     public function clearHeader($name)
     {
@@ -126,7 +125,7 @@ abstract class AbstractPart
      *
      * @param string $name
      * @param string $value
-     * @return \Phlib\Mail\AbstractPart
+     * @return AbstractPart
      */
     public function removeHeader($name, $value)
     {
@@ -237,12 +236,11 @@ abstract class AbstractPart
      * Set charset
      *
      * @param string $charset
-     * @return \Phlib\Mail\AbstractPart
+     * @return AbstractPart
      */
     public function setCharset($charset)
     {
         $this->charset = $charset;
-
         return $this;
     }
 
@@ -270,7 +268,7 @@ abstract class AbstractPart
      * Set encoding
      *
      * @param string $encoding
-     * @return \Phlib\Mail\AbstractPart
+     * @return AbstractPart
      */
     public function setEncoding($encoding)
     {
