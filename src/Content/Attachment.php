@@ -61,12 +61,12 @@ class Attachment extends AbstractContent
      *
      * @param string $encoding
      * @return Attachment
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setEncoding($encoding)
     {
         if ($encoding !== 'base64') {
-            throw new \InvalidArgumentException('Will only accept base64 for attachment encoding');
+            throw new InvalidArgumentException('Will only accept base64 for attachment encoding');
         }
 
         return $this;

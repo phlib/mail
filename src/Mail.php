@@ -3,6 +3,7 @@
 namespace Phlib\Mail;
 
 use Phlib\Mail\Exception\InvalidArgumentException;
+use Phlib\Mail\Exception\RuntimeException;
 
 class Mail extends AbstractPart
 {
@@ -82,11 +83,12 @@ class Mail extends AbstractPart
      * Get part
      *
      * @return AbstractPart
+     * @throws RuntimeException
      */
     public function getPart()
     {
         if (!$this->part) {
-            throw new \RuntimeException('Missing mail part');
+            throw new RuntimeException('Missing mail part');
         }
         return $this->part;
     }
