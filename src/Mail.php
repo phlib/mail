@@ -60,7 +60,7 @@ class Mail extends AbstractPart
     /**
      * @var string
      */
-    private $returnpath = null;
+    private $returnPath = null;
 
     /**
      * @var int The number of attachments in any of this mail's descendants
@@ -102,8 +102,8 @@ class Mail extends AbstractPart
     {
         $headers = array();
 
-        if ($this->returnpath) {
-            $headers[] = "Return-Path: <$this->returnpath>";
+        if ($this->returnPath) {
+            $headers[] = "Return-Path: <$this->returnPath>";
         }
 
         if ($this->from) {
@@ -297,7 +297,7 @@ class Mail extends AbstractPart
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("Invalid email address ($address)");
         }
-        $this->returnpath = $address;
+        $this->returnPath = $address;
         return $this;
     }
 
@@ -308,7 +308,7 @@ class Mail extends AbstractPart
      */
     public function clearReturnPath()
     {
-        $this->returnpath = null;
+        $this->returnPath = null;
         return $this;
     }
 
@@ -319,7 +319,7 @@ class Mail extends AbstractPart
      */
     public function getReturnPath()
     {
-        return $this->returnpath;
+        return $this->returnPath;
     }
 
     /**
