@@ -15,7 +15,7 @@ abstract class AbstractContent extends AbstractPart
      * Set content
      *
      * @param string $content
-     * @return \Phlib\Mail\Content\AbstractContent
+     * @return AbstractContent
      */
     public function setContent($content)
     {
