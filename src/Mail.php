@@ -20,7 +20,7 @@ class Mail extends AbstractPart
     /**
      * @var array
      */
-    private $prohibitedHeaders = [
+    protected $prohibitedHeaders = [
         'content-type',
         'content-transfer-encoding',
         'mime-version',
