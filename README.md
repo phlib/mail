@@ -18,11 +18,31 @@ $ composer require phlib/mail
 
 ## Usage
 
+### Creating an email
+
 ``` php
 <?php
 use Phlib\Mail;
 
-Factory::createFromString('');
+// from string
+$email = Factory::fromString('... raw email');
+
+// from file
+$email = Factory::fromFile('/path/to/file.eml');
+```
+
+### Working with an email
+
+```php
+
+/** @var Phlib\Mail\Mail $email **/
+$email->getSubject();
+$email->hasHeader('X-Header-Name');
+$email->setReturnPath('return-path@example.com');
+
+// raw email
+$email->toString();
+
 ```
 
 ## License
