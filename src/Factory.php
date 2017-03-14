@@ -8,6 +8,13 @@ use Phlib\Mail\Exception\RuntimeException;
 class Factory
 {
     /**
+     * @var array
+     */
+    private $config = [
+        'skipErrors' => false
+    ];
+
+    /**
      * @var bool
      */
     private $isFile = false;
@@ -26,6 +33,18 @@ class Factory
      * @var array
      */
     private $structure = array();
+
+    /**
+     * Constructor
+     *
+     * @param array $config {
+     *     @var bool $skipErrors Default false
+     * }
+     */
+    public function __construct(array $config = [])
+    {
+        $this->config = array_merge($this->config, $config);
+    }
 
     /**
      * Load email from file
@@ -52,12 +71,13 @@ class Factory
     }
 
     /**
-     * @param $filename
+     * @param string $filename path to file
+     * @param array $config See Constructor
      * @return Mail
      */
-    public static function fromFile($filename)
+    public static function fromFile($filename, array $config = [])
     {
-        return (new self)->createFromFile($filename);
+        return (new self($config))->createFromFile($filename);
     }
 
     /**
@@ -83,12 +103,13 @@ class Factory
     }
 
     /**
-     * @param $source
+     * @param string $source email as string
+     * @param array $config See Constructor
      * @return Mail
      */
-    public static function fromString($source)
+    public static function fromString($source, array $config = [])
     {
-        return (new self)->createFromString($source);
+        return (new self($config))->createFromString($source);
     }
 
     /**
@@ -138,7 +159,14 @@ class Factory
             }
             foreach ($header as $headerEncoded) {
                 // Decode
-                $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
+                try {
+                    $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
+                } catch (InvalidArgumentException $e) {
+                    if ($this->config['skipErrors'] !== false) {
+                        continue;
+                    }
+                    throw $e;
+                }
                 if (is_null($charset) && !is_null($headerDecoded['charset'])) {
                     // Set first discovered charset
                     $charset = $headerDecoded['charset'];
