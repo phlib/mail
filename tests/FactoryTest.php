@@ -115,9 +115,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqMxMDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
 
         $expected = [
-            'toCharset' => 'UTF-8',
-            'fromCharset' => 'UTF-8',
-            'encoding' => 'B',
+            'charset' => 'UTF-8',
             'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
         ];
 
@@ -131,9 +129,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $header = '=?ISO-8859-1?Q?London Olympics: Business Continuity Plan - =C2=A3100 discount today only!?=';
 
         $expected = [
-            'toCharset' => 'ISO-8859-1',
-            'fromCharset' => 'ISO-8859-1',
-            'encoding' => 'Q',
+            'charset' => 'ISO-8859-1',
             'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
         ];
 
@@ -147,9 +143,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $header = 'London Olympics: Business Continuity Plan - =?ISO-8859-1?Q?=C2=A3100?= discount today only!';
 
         $expected = [
-            'toCharset' => 'ISO-8859-1',
-            'fromCharset' => 'ISO-8859-1',
-            'encoding' => 'Q',
+            'charset' => 'ISO-8859-1',
             'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
         ];
 
@@ -164,9 +158,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             . ' =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=';
 
         $expected = [
-            'toCharset' => 'UTF-8',
-            'fromCharset' => 'UTF-8',
-            'encoding' => 'B',
+            'charset' => 'UTF-8',
             'text' => 'London Olympics: Business ContinKeld Jørn Simonsen'
         ];
 
