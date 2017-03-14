@@ -107,6 +107,37 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertContentAttachmentEmailEquals($mail);
     }
 
+    /**
+     * Prevent giving code coverage to the Mail classes
+     * @covers \Phlib\Mail\Factory
+     * @expectedException \Phlib\Mail\Exception\InvalidArgumentException
+     */
+    public function testCreateFromFileBrokenHeader()
+    {
+        $source   = __DIR__ . '/__files/broken_header-source.eml';
+
+        $factory = new Factory();
+        $mail = $factory->createFromFile($source);
+
+        $this->assertBrokenHeaderEmailEquals($mail);
+    }
+
+    /**
+     * Prevent giving code coverage to the Mail classes
+     * @covers \Phlib\Mail\Factory
+     */
+    public function testCreateFromFileBrokenHeaderSkipErrors()
+    {
+        $source   = __DIR__ . '/__files/broken_header-source.eml';
+
+        $factory = new Factory([
+            'skipErrors' => true
+        ]);
+        $mail = $factory->createFromFile($source);
+
+        $this->assertBrokenHeaderEmailEquals($mail);
+    }
+
     public function testDecodeHeaderUtf8Base64()
     {
         $factory = new Factory();
@@ -417,6 +448,24 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
         // Check content
         $expectedContent = __DIR__ . "/__files/content_attachment-expected-html.txt";
+        $expected = file_get_contents($expectedContent);
+        $actual = $primaryPart->encodeContent($primaryPart->getContent());
+        $this->assertEquals($expected, $actual);
+    }
+
+    protected function assertBrokenHeaderEmailEquals(\Phlib\Mail\Mail $mail)
+    {
+        // Check headers
+        $expectedHeaders = __DIR__ . '/__files/broken_header-expected-headers.txt';
+        $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
+
+        // Check parts are constructed as expected
+        /** @var \Phlib\Mail\Mime\MultipartMixed $primaryPart */
+        $primaryPart = $mail->getPart();
+        $this->assertInstanceOf(Html::class, $primaryPart);
+
+        // Check content
+        $expectedContent = __DIR__ . "/__files/broken_header-expected-html.txt";
         $expected = file_get_contents($expectedContent);
         $actual = $primaryPart->encodeContent($primaryPart->getContent());
         $this->assertEquals($expected, $actual);
