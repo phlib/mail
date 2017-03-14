@@ -9,7 +9,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateFromFile()
     {
-        $filename = realpath(__DIR__ . '/../__files/attachments_expected_attch1.txt');
+        $filename = realpath(__DIR__ . '/../__files/attachments-expected-attch1.txt');
         $basename = basename($filename);
         $part = Attachment::createFromFile($filename);
 

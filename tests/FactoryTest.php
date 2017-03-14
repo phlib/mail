@@ -20,7 +20,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromFileAttachments()
     {
-        $source   = __DIR__ . '/__files/attachments_source.eml';
+        $source   = __DIR__ . '/__files/attachments-source.eml';
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -36,7 +36,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromStringAttachments()
     {
-        $source   = __DIR__ . '/__files/attachments_source.eml';
+        $source   = __DIR__ . '/__files/attachments-source.eml';
 
         $factory = new Factory();
         $mail = $factory->createFromString(file_get_contents($source));
@@ -52,7 +52,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromFileBounceHead()
     {
-        $source   = __DIR__ . '/__files/bouncehead_source.eml';
+        $source   = __DIR__ . '/__files/bounce_head-source.eml';
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -68,7 +68,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromFileBounceMsg()
     {
-        $source   = __DIR__ . '/__files/bouncemsg_source.eml';
+        $source   = __DIR__ . '/__files/bounce_msg-source.eml';
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -82,7 +82,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromFileHtml()
     {
-        $source   = __DIR__ . '/__files/html_source.eml';
+        $source   = __DIR__ . '/__files/html-source.eml';
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -99,7 +99,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFromContentAttachment()
     {
-        $source   = __DIR__ . '/__files/contentattachment_source.eml';
+        $source   = __DIR__ . '/__files/content_attachment-source.eml';
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -200,7 +200,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     protected function assertAttachmentsEmailEquals(\Phlib\Mail\Mail $mail)
     {
         // Check headers
-        $expectedHeaders = __DIR__ . '/__files/attachments_expected_headers.txt';
+        $expectedHeaders = __DIR__ . '/__files/attachments-expected-headers.txt';
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
@@ -279,7 +279,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             $part = $details['part'];
 
             // Test part content
-            $expectedContent = __DIR__ . "/__files/attachments_expected_$name.txt";
+            $expectedContent = __DIR__ . "/__files/attachments-expected-$name.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
             $this->assertEquals($expected, $actual, $name);
@@ -308,7 +308,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     protected function assertBounceHeadEmailEquals(\Phlib\Mail\Mail $mail)
     {
         // Check headers
-        $expectedHeaders = __DIR__ . '/__files/bouncehead_expected_headers.txt';
+        $expectedHeaders = __DIR__ . '/__files/bounce_head-expected-headers.txt';
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
@@ -335,7 +335,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $part) {
-            $expectedContent = __DIR__ . "/__files/bouncehead_expected_$name.txt";
+            $expectedContent = __DIR__ . "/__files/bounce_head-expected-$name.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
             $this->assertEquals($expected, $actual, $name);
@@ -345,7 +345,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     protected function assertBounceMsgEmailEquals(\Phlib\Mail\Mail $mail)
     {
         // Check headers
-        $expectedHeaders = __DIR__ . '/__files/bouncemsg_expected_headers.txt';
+        $expectedHeaders = __DIR__ . '/__files/bounce_msg-expected-headers.txt';
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
@@ -379,7 +379,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $part) {
-            $expectedContent = __DIR__ . "/__files/bouncemsg_expected_$name.txt";
+            $expectedContent = __DIR__ . "/__files/bounce_msg-expected-$name.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
             $this->assertEquals($expected, $actual, $name);
@@ -389,7 +389,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     protected function assertHtmlEmailEquals(\Phlib\Mail\Mail $mail)
     {
         // Check headers
-        $expectedHeaders = __DIR__ . '/__files/html_expected_headers.txt';
+        $expectedHeaders = __DIR__ . '/__files/html-expected-headers.txt';
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
@@ -398,7 +398,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Html::class, $primaryPart);
 
         // Check content
-        $expectedContent = __DIR__ . "/__files/html_expected_html.txt";
+        $expectedContent = __DIR__ . "/__files/html-expected-html.txt";
         $expected = file_get_contents($expectedContent);
         $actual = $primaryPart->encodeContent($primaryPart->getContent());
         $this->assertEquals($expected, $actual);
@@ -407,7 +407,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     protected function assertContentAttachmentEmailEquals(\Phlib\Mail\Mail $mail)
     {
         // Check headers
-        $expectedHeaders = __DIR__ . '/__files/contentattachment_expected_headers.txt';
+        $expectedHeaders = __DIR__ . '/__files/content_attachment-expected-headers.txt';
         $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
 
         // Check parts are constructed as expected
@@ -416,7 +416,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Html::class, $primaryPart);
 
         // Check content
-        $expectedContent = __DIR__ . "/__files/contentattachment_expected_html.txt";
+        $expectedContent = __DIR__ . "/__files/content_attachment-expected-html.txt";
         $expected = file_get_contents($expectedContent);
         $actual = $primaryPart->encodeContent($primaryPart->getContent());
         $this->assertEquals($expected, $actual);
