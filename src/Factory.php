@@ -139,9 +139,9 @@ class Factory
             foreach ($header as $headerEncoded) {
                 // Decode
                 $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
-                if (is_null($charset) && !is_null($headerDecoded['fromCharset'])) {
+                if (is_null($charset) && !is_null($headerDecoded['charset'])) {
                     // Set first discovered charset
-                    $charset = $headerDecoded['fromCharset'];
+                    $charset = $headerDecoded['charset'];
                     $mail->setCharset($charset);
                 }
                 $headerText = $headerDecoded['text'];
@@ -318,42 +318,32 @@ class Factory
     }
 
     /**
+     * Decode header
      *
-     * array(
-     *   'fromCharset' => string,
-     *   'toCharset' => string,
-     *   'encoding' => string,
-     *   'text' => string // decoded header
-     * )
-     *
-     * @param string $header
-     * @param string $toCharset
-     * @return array
+     * @param string $header Encoded header
+     * @param string $charset Target charset. Optional. Default will use source charset where available.
+     * @return array {
+     *     @var string $text    Decoded header
+     *     @var string $charset Charset of the decoded header
+     * }
      * @throws InvalidArgumentException
      */
-    public function decodeHeader($header, $toCharset = null)
+    public function decodeHeader($header, $charset = null)
     {
-        $result = [
-            'fromCharset' => null,
-            'toCharset' => null,
-            'encoding' => null,
-            'text' => $header
-        ];
-
         if (preg_match('/=\?([^\?]+)\?([^\?])\?[^\?]+\?=/', $header, $matches) > 0) {
-            $result['fromCharset'] = $matches[1];
-            $result['encoding'] = $matches[2];
-            if (is_null($toCharset)) {
-                $toCharset = $matches[1];
+            if ($charset === null) {
+                $charset = $matches[1];
             }
-            $result['toCharset'] = $toCharset;
-            $result['text'] = @iconv_mime_decode($header, 0, $toCharset);
-            if ($result['text'] === false) {
+            $header = @iconv_mime_decode($header, 0, $charset);
+            if ($header === false) {
                 throw new InvalidArgumentException('Failed to decode header, header is not valid.');
             }
         }
 
-        return $result;
+        return [
+            'charset' => $charset,
+            'text' => $header
+        ];
     }
 
     /**
