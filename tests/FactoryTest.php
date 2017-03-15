@@ -126,7 +126,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $factory = new Factory();
 
-        $header = '=?ISO-8859-1?Q?London Olympics: Business Continuity Plan - =C2=A3100 discount today only!?=';
+        $header = '=?ISO-8859-1?Q?London Olympics: Business Continuity Plan - =A3100 discount today only!?=';
 
         $expected = [
             'charset' => 'ISO-8859-1',
@@ -140,7 +140,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $factory = new Factory();
 
-        $header = 'London Olympics: Business Continuity Plan - =?ISO-8859-1?Q?=C2=A3100?= discount today only!';
+        $header = 'London Olympics: Business Continuity Plan - =?ISO-8859-1?Q?=A3100?= discount today only!';
 
         $expected = [
             'charset' => 'ISO-8859-1',
@@ -165,14 +165,15 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $factory->decodeHeader($header));
     }
 
-    /**
-     * @expectedException \Phlib\Mail\Exception\InvalidArgumentException
-     */
-    public function testDecodeHeaderFailure()
+    public function testDecodeBrokenHeader()
     {
         $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?=' . "\r\n"
             . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqPhlibDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
-        (new Factory())->decodeHeader($header);
+        $decoded = (new Factory())->decodeHeader($header);
+        $this->assertEquals('UTF-8', $decoded['charset']);
+        // test that we can at least show something if the encoded word is malformed (RFC 2047 section 6.3)
+        $this->assertStringStartsWith('London Olympics: Business Contin', $decoded['text']);
+
     }
 
     public function testParseEmailAddresses()

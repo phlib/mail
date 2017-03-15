@@ -335,10 +335,13 @@ class Factory
             if ($charset === null) {
                 $charset = $matches[1];
             }
-            $header = @iconv_mime_decode($header, 0, $charset);
-            if ($header === false) {
-                throw new InvalidArgumentException('Failed to decode header, header is not valid.');
-            }
+
+            // Workaround for https://bugs.php.net/bug.php?id=68821
+            $header = preg_replace_callback('/(=\?[^\?]+\?Q\?)([^\?]+)(\?=)/i', function($matches) {
+                return $matches[1] . str_replace('_', '=20', $matches[2]) . $matches[3];
+            }, $header);
+
+            $header = mb_decode_mimeheader($header);
         }
 
         return [
