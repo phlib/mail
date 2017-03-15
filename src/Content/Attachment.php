@@ -30,15 +30,16 @@ class Attachment extends AbstractContent
      * Create a new Attachment part from a local file
      *
      * @param string $filename
+     * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
      * @return Attachment
      */
-    public static function createFromFile($filename)
+    public static function createFromFile($filename, $disposition = null)
     {
         if (!is_readable($filename)) {
             throw new InvalidArgumentException('Attachment file cannot be read');
         }
 
-        $attachment = new self(basename($filename), mime_content_type($filename));
+        $attachment = new self(basename($filename), $disposition, mime_content_type($filename));
         $attachment->setContent(file_get_contents($filename));
 
         return $attachment;
@@ -47,13 +48,18 @@ class Attachment extends AbstractContent
     /**
      * Constructor to set immutable values
      *
-     * @var string $name
+     * @param string $name
+     * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
      * @param string $type
      */
-    public function __construct($name, $type = 'application/octet-stream')
+    public function __construct($name, $disposition = null, $type = 'application/octet-stream')
     {
         $this->name = $name;
+        $this->disposition = $disposition;
         $this->type = $type;
+
+        // Existing disposition headers are not allowed, as disposition must be defined in construct
+        $this->prohibitedHeaders[] = 'content-disposition';
     }
 
     /**
@@ -73,32 +79,6 @@ class Attachment extends AbstractContent
     }
 
     /**
-     * Set attachment name
-     *
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Set disposition (eg. inline, attachment)
-     *
-     * @param string $disposition
-     * @return $this
-     */
-    public function setDisposition($disposition)
-    {
-        $this->disposition = $disposition;
-
-        return $this;
-    }
-
-    /**
      * Get encoded headers
      *
      * @return string
@@ -107,6 +87,7 @@ class Attachment extends AbstractContent
     {
         $headers = parent::getEncodedHeaders();
         if ($this->disposition) {
+            // RFC 2183
             $headers .= "Content-Disposition: {$this->disposition}; filename=\"{$this->name}\"\r\n";
         }
 

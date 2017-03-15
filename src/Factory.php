@@ -271,7 +271,8 @@ class Factory
             if ($name != '1' && isset($partData['content-name'])) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
-                $mailPart = new Content\Attachment($partData['content-name'], $type);
+                $disposition = isset($partData['content-disposition']) ? $partData['content-disposition'] : null;
+                $mailPart = new Content\Attachment($partData['content-name'], $disposition, $type);
                 if (isset($partData['content-charset'])) {
                     $mailPart->setCharset($partData['content-charset']);
                 }

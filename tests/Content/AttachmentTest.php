@@ -11,7 +11,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     {
         $filename = realpath(__DIR__ . '/../__files/attachments-expected-attch1.txt');
         $basename = basename($filename);
-        $part = Attachment::createFromFile($filename);
+        $part = Attachment::createFromFile($filename, 'attachment');
 
         // Type
         $expectedType = 'text/plain';
@@ -25,8 +25,6 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         $expected = "Content-Type: {$expectedType}; name=\"{$basename}\"\r\n"
                     . "Content-Transfer-Encoding: base64\r\n"
                     . "Content-Disposition: attachment; filename=\"{$basename}\"\r\n";
-        // Need to set disposition, so can check the name appears there too
-        $part->setDisposition('attachment');
 
         $actual = $part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -50,7 +48,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
     public function testSetGetType()
     {
         $type = 'text/plain';
-        $part = new Attachment('example-file-name.png', $type);
+        $part = new Attachment('example-file-name.png', null, $type);
         $this->assertEquals($type, $part->getType());
     }
 
@@ -90,46 +88,28 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testConstructName()
+    public function testConstructNameDisposition()
     {
         $filename = 'example-file-name.png';
-        $part = new Attachment($filename);
-
-        // Need to set disposition, so can check the name appears there too
-        $part->setDisposition('attachment');
+        $disposition = 'attachment';
+        $part = new Attachment($filename, $disposition, 'application/octet-stream');
 
         $actual = $part->getEncodedHeaders();
         $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
-        $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
+        $this->assertRegExp("/Content-Disposition: {$disposition}; filename=\"{$filename}\"/", $actual);
     }
 
-    public function testSetName()
-    {
-        $part = new Attachment('original-file-name.png');
-        $filename = 'example-file-name.png';
-        $part->setName($filename);
-
-        // Need to set disposition, so can check the name appears there too
-        $part->setDisposition('attachment');
-
-        $actual = $part->getEncodedHeaders();
-        $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
-        $this->assertRegExp("/Content-Disposition: [^;]+; filename=\"{$filename}\"/", $actual);
-    }
-
-    public function testSetDisposition()
-    {
-        $disposition = 'example-disposition';
-        $part = new Attachment('example-file-name.png');
-        $part->setDisposition($disposition);
-
-        $actual = $part->getEncodedHeaders();
-        $this->assertContains("Content-Disposition: {$disposition}", $actual);
-    }
-
-    public function testNoSetDisposition()
+    public function testNoDispositionDefault()
     {
         $part = new Attachment('example-file-name.png');
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertNotContains('Content-Disposition:', $actual);
+    }
+
+    public function testNoDispositionNull()
+    {
+        $part = new Attachment('example-file-name.png', null);
 
         $actual = $part->getEncodedHeaders();
         $this->assertNotContains('Content-Disposition:', $actual);
@@ -140,8 +120,7 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         $filename = 'example-file-name.png';
         $disposition = 'attachment';
 
-        $part = new Attachment($filename);
-        $part->setDisposition($disposition);
+        $part = new Attachment($filename, $disposition);
 
         $expected = "Content-Type: application/octet-stream; name=\"{$filename}\"\r\n"
             . "Content-Transfer-Encoding: base64\r\n"

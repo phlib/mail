@@ -295,7 +295,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
                 $this->assertContains($contentType, $partHeaders);
                 if ($details['disposition'] === true) {
                     $this->assertContains(
-                        'Content-Disposition: attachment; filename=' . $details['name'],
+                        'Content-Disposition: attachment; filename="' . $details['name'] . '"',
                         $partHeaders
                     );
                 } else {
