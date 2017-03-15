@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Add encoding for address headers (To, Cc, Reply-To) which was lost in 2.0.0
 
 ## [2.0.0]
 ### Added
