@@ -28,6 +28,7 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
+        "ext-iconv" : "*",
         "phpunit/phpunit": "~4.4"
     },
     "autoload": {
