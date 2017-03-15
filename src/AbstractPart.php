@@ -197,7 +197,7 @@ abstract class AbstractPart
         foreach ($this->headers as $name => $values) {
             foreach ($values as $value) {
                 $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
-                $headers[] = "$name: " . $this->encodeHeaderValue($value);
+                $headers[] = $this->encodeHeader("$name: $value");
             }
         }
 
@@ -295,45 +295,18 @@ abstract class AbstractPart
     }
 
     /**
-     * Encode header value
+     * Encode header
      *
-     * @param string $value
+     * @param string $header
      * @return string
      */
-    public function encodeHeaderValue($value)
+    public function encodeHeader($header)
     {
-        if (preg_match('/[\x80-\xFF]/', $value)) {
-            switch ($this->encoding) {
-                case self::ENCODING_QPRINTABLE:
-                    $prefix = "=?{$this->charset}?Q?";
-                    $suffix = '?=';
-
-                    $encoded = rtrim(quoted_printable_encode($value));
-                    $encoded = str_replace("\r\n", "$suffix\r\n $prefix", $encoded);
-                    $encoded = $prefix . $encoded . $suffix;
-                    break;
-
-                case self::ENCODING_BASE64:
-                    $prefix = "=?{$this->charset}?B?";
-                    $suffix = '?=';
-                    $length = 76 - strlen($prefix) - strlen($suffix);
-
-                    $encoded = rtrim(chunk_split(base64_encode($value), $length, "\r\n"));
-                    $encoded = str_replace("\r\n", "$suffix\r\n $prefix", $encoded);
-                    $encoded = $prefix . $encoded . $suffix;
-                    break;
-
-                case self::ENCODING_7BIT:
-                case self::ENCODING_8BIT:
-                default:
-                    return filter_var($value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH);
-                    break;
-            }
-        } else {
-            $encoded = $value;
+        $charset = $this->charset;
+        if (!$charset) {
+            $charset = mb_internal_encoding();
         }
-
-        return $encoded;
+        return mb_encode_mimeheader($header, $charset);
     }
 
     /**

@@ -191,39 +191,15 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($type, $this->part->getType());
     }
 
-    /**
-     * @dataProvider dataEncodeHeaderValue
-     */
-    public function testEncodeHeaderValue($encoding, $value, $expected)
+    public function testEncodeHeader()
     {
+        $value    = "line1\r\nline2, high ascii > é <\r\n";
+        $header   = "Subject: $value";
+        $expected = "Subject: =?UTF-8?B?" . base64_encode($value) . "?=";
+
         $this->part->setCharset('UTF-8');
-        $this->part->setEncoding($encoding);
-        $actual = $this->part->encodeHeaderValue($value);
+        $actual = $this->part->encodeHeader($header);
         $this->assertEquals($expected, $actual);
-    }
-
-    public function dataEncodeHeaderValue()
-    {
-        $value = "line1\r\n"
-            . "line2, high ascii > é <\r\n";
-
-        $b64 = "=?UTF-8?B?" . base64_encode($value) . "?=";
-
-        $qp = "=?UTF-8?Q?line1?=\r\n"
-            . " =?UTF-8?Q?line2, high ascii > =C3=A9 <?=";
-
-        $bit7 = "line1\r\n"
-            . "line2, high ascii >  <\r\n";
-
-        $bit8 = "line1\r\n"
-            . "line2, high ascii >  <\r\n";
-
-        return [
-            [AbstractPart::ENCODING_BASE64, $value, $b64],
-            [AbstractPart::ENCODING_QPRINTABLE, $value, $qp],
-            [AbstractPart::ENCODING_7BIT, $value, $bit7],
-            [AbstractPart::ENCODING_8BIT, $value, $bit8]
-        ];
     }
 
     /**

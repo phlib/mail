@@ -108,11 +108,11 @@ class Mail extends AbstractPart
 
         if ($this->from) {
             list($address, $name) = $this->from;
-            $headers[] = 'From: ' . $this->formatAddress($address, $name);
+            $headers[] = $this->encodeHeader('From: ' . $this->formatAddress($address, $name));
         }
 
         if ($this->subject) {
-            $headers[] = 'Subject: ' . $this->encodeHeaderValue($this->subject);
+            $headers[] = $this->encodeHeader('Subject: ' . $this->subject);
         }
 
         if (!empty($this->to)) {
@@ -391,11 +391,10 @@ class Mail extends AbstractPart
             return $address;
         }
 
-        $encodedName = $this->encodeHeaderValue($name);
-        if ($encodedName === $name and strpos($name, ',') !== false) {
-            return "\"$encodedName\" <$address>";
+        if (strpos($name, ',') !== false) {
+            return "\"$name\" <$address>";
         } else {
-            return "$encodedName <$address>";
+            return "$name <$address>";
         }
     }
 
