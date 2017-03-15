@@ -63,9 +63,11 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->mail->setPart($part);
 
         $expected = $this->addHeaders();
-        $expected .= "MIME-Version: 1.0\r\n";
+        $expected['MIME-Version'] = '1.0';
 
-        $this->assertEquals($expected, $this->mail->getEncodedHeaders());
+        var_dump($this->mail->getEncodedHeaders());
+
+        $this->assertEquals($expected, iconv_mime_decode_headers($this->mail->getEncodedHeaders()));
     }
 
     /**
@@ -292,42 +294,46 @@ class MailTest extends \PHPUnit_Framework_TestCase
     public function testToString()
     {
         $expectedHeaders = $this->addHeaders();
+        $expectedHeaders['Content-Type'] = 'application/octet-stream; charset="UTF-8"';
+        $expectedHeaders['Content-Transfer-Encoding'] = 'quoted-printable';
 
         $content = 'test content';
         $part = new Content();
         $part->setContent($content);
         $part->setCharset('UTF-8');
         $this->mail->setPart($part);
-        $expectedContent =
-            "Content-Type: application/octet-stream; charset=\"UTF-8\"\r\n"
-            . "Content-Transfer-Encoding: quoted-printable\r\n"
-            . "\r\n"
-            . $content;
 
-        $expected = $expectedHeaders . $expectedContent;
-        $this->assertEquals($expected, $this->mail->toString());
+        $actual = $this->mail->toString();
+        list($actualHeaders, $actualContent) = explode("\r\n\r\n", $actual, 2);
+
+        $this->assertEquals($expectedHeaders, iconv_mime_decode_headers($actualHeaders));
+        $this->assertEquals($content, $actualContent);
     }
 
     /**
      * Add headers to the mail object and return the expected header string
      *
-     * @return string
+     * @return array
      */
     protected function addHeaders()
     {
         $this->mail->setReturnPath('return-path@example.com');
-        $this->mail->setFrom('from@example.com');
+        $this->mail->setFrom('from@example.com', "From Alias \xf0\x9f\x93\xa7 envelope");
         $this->mail->setSubject('subject line');
-        $this->mail->addTo('to@example.com');
+        $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
+        $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
         $this->mail->setReplyTo('reply-to@example.com');
 
-        $expected = "Return-Path: <return-path@example.com>\r\n"
-            . "From: from@example.com\r\n"
-            . "Subject: subject line\r\n"
-            . "To: to@example.com\r\n"
-            . "Cc: cc@example.com\r\n"
-            . "Reply-To: reply-to@example.com\r\n";
+        $expected = [
+            "Return-Path" => "<return-path@example.com>",
+            "From" => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
+            "Subject" => "subject line",
+            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>,\r\n" .
+                " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
+            "Cc" => "cc@example.com",
+            "Reply-To" => "reply-to@example.com"
+        ];
 
         return $expected;
     }
