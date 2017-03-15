@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - **BC break**: Simplified result array for `Factory::decodeHeader()` to just
   contain the charset of the resulting string
+- **BC break**: Added *disposition* as a constructor argument for `Attachment`
+### Removed
+- **BC break**: Removed `Attachment::setName()` and
+  `Attachment::setDisposition()` to make the related parameters immutable
 
 ## [1.0.0] - 2017-02-07
 ### Added
