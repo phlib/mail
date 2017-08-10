@@ -6,6 +6,8 @@ matrix:
       env: EXT_MAILPARSE_VER="-f mailparse-2.1.6"
     - php: 7.0
       env: EXT_MAILPARSE_VER="mailparse"
+    - php: 7.1
+      env: EXT_MAILPARSE_VER="mailparse"
 
 before_script:
   - pecl channel-update pecl.php.net
