@@ -6,15 +6,24 @@ use Phlib\Mail\Content\Attachment;
 use Phlib\Mail\Content\Content;
 use Phlib\Mail\Content\Html;
 use Phlib\Mail\Content\Text;
+use Phlib\Mail\Exception\RuntimeException;
 use Phlib\Mail\Factory;
 use Phlib\Mail\Mime\AbstractMime;
 use Phlib\Mail\Mime\MultipartAlternative;
 use Phlib\Mail\Mime\MultipartMixed;
 use Phlib\Mail\Mime\MultipartRelated;
 use Phlib\Mail\Mime\MultipartReport;
+use phpmock\phpunit\PHPMock;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
+    use PHPMock;
+
+    public function setUp()
+    {
+        $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
+    }
+
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
@@ -211,6 +220,24 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $mainPart = $mail->getPart();
 
         $this->assertEquals(9, count($mainPart->getParts()));
+    }
+
+    public function testGetPartFail()
+    {
+        $warningMsg = 'Couldn\'t get the part';
+
+        $this->setExpectedException(RuntimeException::class, $warningMsg);
+
+        $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
+        $mailparse_msg_get_part->expects($this->once())
+            ->willReturnCallback(function() use ($warningMsg) {
+                trigger_error($warningMsg, E_USER_WARNING);
+                return false;
+            });
+
+        $source   = __DIR__ . '/__files/bounce_msg-source.eml';
+
+        (new Factory())->createFromFile($source);
     }
 
     protected function assertAttachmentsEmailEquals(\Phlib\Mail\Mail $mail)

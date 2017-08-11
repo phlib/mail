@@ -29,7 +29,8 @@
     },
     "require-dev": {
         "ext-iconv" : "*",
-        "phpunit/phpunit": "~4.4"
+        "phpunit/phpunit": "~4.4",
+        "php-mock/php-mock-phpunit": "^1.1"
     },
     "autoload": {
         "psr-4": {
