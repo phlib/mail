@@ -65,8 +65,6 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $expected = $this->addHeaders();
         $expected['MIME-Version'] = '1.0';
 
-        var_dump($this->mail->getEncodedHeaders());
-
         $this->assertEquals($expected, iconv_mime_decode_headers($this->mail->getEncodedHeaders()));
     }
 
