@@ -43,7 +43,7 @@ class Factory
             throw new RuntimeException("Filename '{$this->source}' cannot be found");
         }
 
-        $result = $this->mimeMail = mailparse_msg_parse_file($this->source);
+        $result = $this->mimeMail = @mailparse_msg_parse_file($this->source);
         if ($result === false) {
             throw new RuntimeException("Email could not be read");
         }
@@ -73,7 +73,7 @@ class Factory
         $this->isFile = false;
 
         $this->mimeMail = mailparse_msg_create();
-        $result = mailparse_msg_parse($this->mimeMail, $this->source);
+        $result = @mailparse_msg_parse($this->mimeMail, $this->source);
 
         if ($result === false) {
             throw new RuntimeException("Email could not be read");
@@ -101,14 +101,14 @@ class Factory
         $mail = new Mail();
 
         // Headers and meta info
-        $mimeData = mailparse_msg_get_part_data($this->mimeMail);
+        $mimeData = @mailparse_msg_get_part_data($this->mimeMail);
         if ($mimeData === false || empty($mimeData)) {
             throw new RuntimeException("Email headers could not be read");
         }
         $this->addMailHeaders($mail, $mimeData['headers']);
 
         // Names of parts
-        $this->structure = mailparse_msg_get_structure($this->mimeMail);
+        $this->structure = @mailparse_msg_get_structure($this->mimeMail);
         if ($this->structure === false || empty($this->structure)) {
             throw new RuntimeException("Email structure could not be read");
         }
@@ -225,8 +225,12 @@ class Factory
     private function parsePart($name, Mail $mail)
     {
         // Get part resource
-        $part = mailparse_msg_get_part($this->mimeMail, $name);
-        $partData = mailparse_msg_get_part_data($part);
+        if (($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
+            ($partData = @mailparse_msg_get_part_data($part)) === false
+        ) {
+            $error = error_get_last();
+            throw new RuntimeException("Unable to parse part $name: {$error['message']}");
+        }
 
         // Create correct Mail part object
         $type = false;
@@ -296,9 +300,9 @@ class Factory
             }
 
             if ($this->isFile) {
-                $content = mailparse_msg_extract_part_file($part, $this->source, null);
+                $content = @mailparse_msg_extract_part_file($part, $this->source, null);
             } else {
-                $content = mailparse_msg_extract_part($part, $this->source, null);
+                $content = @mailparse_msg_extract_part($part, $this->source, null);
             }
 
             if ($content === false) {
