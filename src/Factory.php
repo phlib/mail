@@ -259,7 +259,7 @@ class Factory
             // This part should have children
             $childId = 1;
             // Check if the next part matches the expected child name
-            while (in_array("$name.$childId", $this->structure)) {
+            while (in_array("$name.$childId", $this->structure, true)) {
                 $child = $this->parsePart("$name.$childId", $mail);
                 $mailPart->addPart($child);
 

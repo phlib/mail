@@ -7,6 +7,7 @@ use Phlib\Mail\Content\Content;
 use Phlib\Mail\Content\Html;
 use Phlib\Mail\Content\Text;
 use Phlib\Mail\Factory;
+use Phlib\Mail\Mime\AbstractMime;
 use Phlib\Mail\Mime\MultipartAlternative;
 use Phlib\Mail\Mime\MultipartMixed;
 use Phlib\Mail\Mime\MultipartRelated;
@@ -196,6 +197,25 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertEquals($expected, $factory->parseEmailAddresses($addresses));
+    }
+
+    /**
+     * Tests for an issue (#10) where the Factory was incorrectly handling emails with 9 child parts, as it would
+     * incorrectly try to parse a 10th part (e.g. "1.10") because of non-strict checking for the value "1.10" in the
+     * structure array containing a value "1.1"
+     */
+    public function testNineChildParts()
+    {
+        $source   = __DIR__ . '/__files/mime-9-parts-source.eml';
+
+        $factory = new Factory();
+
+        $mail = $factory->createFromFile($source);
+
+        /** @var AbstractMime $mainPart */
+        $mainPart = $mail->getPart();
+
+        $this->assertEquals(9, count($mainPart->getParts()));
     }
 
     protected function assertAttachmentsEmailEquals(\Phlib\Mail\Mail $mail)
