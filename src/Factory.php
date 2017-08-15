@@ -227,7 +227,7 @@ class Factory
         // Get part resource
         if (($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
             ($partData = @mailparse_msg_get_part_data($part)) === false
-       ) {
+        ) {
             $error = error_get_last();
             throw new RuntimeException("Unable to parse part $name: {$error['message']}");
         }
