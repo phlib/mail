@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.2]
+### Fixed
+- Correctly handle emails with 9 mime sub-parts (issue #10)
+
 ## [2.0.1]
 ### Fixed
 - Add encoding for address headers (To, Cc, Reply-To) which was lost in 2.0.0
