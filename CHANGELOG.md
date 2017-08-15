@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.3]
+### Changed
+- Ensure all calls to mailparse functions are silenced for warnings, and handle false returns
+
 ## [2.0.2]
 ### Fixed
 - Correctly handle emails with 9 mime sub-parts (issue #10)
