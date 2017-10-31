@@ -231,7 +231,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $warningMsg = 'Couldn\'t get the part';
 
-        $this->setExpectedException(RuntimeException::class, $warningMsg);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($warningMsg);
 
         $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
         $mailparse_msg_get_part->expects($this->once())

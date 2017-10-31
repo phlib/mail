@@ -4,6 +4,7 @@ namespace Phlib\Tests\Mail\Content;
 
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Content\Attachment;
+use Phlib\Mail\Exception\InvalidArgumentException;
 
 class AttachmentTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,12 +31,11 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @expectedException \Phlib\Mail\Exception\InvalidArgumentException
-     * @expectedExceptionMessage file cannot be read
-     */
     public function testCreateFromFileInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('file cannot be read');
+
         Attachment::createFromFile('path/to/invalid/file.txt');
     }
 
@@ -70,10 +70,10 @@ class AttachmentTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataSetGetEncodingInvalid
-     * @expectedException \InvalidArgumentException
      */
     public function testSetGetEncodingInvalid($encoding)
     {
+        $this->expectException(InvalidArgumentException::class);
         $part = new Attachment('example-file-name.png');
         $part->setEncoding($encoding);
     }

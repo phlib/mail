@@ -3,6 +3,8 @@
 namespace Phlib\Tests\Mail;
 
 use Phlib\Mail\Content\Content;
+use Phlib\Mail\Exception\InvalidArgumentException;
+use Phlib\Mail\Exception\RuntimeException;
 use Phlib\Mail\Mail;
 use Phlib\Mail\Mime\Mime;
 
@@ -34,11 +36,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($part, $this->mail->getPart());
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testGetPartNotSet()
     {
+        $this->expectException(RuntimeException::class);
         $this->mail->getPart();
     }
 
@@ -68,11 +68,10 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, iconv_mime_decode_headers($this->mail->getEncodedHeaders()));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testGetEncodedHeadersNotSet()
     {
+        $this->expectException(RuntimeException::class);
+
         $expected = "";
         $this->assertEquals($expected, $this->mail->getEncodedHeaders());
     }
@@ -90,11 +89,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->mail->getTo());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAddToInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->mail->addTo('invalid address');
     }
 
@@ -122,11 +119,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->mail->getCc());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAddCcInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->mail->addCc('invalid address');
     }
 
@@ -152,11 +147,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->mail->getReplyTo());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetReplyToInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->mail->setReplyTo('invalid address');
     }
 
@@ -168,11 +161,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($address, $this->mail->getReturnPath());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetReturnPathInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->mail->setReturnPath('invalid address');
     }
 
@@ -197,11 +188,9 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($data, $this->mail->getFrom());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetFromInvalid()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->mail->setFrom('invalid address');
     }
 
