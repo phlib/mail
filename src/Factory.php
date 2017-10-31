@@ -52,7 +52,7 @@ class Factory
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @return Mail
      */
     public static function fromFile($filename)
@@ -83,7 +83,7 @@ class Factory
     }
 
     /**
-     * @param $source
+     * @param string $source
      * @return Mail
      */
     public static function fromString($source)
@@ -94,6 +94,7 @@ class Factory
     /**
      * Parse the email
      *
+     * @return Mail
      * @throws RuntimeException
      */
     private function parseEmail()
@@ -126,6 +127,7 @@ class Factory
      *
      * @param Mail $mail
      * @param array $headers
+     * @return void
      */
     private function addMailHeaders(Mail $mail, array $headers)
     {
@@ -191,6 +193,7 @@ class Factory
      *
      * @param AbstractPart $part
      * @param array $headers
+     * @return void
      */
     private function addHeaders(AbstractPart $part, array $headers)
     {
