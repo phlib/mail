@@ -44,6 +44,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Content\Content<extended>
      */
     public function testGetEncodedHeaders()
     {
@@ -56,6 +57,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Mime\Mime<extended>
      */
     public function testGetEncodedHeadersWithData()
     {
@@ -277,6 +279,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Content\Content<extended>
      */
     public function testToString()
     {
