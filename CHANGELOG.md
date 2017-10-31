@@ -5,9 +5,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Free internal Mailparse resources once the email has been parsed. This should
+help PHP to free up memory.
 ### Changed
 - Clarify the return type for the following `Mail` methods to show they can be
-null if not set: `getFrom()`, `getReplyTo()`, `getReturnPath()`, `getSubject()` 
+null if not set: `getFrom()`, `getReplyTo()`, `getReturnPath()`, `getSubject()`
+### Deprecated
+- `Factory::decodeHeader()` and `Factory::parseEmailAddresses()` should not have
+originally formed part of the public API, and will be removed in the next major
+version 
+- `Factory::fromFile()` and `Factory::fromString()` static methods will be
+removed in the next major version. Instead use `createFromFile()` and
+`createFromString()` to avoid statics and allow for the Factory to be used in
+dependency injection. 
 
 ## [2.0.3]
 ### Changed
