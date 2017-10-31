@@ -1,6 +1,6 @@
 <?php
 
-namespace Phlib\Tests\Mail\Content;
+namespace Phlib\Mail\Tests\Content;
 
 use Phlib\Mail\Content\Content;
 

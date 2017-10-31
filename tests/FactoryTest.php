@@ -1,6 +1,6 @@
 <?php
 
-namespace Phlib\Tests\Mail;
+namespace Phlib\Mail\Tests;
 
 use Phlib\Mail\Content\Attachment;
 use Phlib\Mail\Content\Content;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Phlib\Tests\Mail\Mime;
+namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\MultipartRelated;
 

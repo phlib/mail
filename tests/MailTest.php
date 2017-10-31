@@ -1,6 +1,6 @@
 <?php
 
-namespace Phlib\Tests\Mail;
+namespace Phlib\Mail\Tests;
 
 use Phlib\Mail\Content\Content;
 use Phlib\Mail\Exception\InvalidArgumentException;
