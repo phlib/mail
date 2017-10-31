@@ -51,6 +51,16 @@ class Parser
     }
 
     /**
+     * Free the Mailparse MIME mail resource
+     */
+    public function __destruct()
+    {
+        if (is_resource($this->mimeMail)) {
+            mailparse_msg_free($this->mimeMail);
+        }
+    }
+
+    /**
      * Parse the email
      *
      * @return Mail
