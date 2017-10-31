@@ -232,7 +232,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
     {
         $address = 'dummy@example.com';
         $name = 'Address Alias';
-        $expected = "$name <$address>";
+        $expected = "{$name} <{$address}>";
         $actual = $this->mail->formatAddress($address, $name);
 
         $this->assertEquals($expected, $actual);
@@ -245,7 +245,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
     {
         $address = 'dummy@example.com';
         $name = 'Address,Alias';
-        $expected = "\"$name\" <$address>";
+        $expected = "\"{$name}\" <{$address}>";
         $actual = $this->mail->formatAddress($address, $name);
 
         $this->assertEquals($expected, $actual);
@@ -324,13 +324,13 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->mail->setReplyTo('reply-to@example.com');
 
         $expected = [
-            "Return-Path" => "<return-path@example.com>",
+            "Return-Path" => '<return-path@example.com>',
             "From" => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
-            "Subject" => "subject line",
+            "Subject" => 'subject line',
             "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>,\r\n" .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
-            "Cc" => "cc@example.com",
-            "Reply-To" => "reply-to@example.com"
+            "Cc" => 'cc@example.com',
+            "Reply-To" => 'reply-to@example.com'
         ];
 
         return $expected;

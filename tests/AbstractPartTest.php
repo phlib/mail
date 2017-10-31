@@ -194,7 +194,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
     public function testEncodeHeader()
     {
         $value    = "line1\r\nline2, high ascii > é <\r\n";
-        $header   = "Subject: $value";
+        $header   = "Subject: {$value}";
         $expected = "Subject: =?UTF-8?B?" . base64_encode($value) . "?=";
 
         $this->part->setCharset('UTF-8');
@@ -225,7 +225,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
             foreach ($values as $value) {
                 $name = ucwords($name);
                 $this->part->addHeader(ucwords($name), $value);
-                $expected .= "$name: $value\r\n";
+                $expected .= "{$name}: {$value}\r\n";
             }
         }
 

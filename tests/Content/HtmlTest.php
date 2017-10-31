@@ -19,7 +19,7 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeDefault()
     {
-        $type = "text/html";
+        $type = 'text/html';
         $this->assertEquals($type, $this->part->getType());
     }
 }

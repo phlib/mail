@@ -18,7 +18,7 @@ class MultipartRelatedTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeDefault()
     {
-        $type = "multipart/related";
+        $type = 'multipart/related';
         $this->assertEquals($type, $this->part->getType());
     }
 }

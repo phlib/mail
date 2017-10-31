@@ -45,7 +45,7 @@ class Factory
 
         $result = $this->mimeMail = @mailparse_msg_parse_file($this->source);
         if ($result === false) {
-            throw new RuntimeException("Email could not be read");
+            throw new RuntimeException('Email could not be read');
         }
 
         return $this->parseEmail();
@@ -76,7 +76,7 @@ class Factory
         $result = @mailparse_msg_parse($this->mimeMail, $this->source);
 
         if ($result === false) {
-            throw new RuntimeException("Email could not be read");
+            throw new RuntimeException('Email could not be read');
         }
 
         return $this->parseEmail();
@@ -103,14 +103,14 @@ class Factory
         // Headers and meta info
         $mimeData = @mailparse_msg_get_part_data($this->mimeMail);
         if ($mimeData === false || empty($mimeData)) {
-            throw new RuntimeException("Email headers could not be read");
+            throw new RuntimeException('Email headers could not be read');
         }
         $this->addMailHeaders($mail, $mimeData['headers']);
 
         // Names of parts
         $this->structure = @mailparse_msg_get_structure($this->mimeMail);
         if ($this->structure === false || empty($this->structure)) {
-            throw new RuntimeException("Email structure could not be read");
+            throw new RuntimeException('Email structure could not be read');
         }
 
         // Get primary email part
@@ -307,7 +307,7 @@ class Factory
 
             if ($content === false) {
                 throw new RuntimeException(
-                    "Content could not be parsed ($name)"
+                    "Content could not be parsed ({$name})"
                 );
             }
 

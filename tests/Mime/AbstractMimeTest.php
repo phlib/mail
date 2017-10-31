@@ -100,7 +100,7 @@ class AbstractMimeTest extends \PHPUnit_Framework_TestCase
         $htmlPart->setCharset('UTF-8');
         $expected[] = "Content-Type: text/html; charset=\"UTF-8\"\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
-            . "\r\n$contentHtml";
+            . "\r\n{$contentHtml}";
 
         $textPart = new \Phlib\Mail\Content\Text();
         $contentText = 'Text Content';
@@ -108,7 +108,7 @@ class AbstractMimeTest extends \PHPUnit_Framework_TestCase
         $textPart->setCharset('UTF-8');
         $expected[] = "Content-Type: text/plain; charset=\"UTF-8\"\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
-            . "\r\n$contentText";
+            . "\r\n{$contentText}";
 
         $parts = [
             $htmlPart,
@@ -119,8 +119,8 @@ class AbstractMimeTest extends \PHPUnit_Framework_TestCase
         $actual = $this->part->toString();
 
         $boundary = $this->part->getBoundary();
-        $expected = implode("\r\n--$boundary\r\n", $expected);
-        $expected .= "\r\n--$boundary--\r\n";
+        $expected = implode("\r\n--{$boundary}\r\n", $expected);
+        $expected .= "\r\n--{$boundary}--\r\n";
 
         $this->assertEquals($expected, $actual);
     }

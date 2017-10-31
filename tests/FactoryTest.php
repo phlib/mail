@@ -327,7 +327,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             $part = $details['part'];
 
             // Test part content
-            $expectedContent = __DIR__ . "/__files/attachments-expected-$name.txt";
+            $expectedContent = __DIR__ . "/__files/attachments-expected-{$name}.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
             $this->assertEquals($expected, $actual, $name);
@@ -383,7 +383,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $part) {
-            $expectedContent = __DIR__ . "/__files/bounce_head-expected-$name.txt";
+            $expectedContent = __DIR__ . "/__files/bounce_head-expected-{$name}.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
             $this->assertEquals($expected, $actual, $name);
@@ -427,7 +427,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         foreach ($content as $name => $part) {
-            $expectedContent = __DIR__ . "/__files/bounce_msg-expected-$name.txt";
+            $expectedContent = __DIR__ . "/__files/bounce_msg-expected-{$name}.txt";
             $expected = file_get_contents($expectedContent);
             $actual = $part->encodeContent($part->getContent());
             $this->assertEquals($expected, $actual, $name);

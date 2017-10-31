@@ -18,7 +18,7 @@ class MultipartMixedTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeDefault()
     {
-        $type = "multipart/mixed";
+        $type = 'multipart/mixed';
         $this->assertEquals($type, $this->part->getType());
     }
 }

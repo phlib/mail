@@ -18,7 +18,7 @@ class MultipartAlternativeTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeDefault()
     {
-        $type = "multipart/alternative";
+        $type = 'multipart/alternative';
         $this->assertEquals($type, $this->part->getType());
     }
 }

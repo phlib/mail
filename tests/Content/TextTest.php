@@ -18,7 +18,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 
     public function testGetTypeDefault()
     {
-        $type = "text/plain";
+        $type = 'text/plain';
         $this->assertEquals($type, $this->part->getType());
     }
 }
