@@ -6,6 +6,9 @@ use Phlib\Mail\Factory;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @deprecated 2.0.4:3.0.0 Method should not have been available in the public interface
+     */
     public function testDecodeHeaderUtf8Base64()
     {
         $factory = new Factory();
@@ -21,6 +24,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $factory->decodeHeader($header));
     }
 
+    /**
+     * @deprecated 2.0.4:3.0.0 Method should not have been available in the public interface
+     */
     public function testDecodeHeaderIsoQ()
     {
         $factory = new Factory();
@@ -35,6 +41,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $factory->decodeHeader($header));
     }
 
+    /**
+     * @deprecated 2.0.4:3.0.0 Method should not have been available in the public interface
+     */
     public function testDecodeHeaderPart()
     {
         $factory = new Factory();
@@ -49,6 +58,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $factory->decodeHeader($header));
     }
 
+    /**
+     * @deprecated 2.0.4:3.0.0 Method should not have been available in the public interface
+     */
     public function testDecodeHeaderMixed()
     {
         $factory = new Factory();
@@ -64,6 +76,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $factory->decodeHeader($header));
     }
 
+    /**
+     * @deprecated 2.0.4:3.0.0 Method should not have been available in the public interface
+     */
     public function testDecodeBrokenHeader()
     {
         $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?=' . "\r\n"
@@ -74,6 +89,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('London Olympics: Business Contin', $decoded['text']);
     }
 
+    /**
+     * @deprecated 2.0.4:3.0.0 Method should not have been available in the public interface
+     */
     public function testParseEmailAddresses()
     {
         $factory = new Factory();
