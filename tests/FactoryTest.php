@@ -235,7 +235,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
         $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
         $mailparse_msg_get_part->expects($this->once())
-            ->willReturnCallback(function() use ($warningMsg) {
+            ->willReturnCallback(function () use ($warningMsg) {
                 trigger_error($warningMsg, E_USER_WARNING);
                 return false;
             });

@@ -341,7 +341,7 @@ class Factory
             }
 
             // Workaround for https://bugs.php.net/bug.php?id=68821
-            $header = preg_replace_callback('/(=\?[^\?]+\?Q\?)([^\?]+)(\?=)/i', function($matches) {
+            $header = preg_replace_callback('/(=\?[^\?]+\?Q\?)([^\?]+)(\?=)/i', function ($matches) {
                 return $matches[1] . str_replace('_', '=20', $matches[2]) . $matches[3];
             }, $header);
 
