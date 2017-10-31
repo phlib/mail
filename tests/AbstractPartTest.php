@@ -1,8 +1,9 @@
 <?php
 
-namespace Phlib\Tests\Mail;
+namespace Phlib\Mail\Tests;
 
 use Phlib\Mail\AbstractPart;
+use Phlib\Mail\Exception\InvalidArgumentException;
 
 class AbstractPartTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,22 +36,22 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage invalid name
-     */
     public function testAddHeaderInvalidName()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('invalid name');
+
         $this->part->addHeader('invalid name', 'value');
     }
 
     /**
      * @dataProvider dataAddHeaderProhibitedName
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Header name is prohibited
      */
     public function testAddHeaderProhibitedName($name)
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Header name is prohibited');
+
         $this->part->addHeader($name, 'value');
     }
 
@@ -171,10 +172,10 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataSetGetEncodingInvalid
-     * @expectedException \InvalidArgumentException
      */
     public function testSetGetEncodingInvalid($encoding)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->part->setEncoding($encoding);
     }
 

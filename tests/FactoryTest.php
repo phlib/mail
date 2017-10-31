@@ -1,6 +1,6 @@
 <?php
 
-namespace Phlib\Tests\Mail;
+namespace Phlib\Mail\Tests;
 
 use Phlib\Mail\Content\Attachment;
 use Phlib\Mail\Content\Content;
@@ -27,6 +27,11 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
+     * @uses \Phlib\Mail\AbstractPart
+     * @uses \Phlib\Mail\Content\AbstractContent
+     * @uses \Phlib\Mail\Content\Attachment
+     * @uses \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Mime\AbstractMime
      */
     public function testCreateFromFileAttachments()
     {
@@ -43,6 +48,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
+     * @uses \Phlib\Mail\Content\Attachment<extended>
+     * @uses \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Mime\AbstractMime
      */
     public function testCreateFromStringAttachments()
     {
@@ -59,6 +67,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
+     * @uses \Phlib\Mail\Content\Content<extended>
+     * @uses \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Mime\MultipartReport<extended>
      */
     public function testCreateFromFileBounceHead()
     {
@@ -75,6 +86,9 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
+     * @uses \Phlib\Mail\Content\Content<extended>
+     * @uses \Phlib\Mail\Mail
+     * @uses \Phlib\Mail\Mime\MultipartReport<extended>
      */
     public function testCreateFromFileBounceMsg()
     {
@@ -89,6 +103,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
+     * @uses \Phlib\Mail\Content\AbstractContent<extended>
+     * @uses \Phlib\Mail\Mail
      */
     public function testCreateFromFileHtml()
     {
@@ -103,6 +119,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     /**
      * Prevent giving code coverage to the Mail classes
      * @covers \Phlib\Mail\Factory
+     * @uses \Phlib\Mail\Content\AbstractContent<extended>
+     * @uses \Phlib\Mail\Mail
      * @requires PHP 5.4.17
      * see http://bugs.php.net/64166 this change appears to have affected the expected output from
      * quoted_printable_encode between PHP versions
@@ -231,7 +249,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $warningMsg = 'Couldn\'t get the part';
 
-        $this->setExpectedException(RuntimeException::class, $warningMsg);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($warningMsg);
 
         $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
         $mailparse_msg_get_part->expects($this->once())

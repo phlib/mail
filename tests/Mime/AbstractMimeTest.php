@@ -1,6 +1,6 @@
 <?php
 
-namespace Phlib\Tests\Mail\Mime;
+namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\AbstractMime;
 
@@ -85,7 +85,9 @@ class AbstractMimeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Phlib\Mail\Mime\AbstractMime::toString
+     * @covers \Phlib\Mail\Mime\AbstractMime::toString
+     * @uses \Phlib\Mail\Content\AbstractContent<extended>
+     * @uses \Phlib\Mail\Mime\AbstractMime<extended>
      */
     public function testToString()
     {
