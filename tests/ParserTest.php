@@ -38,7 +38,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $source   = __DIR__ . '/__files/attachments-source.eml';
         $mail = (new Parser(/*isFile*/ true, $source))->parseEmail();
 
-        $this->assertAttachmentsEmailEquals($mail);
+        ParserAssertAttachmentsEmail::assertEquals($mail);
         $this->assertEquals(true, $mail->hasAttachment());
         $this->assertEquals(5, $mail->getAttachmentCount());
     }
@@ -55,7 +55,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $source   = __DIR__ . '/__files/attachments-source.eml';
         $mail = (new Parser(/*isFile*/ false, file_get_contents($source)))->parseEmail();
 
-        $this->assertAttachmentsEmailEquals($mail);
+        ParserAssertAttachmentsEmail::assertEquals($mail);
         $this->assertEquals(true, $mail->hasAttachment());
         $this->assertEquals(5, $mail->getAttachmentCount());
     }
@@ -72,7 +72,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $source   = __DIR__ . '/__files/bounce_head-source.eml';
         $mail = (new Parser(/*isFile*/ true, $source))->parseEmail();
 
-        $this->assertBounceHeadEmailEquals($mail);
+        ParserAssertBounceHeadEmail::assertEquals($mail);
         $this->assertEquals(true, $mail->hasAttachment());
         $this->assertEquals(2, $mail->getAttachmentCount());
     }
@@ -89,7 +89,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $source   = __DIR__ . '/__files/bounce_msg-source.eml';
         $mail = (new Parser(/*isFile*/ true, $source))->parseEmail();
 
-        $this->assertBounceMsgEmailEquals($mail);
+        ParserAssertBounceMsgEmail::assertEquals($mail);
     }
 
     /**
@@ -103,7 +103,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $source   = __DIR__ . '/__files/html-source.eml';
         $mail = (new Parser(/*isFile*/ true, $source))->parseEmail();
 
-        $this->assertHtmlEmailEquals($mail);
+        ParserAssertHtmlEmail::assertEquals($mail);
     }
 
     /**
@@ -117,7 +117,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $source   = __DIR__ . '/__files/content_attachment-source.eml';
         $mail = (new Parser(/*isFile*/ true, $source))->parseEmail();
 
-        $this->assertContentAttachmentEmailEquals($mail);
+        ParserAssertContentAttachmentEmail::assertEquals($mail);
     }
 
     /**
@@ -233,230 +233,5 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         return $method->invoke($mock, $header);
-    }
-
-    private function assertAttachmentsEmailEquals(\Phlib\Mail\Mail $mail)
-    {
-        // Check headers
-        $expectedHeaders = __DIR__ . '/__files/attachments-expected-headers.txt';
-        $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
-
-        // Check parts are constructed as expected
-        /** @var \Phlib\Mail\Mime\MultipartMixed $primaryPart */
-        $primaryPart = $mail->getPart();
-        $this->assertInstanceOf(MultipartMixed::class, $primaryPart);
-
-        /** @var \Phlib\Mail\Mime\AbstractMime[] $mixedParts */
-        $mixedParts = $primaryPart->getParts();
-        $this->assertCount(5, $mixedParts);
-        $this->assertInstanceOf(MultipartRelated::class, $mixedParts[0]);
-        $this->assertInstanceOf(Attachment::class, $mixedParts[1]);
-        $this->assertInstanceOf(Attachment::class, $mixedParts[2]);
-        $this->assertInstanceOf(Attachment::class, $mixedParts[3]);
-        $this->assertInstanceOf(Attachment::class, $mixedParts[4]);
-
-        /** @var \Phlib\Mail\AbstractPart[] $relatedParts */
-        $relatedParts = $mixedParts[0]->getParts();
-        $this->assertCount(2, $relatedParts);
-        $this->assertInstanceOf(MultipartAlternative::class, $relatedParts[0]);
-        $this->assertInstanceOf(Attachment::class, $relatedParts[1]);
-
-        /** @var \Phlib\Mail\Content\AbstractContent[] $alternateParts */
-        $alternateParts = $relatedParts[0]->getParts();
-        $this->assertCount(2, $alternateParts);
-        $this->assertInstanceOf(Text::class, $alternateParts[0]);
-        $this->assertInstanceOf(Html::class, $alternateParts[1]);
-
-        // Check part content
-        $content = [
-            'text' => array(
-                'part' => $alternateParts[0]
-            ),
-            'html' => array(
-                'part' => $alternateParts[1]
-            ),
-            'attch1' => array(
-                'part' => $relatedParts[1],
-                'disposition' => false,
-                'name' => '330.gif',
-                'charset' => false,
-                'type' => 'image/gif'
-            ),
-            'attch2' => array(
-                'part' => $mixedParts[1],
-                'disposition' => true,
-                'name' => 'protocol.txt',
-                'charset' => 'US-ASCII',
-                'type' => 'text/plain'
-            ),
-            'attch3' => array(
-                'part' => $mixedParts[2],
-                'disposition' => true,
-                'name' => 'example-logo.png',
-                'charset' => false,
-                'type' => 'image/png'
-            ),
-            'attch4' => array(
-                'part' => $mixedParts[3],
-                'disposition' => true,
-                'name' => 'Tech_specs-letter_Crucial_m4_ssd_v3-11-11_online.pdf',
-                'charset' => false,
-                'type' => 'application/pdf'
-            ),
-            'attch5' => array(
-                'part' => $mixedParts[4],
-                'disposition' => true,
-                'name' => 'plain.eml',
-                'charset' => 'US-ASCII',
-                'type' => 'text/plain'
-            )
-        ];
-
-        foreach ($content as $name => $details) {
-            /** @var \Phlib\Mail\Content\AbstractContent $part */
-            $part = $details['part'];
-
-            // Test part content
-            $expectedContent = __DIR__ . "/__files/attachments-expected-{$name}.txt";
-            $expected = file_get_contents($expectedContent);
-            $actual = $part->encodeContent($part->getContent());
-            $this->assertEquals($expected, $actual, $name);
-
-            // Test attachments
-            if ($part instanceof Attachment || $part instanceof Content) {
-                $partHeaders = $part->getEncodedHeaders();
-                $contentType = "Content-Type: {$details['type']};";
-                if ($details['charset']) {
-                    $contentType .= " charset=\"{$details['charset']}\";";
-                }
-                $contentType .= " name=\"{$details['name']}\"";
-                $this->assertContains($contentType, $partHeaders);
-                if ($details['disposition'] === true) {
-                    $this->assertContains(
-                        'Content-Disposition: attachment; filename="' . $details['name'] . '"',
-                        $partHeaders
-                    );
-                } else {
-                    $this->assertNotContains('Content-Disposition', $partHeaders);
-                }
-            }
-        }
-    }
-
-    private function assertBounceHeadEmailEquals(\Phlib\Mail\Mail $mail)
-    {
-        // Check headers
-        $expectedHeaders = __DIR__ . '/__files/bounce_head-expected-headers.txt';
-        $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
-
-        // Check parts are constructed as expected
-        /** @var \Phlib\Mail\Mime\Mime $primaryPart */
-        $primaryPart = $mail->getPart();
-        $this->assertInstanceOf(MultipartReport::class, $primaryPart);
-        $this->assertEquals('multipart/report', $primaryPart->getType());
-        $this->assertContains('; report-type=delivery-status', $primaryPart->getEncodedHeaders());
-
-        $reportParts = $primaryPart->getParts();
-        $this->assertCount(3, $reportParts);
-        $this->assertInstanceOf(Text::class, $reportParts[0]);
-        $this->assertInstanceOf(Content::class, $reportParts[1]);
-        $this->assertEquals('message/delivery-status', $reportParts[1]->getType());
-        $this->assertInstanceOf(Content::class, $reportParts[2]);
-        $this->assertEquals('text/rfc822-headers', $reportParts[2]->getType());
-
-        // Check part content
-        /** @var \Phlib\Mail\Content\AbstractContent[] $content */
-        $content = [
-            'text' => $reportParts[0],
-            'status' => $reportParts[1],
-            'message' => $reportParts[2]
-        ];
-
-        foreach ($content as $name => $part) {
-            $expectedContent = __DIR__ . "/__files/bounce_head-expected-{$name}.txt";
-            $expected = file_get_contents($expectedContent);
-            $actual = $part->encodeContent($part->getContent());
-            $this->assertEquals($expected, $actual, $name);
-        }
-    }
-
-    private function assertBounceMsgEmailEquals(\Phlib\Mail\Mail $mail)
-    {
-        // Check headers
-        $expectedHeaders = __DIR__ . '/__files/bounce_msg-expected-headers.txt';
-        $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
-
-        // Check parts are constructed as expected
-        /** @var \Phlib\Mail\Mime\Mime $primaryPart */
-        $primaryPart = $mail->getPart();
-        $this->assertInstanceOf(MultipartReport::class, $primaryPart);
-        $this->assertEquals('multipart/report', $primaryPart->getType());
-        $this->assertContains('; report-type=delivery-status', $primaryPart->getEncodedHeaders());
-
-        $reportParts = $primaryPart->getParts();
-        $this->assertCount(3, $reportParts);
-
-        $this->assertInstanceOf(MultipartAlternative::class, $reportParts[0]);
-        $alternateParts = $reportParts[0]->getParts();
-        $this->assertCount(2, $alternateParts);
-        $this->assertInstanceOf(Text::class, $alternateParts[0]);
-        $this->assertInstanceOf(Html::class, $alternateParts[1]);
-
-        $this->assertInstanceOf(Content::class, $reportParts[1]);
-        $this->assertEquals('message/delivery-status', $reportParts[1]->getType());
-        $this->assertInstanceOf(Content::class, $reportParts[2]);
-        $this->assertEquals('message/rfc822', $reportParts[2]->getType());
-
-        // Check part content
-        /** @var \Phlib\Mail\Content\AbstractContent[] $content */
-        $content = [
-            'text' => $alternateParts[0],
-            'html' => $alternateParts[1],
-            'status' => $reportParts[1],
-            'message' => $reportParts[2]
-        ];
-
-        foreach ($content as $name => $part) {
-            $expectedContent = __DIR__ . "/__files/bounce_msg-expected-{$name}.txt";
-            $expected = file_get_contents($expectedContent);
-            $actual = $part->encodeContent($part->getContent());
-            $this->assertEquals($expected, $actual, $name);
-        }
-    }
-
-    private function assertHtmlEmailEquals(\Phlib\Mail\Mail $mail)
-    {
-        // Check headers
-        $expectedHeaders = __DIR__ . '/__files/html-expected-headers.txt';
-        $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
-
-        // Check parts are constructed as expected
-        /** @var \Phlib\Mail\Mime\MultipartMixed $primaryPart */
-        $primaryPart = $mail->getPart();
-        $this->assertInstanceOf(Html::class, $primaryPart);
-
-        // Check content
-        $expectedContent = __DIR__ . "/__files/html-expected-html.txt";
-        $expected = file_get_contents($expectedContent);
-        $actual = $primaryPart->encodeContent($primaryPart->getContent());
-        $this->assertEquals($expected, $actual);
-    }
-
-    private function assertContentAttachmentEmailEquals(\Phlib\Mail\Mail $mail)
-    {
-        // Check headers
-        $expectedHeaders = __DIR__ . '/__files/content_attachment-expected-headers.txt';
-        $this->assertEquals(file_get_contents($expectedHeaders), $mail->getEncodedHeaders());
-
-        // Check parts are constructed as expected
-        /** @var \Phlib\Mail\Content\Html $primaryPart */
-        $primaryPart = $mail->getPart();
-        $this->assertInstanceOf(Html::class, $primaryPart);
-
-        // Check content
-        $expectedContent = __DIR__ . "/__files/content_attachment-expected-html.txt";
-        $expected = file_get_contents($expectedContent);
-        $actual = $primaryPart->encodeContent($primaryPart->getContent());
-        $this->assertEquals($expected, $actual);
     }
 }
