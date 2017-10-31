@@ -121,9 +121,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
      * @covers \Phlib\Mail\Factory
      * @uses \Phlib\Mail\Content\AbstractContent<extended>
      * @uses \Phlib\Mail\Mail
-     * @requires PHP 5.4.17
-     * see http://bugs.php.net/64166 this change appears to have affected the expected output from
-     * quoted_printable_encode between PHP versions
      */
     public function testCreateFromContentAttachment()
     {
