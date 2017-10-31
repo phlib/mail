@@ -33,9 +33,9 @@ class Mail extends AbstractPart
     ];
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $subject = null;
+    private $subject;
 
     /**
      * @var array
@@ -43,9 +43,9 @@ class Mail extends AbstractPart
     private $to = [];
 
     /**
-     * @var string
+     * @var array|null
      */
-    private $from = null;
+    private $from;
 
     /**
      * @var array
@@ -53,14 +53,14 @@ class Mail extends AbstractPart
     private $cc = [];
 
     /**
-     * @var string
+     * @var array|null
      */
-    private $replyTo = null;
+    private $replyTo;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $returnPath = null;
+    private $returnPath;
 
     /**
      * @var int The number of attachments in any of this mail's descendants
@@ -259,7 +259,7 @@ class Mail extends AbstractPart
     /**
      * Get reply to
      *
-     * @return array
+     * @return array|null
      */
     public function getReplyTo()
     {
@@ -316,7 +316,7 @@ class Mail extends AbstractPart
     /**
      * Get return path
      *
-     * @return string
+     * @return string|null
      */
     public function getReturnPath()
     {
@@ -349,7 +349,7 @@ class Mail extends AbstractPart
     /**
      * Get from
      *
-     * @return array
+     * @return array|null
      */
     public function getFrom()
     {
@@ -371,7 +371,7 @@ class Mail extends AbstractPart
     /**
      * Get subject
      *
-     * @return string
+     * @return string|null
      */
     public function getSubject()
     {
