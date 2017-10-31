@@ -52,6 +52,7 @@ class Factory
     }
 
     /**
+     * @deprecated 2.1.0:3.0.0 Use createFromFile() to avoid statics and allow for the Factory to be used in DI
      * @param string $filename
      * @return Mail
      */
@@ -83,6 +84,7 @@ class Factory
     }
 
     /**
+     * @deprecated 2.1.0:3.0.0 Use createFromString() to avoid statics and allow for the Factory to be used in DI
      * @param string $source
      * @return Mail
      */

@@ -12,6 +12,10 @@ null if not set: `getFrom()`, `getReplyTo()`, `getReturnPath()`, `getSubject()`
 - `Factory::decodeHeader()` and `Factory::parseEmailAddresses()` should not have
 originally formed part of the public API, and will be removed in the next major
 version 
+- `Factory::fromFile()` and `Factory::fromString()` static methods will be
+removed in the next major version. Instead use `createFromFile()` and
+`createFromString()` to avoid statics and allow for the Factory to be used in
+dependency injection. 
 
 ## [2.0.3]
 ### Changed
