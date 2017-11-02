@@ -10,22 +10,22 @@ class Factory
     /**
      * @var bool
      */
-    private $isFile = false;
+    private $isFile;
 
     /**
      * @var string
      */
-    private $source = '';
+    private $source;
 
     /**
      * @var resource
      */
-    private $mimeMail = null;
+    private $mimeMail;
 
     /**
      * @var array
      */
-    private $structure = array();
+    private $structure;
 
     /**
      * Load email from file
@@ -55,9 +55,10 @@ class Factory
                 mailparse_msg_free($this->mimeMail);
             }
             unset(
-                $this->mimeMail,
+                $this->isFile,
                 $this->source,
-                $this->isFile
+                $this->mimeMail,
+                $this->structure
             );
         }
     }
@@ -98,9 +99,10 @@ class Factory
                 mailparse_msg_free($this->mimeMail);
             }
             unset(
-                $this->mimeMail,
+                $this->isFile,
                 $this->source,
-                $this->isFile
+                $this->mimeMail,
+                $this->structure
             );
         }
     }
