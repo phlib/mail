@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.1.0] - 2017-11-02
 ### Fixed
 - Free internal Mailparse resources once the email has been parsed. This should
 help PHP to free up memory.
@@ -20,19 +22,19 @@ removed in the next major version. Instead use `createFromFile()` and
 `createFromString()` to avoid statics and allow for the Factory to be used in
 dependency injection. 
 
-## [2.0.3]
+## [2.0.3] - 2017-08-15
 ### Changed
 - Ensure all calls to mailparse functions are silenced for warnings, and handle false returns
 
-## [2.0.2]
+## [2.0.2] - 2017-08-15
 ### Fixed
 - Correctly handle emails with 9 mime sub-parts (issue #10)
 
-## [2.0.1]
+## [2.0.1] - 2017-03-15
 ### Fixed
 - Add encoding for address headers (To, Cc, Reply-To) which was lost in 2.0.0
 
-## [2.0.0]
+## [2.0.0] - 2017-03-15
 ### Added
 - **BC break**: Added new dependency on mbstring extension
 ### Changed
