@@ -13,7 +13,10 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse');
+        $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse_file');
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
+        $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
     }
 
     /**
@@ -28,6 +31,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromFileAttachments()
     {
         $source   = __DIR__ . '/__files/attachments-source.eml';
+
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -48,6 +57,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $source   = __DIR__ . '/__files/attachments-source.eml';
 
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
+
         $factory = new Factory();
         $mail = $factory->createFromString(file_get_contents($source));
 
@@ -66,6 +81,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromFileBounceHead()
     {
         $source   = __DIR__ . '/__files/bounce_head-source.eml';
+
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -86,6 +107,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $source   = __DIR__ . '/__files/bounce_msg-source.eml';
 
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
+
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
 
@@ -101,6 +128,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateFromFileHtml()
     {
         $source   = __DIR__ . '/__files/html-source.eml';
+
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
 
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
@@ -118,10 +151,78 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $source   = __DIR__ . '/__files/content_attachment-source.eml';
 
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
+
         $factory = new Factory();
         $mail = $factory->createFromFile($source);
 
         AssertContentAttachmentEmail::assertEquals($mail);
+    }
+
+    /**
+     * Expect an exception, and there should be NO resource to free
+     */
+    public function testCreateFromFileNotFound()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('cannot be found');
+
+        $source = __DIR__ . '/__files/does-not-exist';
+
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::never());
+
+        $factory = new Factory();
+        $factory->createFromFile($source);
+    }
+
+    /**
+     * Expect an exception, and there should be NO resource to free
+     */
+    public function testCreateFromFileCannotRead()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('could not be read');
+
+        $source = __DIR__ . '/__files/html-source.eml';
+
+        $mailparse_msg_parse_file = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_parse_file');
+        $mailparse_msg_parse_file->expects(self::once())
+            ->willReturn(false);
+
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::never());
+
+        $factory = new Factory();
+        $factory->createFromFile($source);
+    }
+
+    /**
+     * Expect an exception, and the created resource should be freed
+     */
+    public function testCreateFromStringCannotRead()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('could not be read');
+
+        $source = __DIR__ . '/__files/html-source.eml';
+
+        $mailparse_msg_parse = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_parse');
+        $mailparse_msg_parse->expects(self::once())
+            ->willReturn(false);
+
+        $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
+        $mailparse_msg_free->expects(self::once())
+            ->willReturnCallback(function ($resource) {
+                return \mailparse_msg_free($resource);
+            });
+
+        $factory = new Factory();
+        $factory->createFromString(file_get_contents($source));
     }
 
     /**

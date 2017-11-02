@@ -10,22 +10,22 @@ class Factory
     /**
      * @var bool
      */
-    private $isFile = false;
+    private $isFile;
 
     /**
      * @var string
      */
-    private $source = '';
+    private $source;
 
     /**
      * @var resource
      */
-    private $mimeMail = null;
+    private $mimeMail;
 
     /**
      * @var array
      */
-    private $structure = array();
+    private $structure;
 
     /**
      * Load email from file
@@ -36,19 +36,31 @@ class Factory
      */
     public function createFromFile($filename)
     {
-        $this->source = $filename;
-        $this->isFile = true;
+        try {
+            $this->source = $filename;
+            $this->isFile = true;
 
-        if (!is_file($this->source)) {
-            throw new RuntimeException("Filename '{$this->source}' cannot be found");
+            if (!is_file($this->source)) {
+                throw new RuntimeException("Filename '{$this->source}' cannot be found");
+            }
+
+            $result = $this->mimeMail = @mailparse_msg_parse_file($this->source);
+            if ($result === false) {
+                throw new RuntimeException('Email could not be read');
+            }
+
+            return $this->parseEmail();
+        } finally {
+            if (is_resource($this->mimeMail)) {
+                mailparse_msg_free($this->mimeMail);
+            }
+            unset(
+                $this->isFile,
+                $this->source,
+                $this->mimeMail,
+                $this->structure
+            );
         }
-
-        $result = $this->mimeMail = @mailparse_msg_parse_file($this->source);
-        if ($result === false) {
-            throw new RuntimeException('Email could not be read');
-        }
-
-        return $this->parseEmail();
     }
 
     /**
@@ -70,17 +82,29 @@ class Factory
      */
     public function createFromString($source)
     {
-        $this->source = $source;
-        $this->isFile = false;
+        try {
+            $this->source = $source;
+            $this->isFile = false;
 
-        $this->mimeMail = mailparse_msg_create();
-        $result = @mailparse_msg_parse($this->mimeMail, $this->source);
+            $this->mimeMail = mailparse_msg_create();
+            $result = @mailparse_msg_parse($this->mimeMail, $this->source);
 
-        if ($result === false) {
-            throw new RuntimeException('Email could not be read');
+            if ($result === false) {
+                throw new RuntimeException('Email could not be read');
+            }
+
+            return $this->parseEmail();
+        } finally {
+            if (is_resource($this->mimeMail)) {
+                mailparse_msg_free($this->mimeMail);
+            }
+            unset(
+                $this->isFile,
+                $this->source,
+                $this->mimeMail,
+                $this->structure
+            );
         }
-
-        return $this->parseEmail();
     }
 
     /**
