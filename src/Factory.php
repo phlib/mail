@@ -52,6 +52,7 @@ class Factory
     }
 
     /**
+     * @deprecated 2.1.0:3.0.0 Use createFromFile() to avoid statics and allow for the Factory to be used in DI
      * @param string $filename
      * @return Mail
      */
@@ -83,6 +84,7 @@ class Factory
     }
 
     /**
+     * @deprecated 2.1.0:3.0.0 Use createFromString() to avoid statics and allow for the Factory to be used in DI
      * @param string $source
      * @return Mail
      */
@@ -328,6 +330,7 @@ class Factory
     /**
      * Decode header
      *
+     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
      * @param string $header Encoded header
      * @param string $charset Target charset. Optional. Default will use source charset where available.
      * @return array {
@@ -360,6 +363,7 @@ class Factory
     /**
      * Parse RFC 822 formatted email addresses string
      *
+     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
      * @see mailparse_rfc822_parse_addresses()
      * @param string $addresses
      * @return array 'display', 'address' and 'is_group'

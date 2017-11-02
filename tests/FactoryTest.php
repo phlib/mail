@@ -2,17 +2,9 @@
 
 namespace Phlib\Mail\Tests;
 
-use Phlib\Mail\Content\Attachment;
-use Phlib\Mail\Content\Content;
-use Phlib\Mail\Content\Html;
-use Phlib\Mail\Content\Text;
 use Phlib\Mail\Exception\RuntimeException;
 use Phlib\Mail\Factory;
 use Phlib\Mail\Mime\AbstractMime;
-use Phlib\Mail\Mime\MultipartAlternative;
-use Phlib\Mail\Mime\MultipartMixed;
-use Phlib\Mail\Mime\MultipartRelated;
-use Phlib\Mail\Mime\MultipartReport;
 use phpmock\phpunit\PHPMock;
 
 class FactoryTest extends \PHPUnit_Framework_TestCase
@@ -172,8 +164,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testDecodeHeaderUtf8Base64()
     {
-        $factory = new Factory();
-
         $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?=' . "\r\n"
             . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqMxMDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
 
@@ -182,13 +172,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
         ];
 
-        $this->assertEquals($expected, $factory->decodeHeader($header));
+        $actual = $this->invokeDecodeHeader($header);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testDecodeHeaderIsoQ()
     {
-        $factory = new Factory();
-
         $header = '=?ISO-8859-1?Q?London Olympics: Business Continuity Plan - =A3100 discount today only!?=';
 
         $expected = [
@@ -196,13 +185,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
         ];
 
-        $this->assertEquals($expected, $factory->decodeHeader($header));
+        $actual = $this->invokeDecodeHeader($header);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testDecodeHeaderPart()
     {
-        $factory = new Factory();
-
         $header = 'London Olympics: Business Continuity Plan - =?ISO-8859-1?Q?=A3100?= discount today only!';
 
         $expected = [
@@ -210,13 +198,12 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
         ];
 
-        $this->assertEquals($expected, $factory->decodeHeader($header));
+        $actual = $this->invokeDecodeHeader($header);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testDecodeHeaderMixed()
     {
-        $factory = new Factory();
-
         $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?='
             . ' =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=';
 
@@ -225,20 +212,23 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
             'text' => 'London Olympics: Business ContinKeld Jørn Simonsen'
         ];
 
-        $this->assertEquals($expected, $factory->decodeHeader($header));
+        $actual = $this->invokeDecodeHeader($header);
+        $this->assertEquals($expected, $actual);
     }
 
     public function testDecodeBrokenHeader()
     {
         $header = '=?UTF-8?B?TG9uZG9uIE9seW1waWNzOiBCdXNpbmVzcyBDb250aW4=?=' . "\r\n"
             . ' =?UTF-8?B?dWl0eSBQbGFuIC0gwqPhlibDAgZGlzY291bnQgdG9kYXkgb25seSE=?=';
-        $decoded = (new Factory())->decodeHeader($header);
+        $decoded = $this->invokeDecodeHeader($header);
         $this->assertEquals('UTF-8', $decoded['charset']);
         // test that we can at least show something if the encoded word is malformed (RFC 2047 section 6.3)
         $this->assertStringStartsWith('London Olympics: Business Contin', $decoded['text']);
-
     }
 
+    /**
+     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
+     */
     public function testParseEmailAddresses()
     {
         $factory = new Factory();
@@ -259,5 +249,22 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertEquals($expected, $factory->parseEmailAddresses($addresses));
+    }
+
+    /**
+     * Invoke Factory::decodeHeader()
+     *
+     * @see Factory::decodeHeader()
+     * @param string $header
+     * @return array
+     */
+    private function invokeDecodeHeader($header)
+    {
+        $mock = $this->createPartialMock(Factory::class, []);
+
+        $method = new \ReflectionMethod(Factory::class, 'decodeHeader');
+        $method->setAccessible(true);
+
+        return $method->invoke($mock, $header);
     }
 }
