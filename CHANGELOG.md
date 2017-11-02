@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - Clarify the return type for the following `Mail` methods to show they can be
-null if not set: `getFrom()`, `getReplyTo()`, `getReturnPath()`, `getSubject()` 
+null if not set: `getFrom()`, `getReplyTo()`, `getReturnPath()`, `getSubject()`
+### Deprecated
+- `Factory::decodeHeader()` and `Factory::parseEmailAddresses()` should not have
+originally formed part of the public API, and will be removed in the next major
+version 
 
 ## [2.0.3]
 ### Changed
