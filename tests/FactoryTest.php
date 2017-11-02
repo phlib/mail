@@ -132,6 +132,44 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertContentAttachmentEmailEquals($mail);
     }
 
+    /**
+     * Tests for an issue (#10) where the Factory was incorrectly handling emails with 9 child parts, as it would
+     * incorrectly try to parse a 10th part (e.g. "1.10") because of non-strict checking for the value "1.10" in the
+     * structure array containing a value "1.1"
+     */
+    public function testNineChildParts()
+    {
+        $source   = __DIR__ . '/__files/mime-9-parts-source.eml';
+
+        $factory = new Factory();
+
+        $mail = $factory->createFromFile($source);
+
+        /** @var AbstractMime $mainPart */
+        $mainPart = $mail->getPart();
+
+        $this->assertEquals(9, count($mainPart->getParts()));
+    }
+
+    public function testGetPartFail()
+    {
+        $warningMsg = 'Couldn\'t get the part';
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($warningMsg);
+
+        $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
+        $mailparse_msg_get_part->expects($this->once())
+            ->willReturnCallback(function () use ($warningMsg) {
+                trigger_error($warningMsg, E_USER_WARNING);
+                return false;
+            });
+
+        $source   = __DIR__ . '/__files/bounce_msg-source.eml';
+
+        (new Factory())->createFromFile($source);
+    }
+
     public function testDecodeHeaderUtf8Base64()
     {
         $factory = new Factory();
@@ -221,44 +259,6 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertEquals($expected, $factory->parseEmailAddresses($addresses));
-    }
-
-    /**
-     * Tests for an issue (#10) where the Factory was incorrectly handling emails with 9 child parts, as it would
-     * incorrectly try to parse a 10th part (e.g. "1.10") because of non-strict checking for the value "1.10" in the
-     * structure array containing a value "1.1"
-     */
-    public function testNineChildParts()
-    {
-        $source   = __DIR__ . '/__files/mime-9-parts-source.eml';
-
-        $factory = new Factory();
-
-        $mail = $factory->createFromFile($source);
-
-        /** @var AbstractMime $mainPart */
-        $mainPart = $mail->getPart();
-
-        $this->assertEquals(9, count($mainPart->getParts()));
-    }
-
-    public function testGetPartFail()
-    {
-        $warningMsg = 'Couldn\'t get the part';
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage($warningMsg);
-
-        $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
-        $mailparse_msg_get_part->expects($this->once())
-            ->willReturnCallback(function () use ($warningMsg) {
-                trigger_error($warningMsg, E_USER_WARNING);
-                return false;
-            });
-
-        $source   = __DIR__ . '/__files/bounce_msg-source.eml';
-
-        (new Factory())->createFromFile($source);
     }
 
     protected function assertAttachmentsEmailEquals(\Phlib\Mail\Mail $mail)
