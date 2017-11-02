@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Free internal Mailparse resources once the email has been parsed. This should
+help PHP to free up memory.
 ### Changed
 - Clarify the return type for the following `Mail` methods to show they can be
 null if not set: `getFrom()`, `getReplyTo()`, `getReturnPath()`, `getSubject()`
