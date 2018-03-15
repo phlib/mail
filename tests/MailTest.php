@@ -297,7 +297,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
         list($actualHeaders, $actualContent) = explode("\r\n\r\n", $actual, 2);
 
         $this->assertEquals($expectedHeaders, iconv_mime_decode_headers($actualHeaders));
-        $this->assertEquals($content, $actualContent);
+        $this->assertEquals($content, trim($actualContent));
     }
 
     /**
