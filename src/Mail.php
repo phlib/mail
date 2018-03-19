@@ -449,6 +449,18 @@ class Mail extends AbstractPart
      */
     public function toString()
     {
-        return $this->getEncodedHeaders() . $this->getPart()->toString();
+        $result = $this->getEncodedHeaders() . $this->getPart()->toString();
+        if (substr($result, -1) !== "\n") {
+            // If mail doesn't end with a newline, then append one
+            //
+            // This is mostly to get around an issue when parsing the mail string back in through the Factory, as mailparse
+            // cuts off the last line of the email body if it doesn't end with a newline (https://bugs.php.net/bug.php?id=75923)
+            //
+            // A known issue with this, however, is that a mail with only a content part which is successively
+            // parsed->output->parsed->output will keep gaining new lines each time
+            // (unless the content is base64 encoded, as raw whitespace is discarded when decoding)
+            $result .= "\r\n";
+        }
+        return $result;
     }
 }
