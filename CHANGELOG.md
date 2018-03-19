@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.1] - 2018-03-19
+### Fixed
+- Add a trailing newline when outputting a `Mail` object to string to ensure we
+can parse it back in correctly in `Factory`
+
 ## [2.1.0] - 2017-11-02
 ### Fixed
 - Free internal Mailparse resources once the email has been parsed. This should
