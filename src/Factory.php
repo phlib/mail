@@ -2,30 +2,24 @@
 
 namespace Phlib\Mail;
 
-use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
+use ZBateson\MailMimeParser\MailMimeParser;
+use ZBateson\MailMimeParser\Message;
 
 class Factory
 {
     /**
-     * @var bool
+     * @var MailMimeParser
      */
-    private $isFile;
+    private $mailParser;
 
-    /**
-     * @var string
-     */
-    private $source;
-
-    /**
-     * @var resource
-     */
-    private $mimeMail;
-
-    /**
-     * @var array
-     */
-    private $structure;
+    public function __construct(MailMimeParser $mailParser = null)
+    {
+        if (!isset($mailParser)) {
+            $mailParser = new MailMimeParser();
+        }
+        $this->mailParser = $mailParser;
+    }
 
     /**
      * Load email from file
@@ -36,31 +30,14 @@ class Factory
      */
     public function createFromFile($filename)
     {
-        try {
-            $this->source = $filename;
-            $this->isFile = true;
-
-            if (!is_file($this->source)) {
-                throw new RuntimeException("Filename '{$this->source}' cannot be found");
-            }
-
-            $result = $this->mimeMail = @mailparse_msg_parse_file($this->source);
-            if ($result === false) {
-                throw new RuntimeException('Email could not be read');
-            }
-
-            return $this->parseEmail();
-        } finally {
-            if (is_resource($this->mimeMail)) {
-                mailparse_msg_free($this->mimeMail);
-            }
-            unset(
-                $this->isFile,
-                $this->source,
-                $this->mimeMail,
-                $this->structure
-            );
+        if (!file_exists($filename)) {
+            throw new RuntimeException("Filename '{$filename}' cannot be found");
         }
+        $handle = fopen($filename, 'r');
+        $message = $this->mailParser->parse($handle);
+        fclose($handle);
+
+        return $this->parseEmail($message);
     }
 
     /**
@@ -82,29 +59,9 @@ class Factory
      */
     public function createFromString($source)
     {
-        try {
-            $this->source = $source;
-            $this->isFile = false;
+        $message = $this->mailParser->parse($source);
 
-            $this->mimeMail = mailparse_msg_create();
-            $result = @mailparse_msg_parse($this->mimeMail, $this->source);
-
-            if ($result === false) {
-                throw new RuntimeException('Email could not be read');
-            }
-
-            return $this->parseEmail();
-        } finally {
-            if (is_resource($this->mimeMail)) {
-                mailparse_msg_free($this->mimeMail);
-            }
-            unset(
-                $this->isFile,
-                $this->source,
-                $this->mimeMail,
-                $this->structure
-            );
-        }
+        return $this->parseEmail($message);
     }
 
     /**
@@ -120,29 +77,19 @@ class Factory
     /**
      * Parse the email
      *
+     * @param Message $message
      * @return Mail
      * @throws RuntimeException
      */
-    private function parseEmail()
+    private function parseEmail(Message $message)
     {
         $mail = new Mail();
 
         // Headers and meta info
-        $mimeData = @mailparse_msg_get_part_data($this->mimeMail);
-        if ($mimeData === false || empty($mimeData)) {
-            throw new RuntimeException('Email headers could not be read');
-        }
-        $this->addMailHeaders($mail, $mimeData['headers']);
+        $this->addMailHeaders($mail, $message->getRawHeaders());
 
-        // Names of parts
-        $this->structure = @mailparse_msg_get_structure($this->mimeMail);
-        if ($this->structure === false || empty($this->structure)) {
-            throw new RuntimeException('Email structure could not be read');
-        }
-
-        // Get primary email part
-        $first = reset($this->structure);
-        $child = $this->parsePart($first, $mail);
+        // Parse from main part
+        $child = $this->parsePart($message, $mail);
         $mail->setPart($child);
 
         return $mail;
@@ -160,56 +107,52 @@ class Factory
         $charset = null;
 
         // Iterate headers
-        foreach ($headers as $headerKey => $header) {
-            if (!is_array($header)) {
-                $header = [$header];
+        foreach ($headers as $header) {
+            list($headerKey, $headerEncoded) = $header;
+            // Decode
+            $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
+            if (is_null($charset) && !is_null($headerDecoded['charset'])) {
+                // Set first discovered charset
+                $charset = $headerDecoded['charset'];
+                $mail->setCharset($charset);
             }
-            foreach ($header as $headerEncoded) {
-                // Decode
-                $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
-                if (is_null($charset) && !is_null($headerDecoded['charset'])) {
-                    // Set first discovered charset
-                    $charset = $headerDecoded['charset'];
-                    $mail->setCharset($charset);
-                }
-                $headerText = $headerDecoded['text'];
+            $headerText = $headerDecoded['text'];
 
-                try {
-                    switch (strtolower($headerKey)) {
-                        case 'from':
-                        case 'reply-to':
-                        case 'return-path':
-                            $addresses = $this->parseEmailAddresses($headerText);
-                            $method = 'set' . str_replace(' ', '', ucwords(
-                                str_replace('-', ' ', strtolower($headerKey))
-                            ));
-                            foreach ($addresses as $address) {
-                                $mail->{$method}(
-                                    $address['address'],
-                                    ($address['display'] == $address['address']) ? null : $address['display']
-                                );
-                            }
-                            break;
-                        case 'cc':
-                        case 'to':
-                            $addresses = $this->parseEmailAddresses($headerText);
-                            $method = 'add' . ucwords(strtolower($headerKey));
-                            foreach ($addresses as $address) {
-                                $mail->{$method}(
-                                    $address['address'],
-                                    ($address['display'] == $address['address']) ? null : $address['display']
-                                );
-                            }
-                            break;
-                        case 'subject':
-                            $mail->setSubject($headerText);
-                            break;
-                        default:
-                            $mail->addHeader($headerKey, $headerText);
-                            break;
-                    }
-                } catch (\InvalidArgumentException $e) {
+            try {
+                switch (strtolower($headerKey)) {
+                    case 'from':
+                    case 'reply-to':
+                    case 'return-path':
+                        $addresses = $this->parseEmailAddresses($headerText);
+                        $method = 'set' . str_replace(' ', '', ucwords(
+                            str_replace('-', ' ', strtolower($headerKey))
+                        ));
+                        foreach ($addresses as $address) {
+                            $mail->{$method}(
+                                $address['address'],
+                                ($address['display'] == $address['address']) ? null : $address['display']
+                            );
+                        }
+                        break;
+                    case 'cc':
+                    case 'to':
+                        $addresses = $this->parseEmailAddresses($headerText);
+                        $method = 'add' . ucwords(strtolower($headerKey));
+                        foreach ($addresses as $address) {
+                            $mail->{$method}(
+                                $address['address'],
+                                ($address['display'] == $address['address']) ? null : $address['display']
+                            );
+                        }
+                        break;
+                    case 'subject':
+                        $mail->setSubject($headerText);
+                        break;
+                    default:
+                        $mail->addHeader($headerKey, $headerText);
+                        break;
                 }
+            } catch (\InvalidArgumentException $e) {
             }
         }
     }
@@ -229,17 +172,13 @@ class Factory
         }
 
         // Iterate headers
-        foreach ($headers as $headerKey => $header) {
-            if (!is_array($header)) {
-                $header = [$header];
-            }
-            foreach ($header as $headerEncoded) {
-                $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
-                $headerText = $headerDecoded['text'];
-                try {
-                    $part->addHeader($headerKey, $headerText);
-                } catch (\InvalidArgumentException $e) {
-                }
+        foreach ($headers as $header) {
+            list($headerKey, $headerEncoded) = $header;
+            $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
+            $headerText = $headerDecoded['text'];
+            try {
+                $part->addHeader($headerKey, $headerText);
+            } catch (\InvalidArgumentException $e) {
             }
         }
     }
@@ -247,27 +186,16 @@ class Factory
     /**
      * Recursively parse structure parts starting from the specified part
      *
-     * @param string $name
+     * @param Message\Part\MessagePart $part
      * @param Mail $mail
      * @return AbstractPart
      */
-    private function parsePart($name, Mail $mail)
+    private function parsePart(Message\Part\MessagePart $part, Mail $mail)
     {
-        // Get part resource
-        if (($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
-            ($partData = @mailparse_msg_get_part_data($part)) === false
-        ) {
-            $error = error_get_last();
-            throw new RuntimeException("Unable to parse part $name: {$error['message']}");
-        }
-
         // Create correct Mail part object
-        $type = false;
-        if (array_key_exists('content-type', $partData)) {
-            $type = $partData['content-type'];
-        }
+        $type = $part->getContentType();
 
-        if (stripos($type, 'multipart') === 0) {
+        if ($part instanceof Message\Part\MimePart && $part->isMultiPart()) {
             switch ($type) {
                 case 'multipart/alternative':
                     $mailPart = new Mime\MultipartAlternative();
@@ -280,8 +208,8 @@ class Factory
                     break;
                 case 'multipart/report':
                     $mailPart = new Mime\MultipartReport();
-                    if (array_key_exists('content-report-type', $partData)) {
-                        $mailPart->setReportType($partData['content-report-type']);
+                    if (($reportType = $part->getHeaderParameter('Content-Type', 'Report-Type', false)) !== false) {
+                        $mailPart->setReportType($reportType);
                     }
                     break;
                 default:
@@ -289,26 +217,20 @@ class Factory
                     break;
             }
 
-            // This part should have children
-            $childId = 1;
-            // Check if the next part matches the expected child name
-            while (in_array("$name.$childId", $this->structure, true)) {
-                $child = $this->parsePart("$name.$childId", $mail);
-                $mailPart->addPart($child);
-
-                // Calculate next
-                $childId++;
+            foreach ($part->getChildParts() as $childPart) {
+                $mailPart->addPart($this->parsePart($childPart, $mail));
             }
         } else {
             // Must be some sort of content, can't be an attachment for the primary part
-            if ($name != '1' && isset($partData['content-name'])) {
+            if (!($part instanceof  Message) &&
+                $part instanceof Message\Part\MimePart &&
+                ($contentName = $part->getHeaderParameter('Content-Type', 'name', false)) !== false
+            ) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
-                $disposition = isset($partData['content-disposition']) ? $partData['content-disposition'] : null;
-                $mailPart = new Content\Attachment($partData['content-name'], $disposition, $type);
-                if (isset($partData['content-charset'])) {
-                    $mailPart->setCharset($partData['content-charset']);
-                }
+                $disposition = $part->getContentDisposition(false);
+                $mailPart = new Content\Attachment($contentName, $disposition, $type);
+                $mailPart->setCharset($part->getCharset());
             } else {
                 // Basic content
                 switch ($type) {
@@ -322,30 +244,20 @@ class Factory
                         // It's not HTML or text, so we count it as an attachment
                         $mail->incrementAttachmentCount();
                         $mailPart = new Content\Content($type);
-                        $mailPart->setEncoding($partData['transfer-encoding']);
+                        $mailPart->setEncoding($part->getContentTransferEncoding());
                         break;
                 }
-                $mailPart->setCharset($partData['charset']);
+                $mailPart->setCharset($part->getCharset());
             }
 
-            if ($this->isFile) {
-                $content = @mailparse_msg_extract_part_file($part, $this->source, null);
-            } else {
-                $content = @mailparse_msg_extract_part($part, $this->source, null);
-            }
-
-            if ($content === false) {
-                throw new RuntimeException(
-                    "Content could not be parsed ({$name})"
-                );
-            }
+            $content = $part->getContent();
 
             $mailPart->setContent($content);
         }
 
         // Add any extra headers if this isn't the primary part
-        if ($name != '1') {
-            $this->addHeaders($mailPart, $partData['headers']);
+        if ($part instanceof Message\Part\ParentHeaderPart && !($part instanceof Message)) {
+            $this->addHeaders($mailPart, $part->getRawHeaders());
         }
 
         return $mailPart;
@@ -365,6 +277,8 @@ class Factory
      */
     public function decodeHeader($header, $charset = null)
     {
+        $header = preg_replace("/(\n|\r)\t/", ' ', $header);
+
         if (preg_match('/=\?([^\?]+)\?([^\?])\?[^\?]+\?=/', $header, $matches) > 0) {
             if ($charset === null) {
                 $charset = $matches[1];
