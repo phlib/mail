@@ -3,6 +3,7 @@
 namespace Phlib\Mail;
 
 use Phlib\Mail\Exception\RuntimeException;
+use ZBateson\MailMimeParser\Header\AddressHeader;
 use ZBateson\MailMimeParser\MailMimeParser;
 use ZBateson\MailMimeParser\Message;
 
@@ -86,7 +87,7 @@ class Factory
         $mail = new Mail();
 
         // Headers and meta info
-        $this->addMailHeaders($mail, $message->getRawHeaders());
+        $this->addMailHeaders($mail, $message);
 
         // Parse from main part
         $child = $this->parsePart($message, $mail);
@@ -99,86 +100,90 @@ class Factory
      * Add headers to the Mail object
      *
      * @param Mail $mail
-     * @param array $headers
+     * @param Message $message
      * @return void
      */
-    private function addMailHeaders(Mail $mail, array $headers)
+    private function addMailHeaders(Mail $mail, Message $message)
     {
-        $charset = null;
-
-        // Iterate headers
-        foreach ($headers as $header) {
-            list($headerKey, $headerEncoded) = $header;
-            // Decode
-            $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
-            if (is_null($charset) && !is_null($headerDecoded['charset'])) {
-                // Set first discovered charset
-                $charset = $headerDecoded['charset'];
-                $mail->setCharset($charset);
-            }
-            $headerText = $headerDecoded['text'];
-
+        /** @var AddressHeader $fromHeader */
+        if (($fromHeader = $message->getHeader('from')) !== null) {
             try {
-                switch (strtolower($headerKey)) {
-                    case 'from':
-                    case 'reply-to':
-                    case 'return-path':
-                        $addresses = $this->parseEmailAddresses($headerText);
-                        $method = 'set' . str_replace(' ', '', ucwords(
-                            str_replace('-', ' ', strtolower($headerKey))
-                        ));
-                        foreach ($addresses as $address) {
-                            $mail->{$method}(
-                                $address['address'],
-                                ($address['display'] == $address['address']) ? null : $address['display']
-                            );
-                        }
-                        break;
-                    case 'cc':
-                    case 'to':
-                        $addresses = $this->parseEmailAddresses($headerText);
-                        $method = 'add' . ucwords(strtolower($headerKey));
-                        foreach ($addresses as $address) {
-                            $mail->{$method}(
-                                $address['address'],
-                                ($address['display'] == $address['address']) ? null : $address['display']
-                            );
-                        }
-                        break;
-                    case 'subject':
-                        $mail->setSubject($headerText);
-                        break;
-                    default:
-                        $mail->addHeader($headerKey, $headerText);
-                        break;
+                $addresses = $fromHeader->getAddresses();
+                if (!empty($addresses)) {
+                    $mail->setFrom($addresses[0]->getEmail(), $addresses[0]->getName());
                 }
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {}
+        }
+        /** @var AddressHeader $replyToHeader */
+        if (($replyToHeader = $message->getHeader('reply-to')) !== null) {
+            try {
+                $addresses = $replyToHeader->getAddresses();
+                if (!empty($addresses)) {
+                    $mail->setReplyTo($addresses[0]->getEmail(), $addresses[0]->getName());
+                }
+
+            } catch (\InvalidArgumentException $e) {}
+        }
+        if (($returnPath = $message->getHeaderValue('return-path', false)) !== false) {
+            try {
+                $mail->setReturnPath($returnPath);
+            } catch (\InvalidArgumentException $e) {}
+        }
+
+
+        /** @var AddressHeader $header */
+        foreach ($message->getAllHeadersByName('to') as $header) {
+            foreach ($header->getAddresses() as $address) {
+                try {
+                    $mail->addTo($address->getEmail(), $address->getName());
+                } catch (\InvalidArgumentException $e) {}
             }
         }
+        /** @var AddressHeader $header */
+        foreach ($message->getAllHeadersByName('cc') as $header) {
+            foreach ($header->getAddresses() as $address) {
+                try {
+                    $mail->addCc($address->getEmail(), $address->getName());
+                } catch (\InvalidArgumentException $e) {}
+            }
+        }
+
+        if (($subject = $message->getHeaderValue('subject', false)) !== false) {
+            try {
+                $mail->setSubject($subject);
+            } catch (\InvalidArgumentException $e) {}
+        }
+
+        $this->addHeaders($mail, $message, ['from', 'reply-to', 'return-path', 'cc', 'to', 'subject']);
     }
 
     /**
      * Add headers to a mail part
      *
      * @param AbstractPart $part
-     * @param array $headers
+     * @param Message\Part\ParentHeaderPart $messagePart
+     * @param array $excludeHeaders
      * @return void
      */
-    private function addHeaders(AbstractPart $part, array $headers)
+    private function addHeaders(AbstractPart $part, Message\Part\ParentHeaderPart $messagePart, array $excludeHeaders = [])
     {
-        $charset = null;
-        if (method_exists($part, 'getCharset')) {
-            $charset = $part->getCharset();
-        }
+        $headerKeys = array_keys(array_reduce($messagePart->getRawHeaders(), function($headerKeys, $header) use ($excludeHeaders) {
+            list($headerKey) = $header;
+            if (!in_array($headerKey, $excludeHeaders)) {
+                $headerKeys[strtolower($headerKey)] = true;
+            }
+            return $headerKeys;
+        }, []));
 
         // Iterate headers
-        foreach ($headers as $header) {
-            list($headerKey, $headerEncoded) = $header;
-            $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
-            $headerText = $headerDecoded['text'];
-            try {
-                $part->addHeader($headerKey, $headerText);
-            } catch (\InvalidArgumentException $e) {
+        foreach ($headerKeys as $headerKey) {
+            $headers = $messagePart->getAllHeadersByName($headerKey);
+            foreach ($headers as $header) {
+                $headerText = $header->getRaWValue();
+                $headerText = preg_replace("/(\n|\r)\t/", ' ', $headerText);
+                try {
+                    $part->addHeader($headerKey, $headerText);
+                } catch (\InvalidArgumentException $e) {}
             }
         }
     }
@@ -257,58 +262,9 @@ class Factory
 
         // Add any extra headers if this isn't the primary part
         if ($part instanceof Message\Part\ParentHeaderPart && !($part instanceof Message)) {
-            $this->addHeaders($mailPart, $part->getRawHeaders());
+            $this->addHeaders($mailPart, $part);
         }
 
         return $mailPart;
-    }
-
-    /**
-     * Decode header
-     *
-     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
-     * @param string $header Encoded header
-     * @param string $charset Target charset. Optional. Default will use source charset where available.
-     * @return array {
-     *     @var string $text    Decoded header
-     *     @var string $charset Charset of the decoded header
-     * }
-     * @throws InvalidArgumentException
-     */
-    public function decodeHeader($header, $charset = null)
-    {
-        $header = preg_replace("/(\n|\r)\t/", ' ', $header);
-
-        if (preg_match('/=\?([^\?]+)\?([^\?])\?[^\?]+\?=/', $header, $matches) > 0) {
-            if ($charset === null) {
-                $charset = $matches[1];
-            }
-
-            // Workaround for https://bugs.php.net/bug.php?id=68821
-            $header = preg_replace_callback('/(=\?[^\?]+\?Q\?)([^\?]+)(\?=)/i', function ($matches) {
-                return $matches[1] . str_replace('_', '=20', $matches[2]) . $matches[3];
-            }, $header);
-
-            $header = mb_decode_mimeheader($header);
-        }
-
-        return [
-            'charset' => $charset,
-            'text' => $header
-        ];
-    }
-
-    /**
-     * Parse RFC 822 formatted email addresses string
-     *
-     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
-     * @see mailparse_rfc822_parse_addresses()
-     * @param string $addresses
-     * @return array 'display', 'address' and 'is_group'
-     * @see mailparse_rfc822_parse_addresses
-     */
-    public function parseEmailAddresses($addresses)
-    {
-        return mailparse_rfc822_parse_addresses($addresses);
     }
 }
