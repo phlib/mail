@@ -24,7 +24,6 @@
     ],
     "require": {
         "php": "^5.6|^7.0",
-        "ext-mailparse" : "*",
         "ext-mbstring": "*",
         "zbateson/mail-mime-parser": "^1.0"
     },
