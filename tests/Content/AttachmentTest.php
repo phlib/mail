@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Content;
 
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Content\Attachment;
 use Phlib\Mail\Exception\InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class AttachmentTest extends \PHPUnit_Framework_TestCase
+class AttachmentTest extends TestCase
 {
     public function testCreateFromFile()
     {

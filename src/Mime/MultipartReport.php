@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Mime;
 
@@ -20,7 +21,7 @@ class MultipartReport extends AbstractMime
      * @param string $reportType
      * @return $this
      */
-    public function setReportType($reportType)
+    public function setReportType(string $reportType): self
     {
         $this->reportType = $reportType;
 
@@ -32,7 +33,7 @@ class MultipartReport extends AbstractMime
      *
      * @return string
      */
-    public function getReportType()
+    public function getReportType(): string
     {
         return $this->reportType;
     }
@@ -43,7 +44,7 @@ class MultipartReport extends AbstractMime
      * @param string $contentType
      * @return string
      */
-    protected function addContentTypeParameters($contentType)
+    protected function addContentTypeParameters(string $contentType): string
     {
         if ($this->reportType) {
             $contentType .= "; report-type={$this->reportType}";

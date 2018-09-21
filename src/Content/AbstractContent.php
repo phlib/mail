@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Content;
 
@@ -11,35 +12,18 @@ abstract class AbstractContent extends AbstractPart
      */
     private $content = '';
 
-    /**
-     * Set content
-     *
-     * @param string $content
-     * @return AbstractContent
-     */
-    public function setContent($content)
+    public function setContent(string $content): self
     {
         $this->content = $content;
         return $this;
     }
 
-    /**
-     * Get content
-     *
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * Encode content
-     *
-     * @param string $content
-     * @return string
-     */
-    public function encodeContent($content)
+    public function encodeContent(string $content): string
     {
         switch ($this->encoding) {
             case self::ENCODING_QPRINTABLE:
@@ -58,12 +42,7 @@ abstract class AbstractContent extends AbstractPart
         }
     }
 
-    /**
-     * To string
-     *
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
         return $this->getEncodedHeaders() . "\r\n" . $this->encodeContent($this->getContent());
     }

@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\MultipartAlternative;
+use PHPUnit\Framework\TestCase;
 
-class MultipartAlternativeTest extends \PHPUnit_Framework_TestCase
+class MultipartAlternativeTest extends TestCase
 {
     /**
      * @var MultipartAlternative

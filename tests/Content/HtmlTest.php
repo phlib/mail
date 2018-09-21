@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Content;
 
 use Phlib\Mail\Content\Html;
+use PHPUnit\Framework\TestCase;
 
-class HtmlTest extends \PHPUnit_Framework_TestCase
+class HtmlTest extends TestCase
 {
     /**
      * @var Html

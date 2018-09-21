@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests;
 
@@ -7,8 +8,9 @@ use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
 use Phlib\Mail\Mail;
 use Phlib\Mail\Mime\Mime;
+use PHPUnit\Framework\TestCase;
 
-class MailTest extends \PHPUnit_Framework_TestCase
+class MailTest extends TestCase
 {
     /**
      * @var \Phlib\Mail\Mail
@@ -104,7 +106,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBefore, $this->mail->getTo());
 
         $this->mail->clearTo();
-        $expectedAfter = array();
+        $expectedAfter = [];
         $this->assertEquals($expectedAfter, $this->mail->getTo());
     }
 
@@ -134,7 +136,7 @@ class MailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBefore, $this->mail->getCc());
 
         $this->mail->clearCc();
-        $expectedAfter = array();
+        $expectedAfter = [];
         $this->assertEquals($expectedAfter, $this->mail->getCc());
     }
 

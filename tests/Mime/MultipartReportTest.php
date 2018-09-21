@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\MultipartReport;
+use PHPUnit\Framework\TestCase;
 
-class MultipartReportTest extends \PHPUnit_Framework_TestCase
+class MultipartReportTest extends TestCase
 {
     /**
      * @var MultipartReport

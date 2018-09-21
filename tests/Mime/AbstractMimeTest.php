@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\AbstractMime;
+use PHPUnit\Framework\TestCase;
 
-class AbstractMimeTest extends \PHPUnit_Framework_TestCase
+class AbstractMimeTest extends TestCase
 {
     /**
      * @var AbstractMime
@@ -76,12 +78,12 @@ class AbstractMimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedBefore, $this->part->getParts());
 
         $this->part->clearParts();
-        $this->assertEquals(array(), $this->part->getParts());
+        $this->assertEquals([], $this->part->getParts());
     }
 
     public function testGetPartsDefault()
     {
-        $this->assertEquals(array(), $this->part->getParts());
+        $this->assertEquals([], $this->part->getParts());
     }
 
     /**
@@ -91,7 +93,7 @@ class AbstractMimeTest extends \PHPUnit_Framework_TestCase
      */
     public function testToString()
     {
-        $expected = array();
+        $expected = [];
 
         $this->part->addHeader('test-header', 'header value');
         $expected[] = "Test-Header: header value\r\n";

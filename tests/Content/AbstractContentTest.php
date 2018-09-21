@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Content;
 
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Content\AbstractContent;
+use PHPUnit\Framework\TestCase;
 
-class AbstractContentTest extends \PHPUnit_Framework_TestCase
+class AbstractContentTest extends TestCase
 {
     /**
      * @var AbstractContent

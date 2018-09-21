@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\Mime;
+use PHPUnit\Framework\TestCase;
 
-class MimeTest extends \PHPUnit_Framework_TestCase
+class MimeTest extends TestCase
 {
     public function testSetGetType()
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail;
 
@@ -14,7 +15,7 @@ abstract class AbstractPart
     /**
      * @var array
      */
-    private $headers = array();
+    private $headers = [];
 
     /**
      * @var array
@@ -55,10 +56,10 @@ abstract class AbstractPart
      *
      * @param string $name
      * @param string $value
-     * @return AbstractPart
+     * @return $this
      * @throws InvalidArgumentException
      */
-    public function addHeader($name, $value)
+    public function addHeader(string $name, string $value): self
     {
         $name = strtolower($name);
         if (in_array($name, $this->prohibitedHeaders)) {
@@ -75,21 +76,14 @@ abstract class AbstractPart
         $filteredValue = strtr($value, $rule);
 
         if (!array_key_exists($name, $this->headers)) {
-            $this->headers[$name] = array();
+            $this->headers[$name] = [];
         }
         $this->headers[$name][] = $filteredValue;
 
         return $this;
     }
 
-    /**
-     * Set header
-     *
-     * @param string $name
-     * @param string $value
-     * @return AbstractPart
-     */
-    public function setHeader($name, $value)
+    public function setHeader(string $name, string $value): self
     {
         $this->clearHeader($name);
         $this->addHeader($name, $value);
@@ -97,24 +91,13 @@ abstract class AbstractPart
         return $this;
     }
 
-    /**
-     * Clear headers
-     *
-     * @return AbstractPart
-     */
-    public function clearHeaders()
+    public function clearHeaders(): self
     {
-        $this->headers = array();
+        $this->headers = [];
         return $this;
     }
 
-    /**
-     * Clear header
-     *
-     * @param string $name
-     * @return AbstractPart
-     */
-    public function clearHeader($name)
+    public function clearHeader(string $name): self
     {
         $name = strtolower($name);
         unset($this->headers[$name]);
@@ -122,14 +105,7 @@ abstract class AbstractPart
         return $this;
     }
 
-    /**
-     * Remove header
-     *
-     * @param string $name
-     * @param string $value
-     * @return AbstractPart
-     */
-    public function removeHeader($name, $value)
+    public function removeHeader(string $name, string $value): self
     {
         $name = strtolower($name);
         if (array_key_exists($name, $this->headers)) {
@@ -144,23 +120,12 @@ abstract class AbstractPart
         return $this;
     }
 
-    /**
-     * Get headers
-     *
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
 
-    /**
-     * Get header
-     *
-     * @param string $name
-     * @return array
-     */
-    public function getHeader($name)
+    public function getHeader(string $name): array
     {
         $name = strtolower($name);
         if (!array_key_exists($name, $this->headers)) {
@@ -169,13 +134,7 @@ abstract class AbstractPart
         return $this->headers[$name];
     }
 
-    /**
-     * Has header
-     *
-     * @param string $name
-     * @return boolean
-     */
-    public function hasHeader($name)
+    public function hasHeader(string $name): bool
     {
         $name = strtolower($name);
         if (isset($this->headers[$name]) && !empty($this->headers[$name])) {
@@ -185,14 +144,9 @@ abstract class AbstractPart
         return false;
     }
 
-    /**
-     * Get encoded headers
-     *
-     * @return string
-     */
-    public function getEncodedHeaders()
+    public function getEncodedHeaders(): string
     {
-        $headers = array();
+        $headers = [];
 
         foreach ($this->headers as $name => $values) {
             foreach ($values as $value) {
@@ -229,39 +183,23 @@ abstract class AbstractPart
      * @param string $contentType
      * @return string
      */
-    protected function addContentTypeParameters($contentType)
+    protected function addContentTypeParameters(string $contentType): string
     {
         return $contentType;
     }
 
-    /**
-     * Set charset
-     *
-     * @param string $charset
-     * @return AbstractPart
-     */
-    public function setCharset($charset)
+    public function setCharset(string $charset): self
     {
         $this->charset = $charset;
         return $this;
     }
 
-    /**
-     * Get charset
-     *
-     * @return string
-     */
-    public function getCharset()
+    public function getCharset(): ?string
     {
         return $this->charset;
     }
 
-    /**
-     * Get encoding
-     *
-     * @return string
-     */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
@@ -270,10 +208,10 @@ abstract class AbstractPart
      * Set encoding
      *
      * @param string $encoding
-     * @return AbstractPart
+     * @return $this
      * @throws InvalidArgumentException
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): self
     {
         $encoding = strtolower($encoding);
         if (!in_array($encoding, $this->validEncodings)) {
@@ -284,23 +222,12 @@ abstract class AbstractPart
         return $this;
     }
 
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * Encode header
-     *
-     * @param string $header
-     * @return string
-     */
-    public function encodeHeader($header)
+    public function encodeHeader(string $header): string
     {
         $charset = $this->charset;
         if (!$charset) {
@@ -309,10 +236,5 @@ abstract class AbstractPart
         return mb_encode_mimeheader($header, $charset);
     }
 
-    /**
-     * To string
-     *
-     * @return string
-     */
-    abstract public function toString();
+    abstract public function toString(): string;
 }

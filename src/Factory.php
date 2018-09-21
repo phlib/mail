@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail;
 
@@ -34,7 +35,7 @@ class Factory
      * @return Mail
      * @throws RuntimeException
      */
-    public function createFromFile($filename)
+    public function createFromFile(string $filename): Mail
     {
         try {
             $this->source = $filename;
@@ -68,7 +69,7 @@ class Factory
      * @param string $filename
      * @return Mail
      */
-    public static function fromFile($filename)
+    public static function fromFile(string $filename): Mail
     {
         return (new self)->createFromFile($filename);
     }
@@ -80,7 +81,7 @@ class Factory
      * @return Mail
      * @throws RuntimeException
      */
-    public function createFromString($source)
+    public function createFromString(string $source): Mail
     {
         try {
             $this->source = $source;
@@ -112,7 +113,7 @@ class Factory
      * @param string $source
      * @return Mail
      */
-    public static function fromString($source)
+    public static function fromString(string $source): Mail
     {
         return (new self)->createFromString($source);
     }
@@ -123,7 +124,7 @@ class Factory
      * @return Mail
      * @throws RuntimeException
      */
-    private function parseEmail()
+    private function parseEmail(): Mail
     {
         $mail = new Mail();
 
@@ -148,14 +149,7 @@ class Factory
         return $mail;
     }
 
-    /**
-     * Add headers to the Mail object
-     *
-     * @param Mail $mail
-     * @param array $headers
-     * @return void
-     */
-    private function addMailHeaders(Mail $mail, array $headers)
+    private function addMailHeaders(Mail $mail, array $headers): void
     {
         $charset = null;
 
@@ -214,14 +208,7 @@ class Factory
         }
     }
 
-    /**
-     * Add headers to a mail part
-     *
-     * @param AbstractPart $part
-     * @param array $headers
-     * @return void
-     */
-    private function addHeaders(AbstractPart $part, array $headers)
+    private function addHeaders(AbstractPart $part, array $headers): void
     {
         $charset = null;
         if (method_exists($part, 'getCharset')) {
@@ -251,7 +238,7 @@ class Factory
      * @param Mail $mail
      * @return AbstractPart
      */
-    private function parsePart($name, Mail $mail)
+    private function parsePart(string $name, Mail $mail): AbstractPart
     {
         // Get part resource
         if (($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
@@ -363,7 +350,7 @@ class Factory
      * }
      * @throws InvalidArgumentException
      */
-    public function decodeHeader($header, $charset = null)
+    public function decodeHeader(string $header, ?string $charset = null): array
     {
         if (preg_match('/=\?([^\?]+)\?([^\?])\?[^\?]+\?=/', $header, $matches) > 0) {
             if ($charset === null) {
@@ -393,7 +380,7 @@ class Factory
      * @return array 'display', 'address' and 'is_group'
      * @see mailparse_rfc822_parse_addresses
      */
-    public function parseEmailAddresses($addresses)
+    public function parseEmailAddresses(string $addresses): array
     {
         return mailparse_rfc822_parse_addresses($addresses);
     }

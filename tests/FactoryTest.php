@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests;
 
@@ -6,8 +7,9 @@ use Phlib\Mail\Exception\RuntimeException;
 use Phlib\Mail\Factory;
 use Phlib\Mail\Mime\AbstractMime;
 use phpmock\phpunit\PHPMock;
+use PHPUnit\Framework\TestCase;
 
-class FactoryTest extends \PHPUnit_Framework_TestCase
+class FactoryTest extends TestCase
 {
     use PHPMock;
 

@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\MultipartMixed;
+use PHPUnit\Framework\TestCase;
 
-class MultipartMixedTest extends \PHPUnit_Framework_TestCase
+class MultipartMixedTest extends TestCase
 {
     /**
      * @var MultipartMixed

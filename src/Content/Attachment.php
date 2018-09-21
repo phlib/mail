@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Content;
 
+use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
 
 /**
@@ -31,9 +33,9 @@ class Attachment extends AbstractContent
      *
      * @param string $filename
      * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
-     * @return Attachment
+     * @return $this
      */
-    public static function createFromFile($filename, $disposition = null)
+    public static function createFromFile(string $filename, ?string $disposition = null): Attachment
     {
         if (!is_readable($filename)) {
             throw new InvalidArgumentException('Attachment file cannot be read');
@@ -52,7 +54,7 @@ class Attachment extends AbstractContent
      * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
      * @param string $type
      */
-    public function __construct($name, $disposition = null, $type = 'application/octet-stream')
+    public function __construct(string $name, ?string $disposition = null, string $type = 'application/octet-stream')
     {
         $this->name = $name;
         $this->disposition = $disposition;
@@ -66,10 +68,10 @@ class Attachment extends AbstractContent
      * Set encoding
      *
      * @param string $encoding
-     * @return Attachment
+     * @return $this
      * @throws InvalidArgumentException
      */
-    public function setEncoding($encoding)
+    public function setEncoding(string $encoding): AbstractPart
     {
         if ($encoding !== 'base64') {
             throw new InvalidArgumentException('Will only accept base64 for attachment encoding');
@@ -78,12 +80,7 @@ class Attachment extends AbstractContent
         return $this;
     }
 
-    /**
-     * Get encoded headers
-     *
-     * @return string
-     */
-    public function getEncodedHeaders()
+    public function getEncodedHeaders(): string
     {
         $headers = parent::getEncodedHeaders();
         if ($this->disposition) {
@@ -100,7 +97,7 @@ class Attachment extends AbstractContent
      * @param string $contentType
      * @return string
      */
-    protected function addContentTypeParameters($contentType)
+    protected function addContentTypeParameters(string $contentType): string
     {
         $contentType .= "; name=\"{$this->name}\"";
 

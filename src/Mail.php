@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail;
 
@@ -67,13 +68,7 @@ class Mail extends AbstractPart
      */
     private $attachmentCount = 0;
 
-    /**
-     * Set part
-     *
-     * @param AbstractPart $part
-     * @return $this
-     */
-    public function setPart(AbstractPart $part)
+    public function setPart(AbstractPart $part): self
     {
         $this->part = $part;
         return $this;
@@ -85,7 +80,7 @@ class Mail extends AbstractPart
      * @return AbstractPart
      * @throws RuntimeException
      */
-    public function getPart()
+    public function getPart(): AbstractPart
     {
         if (!$this->part) {
             throw new RuntimeException('Missing mail part');
@@ -93,14 +88,9 @@ class Mail extends AbstractPart
         return $this->part;
     }
 
-    /**
-     * Get encoded headers
-     *
-     * @return string
-     */
-    public function getEncodedHeaders()
+    public function getEncodedHeaders(): string
     {
-        $headers = array();
+        $headers = [];
 
         if ($this->returnPath) {
             $headers[] = "Return-Path: <$this->returnPath>";
@@ -116,7 +106,7 @@ class Mail extends AbstractPart
         }
 
         if (!empty($this->to)) {
-            $to = array();
+            $to = [];
             foreach ($this->to as $address => $name) {
                 $to[] = $this->formatAddress($address, $name);
             }
@@ -124,7 +114,7 @@ class Mail extends AbstractPart
         }
 
         if (!empty($this->cc)) {
-            $cc = array();
+            $cc = [];
             foreach ($this->cc as $address => $name) {
                 $cc[] = $this->formatAddress($address, $name);
             }
@@ -156,7 +146,7 @@ class Mail extends AbstractPart
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function addTo($address, $name = null)
+    public function addTo(string $address, ?string $name = null): self
     {
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("Invalid email address ($address)");
@@ -169,36 +159,19 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Get to
-     *
-     * @return array
-     */
-    public function getTo()
+    public function getTo(): array
     {
         return $this->to;
     }
 
-    /**
-     * Clear any to addresses
-     *
-     * @return $this
-     */
-    public function clearTo()
+    public function clearTo(): self
     {
-        $this->to = array();
+        $this->to = [];
 
         return $this;
     }
 
-    /**
-     * Add CC
-     *
-     * @param string $address
-     * @param string $name
-     * @return $this
-     */
-    public function addCc($address, $name = null)
+    public function addCc(string $address, ?string $name = null): self
     {
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("Invalid email address ($address)");
@@ -211,24 +184,14 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Get cc
-     *
-     * @return array
-     */
-    public function getCc()
+    public function getCc(): array
     {
         return $this->cc;
     }
 
-    /**
-     * Clear cc addresses
-     *
-     * @return $this
-     */
-    public function clearCc()
+    public function clearCc(): self
     {
-        $this->cc = array();
+        $this->cc = [];
 
         return $this;
     }
@@ -241,7 +204,7 @@ class Mail extends AbstractPart
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function setReplyTo($address, $name = null)
+    public function setReplyTo(string $address, ?string $name = null): self
     {
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("Invalid email address ($address)");
@@ -256,23 +219,12 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Get reply to
-     *
-     * @return array|null
-     */
-    public function getReplyTo()
+    public function getReplyTo(): ?array
     {
         return $this->replyTo;
     }
 
-    /**
-     * Filter name
-     *
-     * @param string $name
-     * @return string
-     */
-    private function filterName($name)
+    private function filterName(string $name): string
     {
         $rule = [
             "\r" => '',
@@ -293,7 +245,7 @@ class Mail extends AbstractPart
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function setReturnPath($address)
+    public function setReturnPath(string $address): self
     {
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("Invalid email address ($address)");
@@ -302,23 +254,13 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Clear return path
-     *
-     * @return $this
-     */
-    public function clearReturnPath()
+    public function clearReturnPath(): self
     {
         $this->returnPath = null;
         return $this;
     }
 
-    /**
-     * Get return path
-     *
-     * @return string|null
-     */
-    public function getReturnPath()
+    public function getReturnPath(): ?string
     {
         return $this->returnPath;
     }
@@ -331,7 +273,7 @@ class Mail extends AbstractPart
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function setFrom($address, $name = null)
+    public function setFrom(string $address, ?string $name = null): self
     {
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException("Invalid email address ($address)");
@@ -346,46 +288,23 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Get from
-     *
-     * @return array|null
-     */
-    public function getFrom()
+    public function getFrom(): ?array
     {
         return $this->from;
     }
 
-    /**
-     * Set subject
-     *
-     * @param string $subject
-     * @return $this
-     */
-    public function setSubject($subject)
+    public function setSubject(string $subject): self
     {
         $this->subject = $subject;
         return $this;
     }
 
-    /**
-     * Get subject
-     *
-     * @return string|null
-     */
-    public function getSubject()
+    public function getSubject(): ?string
     {
         return $this->subject;
     }
 
-    /**
-     * Format address
-     *
-     * @param string $address
-     * @param string $name
-     * @return string
-     */
-    public function formatAddress($address, $name = null)
+    public function formatAddress(string $address, ?string $name = null): string
     {
         if (!$name) {
             return $address;
@@ -398,56 +317,31 @@ class Mail extends AbstractPart
         }
     }
 
-    /**
-     * Return true if the mail has a part descendant which is an attachment
-     *
-     * @return bool
-     */
-    public function hasAttachment()
+    public function hasAttachment(): bool
     {
         return ($this->attachmentCount > 0);
     }
 
-    /**
-     * Return the number of attachments contains in the mail's descendants
-     *
-     * @return int
-     */
-    public function getAttachmentCount()
+    public function getAttachmentCount(): int
     {
         return $this->attachmentCount;
     }
 
-    /**
-     * Increment the number of attachments contained in this mail's descendants
-     *
-     * @return $this
-     */
-    public function incrementAttachmentCount()
+    public function incrementAttachmentCount(): self
     {
         $this->attachmentCount++;
 
         return $this;
     }
 
-    /**
-     * Decrement the number of attachments contained in this mail's descendants
-     *
-     * @return $this
-     */
-    public function decrementAttachmentCount()
+    public function decrementAttachmentCount(): self
     {
         $this->attachmentCount--;
 
         return $this;
     }
 
-    /**
-     * To string
-     *
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
         $result = $this->getEncodedHeaders() . $this->getPart()->toString();
         if (substr($result, -1) !== "\n") {

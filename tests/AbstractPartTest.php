@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Phlib\Mail\Tests;
 
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class AbstractPartTest extends \PHPUnit_Framework_TestCase
+class AbstractPartTest extends TestCase
 {
     /**
      * @var AbstractPart
@@ -125,7 +127,7 @@ class AbstractPartTest extends \PHPUnit_Framework_TestCase
 
         $this->part->clearHeaders();
         $actualAfter = $this->part->getHeaders();
-        $this->assertEquals(array(), $actualAfter);
+        $this->assertEquals([], $actualAfter);
     }
 
     public function testHasHeaderFalse()
