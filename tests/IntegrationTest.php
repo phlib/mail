@@ -10,8 +10,9 @@ use Phlib\Mail\Content\Text;
 use Phlib\Mail\Factory;
 use Phlib\Mail\Mime\AbstractMime;
 use Phlib\Mail\Mime\MultipartAlternative;
+use PHPUnit\Framework\TestCase;
 
-class IntegrationTest extends \PHPUnit_Framework_TestCase
+class IntegrationTest extends TestCase
 {
 
     public function testRecreateMultipartMail()

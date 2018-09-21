@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Phlib\Mail\Tests\Content;
 
 use Phlib\Mail\Content\Content;
+use PHPUnit\Framework\TestCase;
 
-class ContentTest extends \PHPUnit_Framework_TestCase
+class ContentTest extends TestCase
 {
     public function testGetTypeDefault()
     {

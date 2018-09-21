@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\AbstractMime;
+use PHPUnit\Framework\TestCase;
 
-class AbstractMimeTest extends \PHPUnit_Framework_TestCase
+class AbstractMimeTest extends TestCase
 {
     /**
      * @var AbstractMime

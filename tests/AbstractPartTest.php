@@ -5,8 +5,9 @@ namespace Phlib\Mail\Tests;
 
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
-class AbstractPartTest extends \PHPUnit_Framework_TestCase
+class AbstractPartTest extends TestCase
 {
     /**
      * @var AbstractPart

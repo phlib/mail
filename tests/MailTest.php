@@ -8,8 +8,9 @@ use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
 use Phlib\Mail\Mail;
 use Phlib\Mail\Mime\Mime;
+use PHPUnit\Framework\TestCase;
 
-class MailTest extends \PHPUnit_Framework_TestCase
+class MailTest extends TestCase
 {
     /**
      * @var \Phlib\Mail\Mail
