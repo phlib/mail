@@ -65,16 +65,6 @@ class Factory
     }
 
     /**
-     * @deprecated 2.1.0:3.0.0 Use createFromFile() to avoid statics and allow for the Factory to be used in DI
-     * @param string $filename
-     * @return Mail
-     */
-    public static function fromFile(string $filename): Mail
-    {
-        return (new self)->createFromFile($filename);
-    }
-
-    /**
      * Load email from string
      *
      * @param string $source email as string
@@ -106,16 +96,6 @@ class Factory
                 $this->structure
             );
         }
-    }
-
-    /**
-     * @deprecated 2.1.0:3.0.0 Use createFromString() to avoid statics and allow for the Factory to be used in DI
-     * @param string $source
-     * @return Mail
-     */
-    public static function fromString(string $source): Mail
-    {
-        return (new self)->createFromString($source);
     }
 
     /**
@@ -341,7 +321,6 @@ class Factory
     /**
      * Decode header
      *
-     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
      * @param string $header Encoded header
      * @param string $charset Target charset. Optional. Default will use source charset where available.
      * @return array {
@@ -350,7 +329,7 @@ class Factory
      * }
      * @throws InvalidArgumentException
      */
-    public function decodeHeader(string $header, ?string $charset = null): array
+    private function decodeHeader(string $header, ?string $charset = null): array
     {
         if (preg_match('/=\?([^\?]+)\?([^\?])\?[^\?]+\?=/', $header, $matches) > 0) {
             if ($charset === null) {
@@ -374,13 +353,11 @@ class Factory
     /**
      * Parse RFC 822 formatted email addresses string
      *
-     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
      * @see mailparse_rfc822_parse_addresses()
      * @param string $addresses
      * @return array 'display', 'address' and 'is_group'
-     * @see mailparse_rfc822_parse_addresses
      */
-    public function parseEmailAddresses(string $addresses): array
+    private function parseEmailAddresses(string $addresses): array
     {
         return mailparse_rfc822_parse_addresses($addresses);
     }
