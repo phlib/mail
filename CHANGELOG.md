@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - `Factory::fromString()`
     - `Factory::decodeHeader()`
     - `Factory::parseEmailAddresses()`
+- **BC break**: Removed `AbstractPart::encodeHeader()`
 
 ## [2.1.1] - 2018-03-19
 ### Fixed

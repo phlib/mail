@@ -227,7 +227,7 @@ abstract class AbstractPart
         return $this->type;
     }
 
-    public function encodeHeader(string $header): string
+    protected function encodeHeader(string $header): string
     {
         $charset = $this->charset;
         if (!$charset) {

@@ -146,10 +146,16 @@ class AbstractPartTest extends TestCase
 
     public function testGetEncodedHeaders()
     {
-        $expected = $this->addHeaders();
+        // Multiple basic headers
+        $expected = $this->addHeaders()[1];
+
+        // Check encoding
+        $value = "line1\r\nline2, high ascii > é <\r\n";
+        $this->part->addHeader('Subject', $value);
+        $expected .= "Subject: line1line2, high ascii > =?UTF-8?B?" . base64_encode('é <') . "?=\r\n";
 
         $actual = $this->part->getEncodedHeaders();
-        $this->assertEquals($expected[1], $actual);
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -192,17 +198,6 @@ class AbstractPartTest extends TestCase
     {
         $type = null;
         $this->assertEquals($type, $this->part->getType());
-    }
-
-    public function testEncodeHeader()
-    {
-        $value    = "line1\r\nline2, high ascii > é <\r\n";
-        $header   = "Subject: {$value}";
-        $expected = "Subject: =?UTF-8?B?" . base64_encode($value) . "?=";
-
-        $this->part->setCharset('UTF-8');
-        $actual = $this->part->encodeHeader($header);
-        $this->assertEquals($expected, $actual);
     }
 
     /**
