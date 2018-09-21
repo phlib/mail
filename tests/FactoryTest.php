@@ -330,31 +330,6 @@ class FactoryTest extends TestCase
     }
 
     /**
-     * @deprecated 2.1.0:3.0.0 Method should not have been available in the public interface
-     */
-    public function testParseEmailAddresses()
-    {
-        $factory = new Factory();
-
-        $addresses = 'recipient1@example.com, "Recipient Two" <recipient2@example.com>';
-
-        $expected = [
-            0 => [
-                'display'  => 'recipient1@example.com',
-                'address'  => 'recipient1@example.com',
-                'is_group' => false,
-            ],
-            1 => [
-                'display'  => 'Recipient Two',
-                'address'  => 'recipient2@example.com',
-                'is_group' => false,
-            ]
-        ];
-
-        $this->assertEquals($expected, $factory->parseEmailAddresses($addresses));
-    }
-
-    /**
      * Invoke Factory::decodeHeader()
      *
      * @see Factory::decodeHeader()
