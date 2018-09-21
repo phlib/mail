@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PHP 7.1 scalar type declarations and return types
 ### Removed
 - Removed support for PHP 5.x and 7.0 as they are no longer
 [actively supported](https://php.net/supported-versions.php) by the PHP project

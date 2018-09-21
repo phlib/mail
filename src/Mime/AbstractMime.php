@@ -17,47 +17,24 @@ abstract class AbstractMime extends AbstractPart
      */
     private $boundary;
 
-    /**
-     * Set boundary
-     *
-     * @param string $boundary
-     * @return AbstractMime
-     */
-    private function setBoundary($boundary)
+    private function setBoundary(string $boundary): self
     {
         $this->boundary = $boundary;
         return $this;
     }
 
-    /**
-     * Get boundary
-     *
-     * @return string
-     */
-    public function getBoundary()
+    public function getBoundary(): ?string
     {
         return $this->boundary;
     }
 
-    /**
-     * Add part
-     *
-     * @param AbstractPart $part
-     * @return AbstractPart
-     */
-    public function addPart(AbstractPart $part)
+    public function addPart(AbstractPart $part): AbstractPart
     {
         $this->parts[] = $part;
         return $part;
     }
 
-    /**
-     * Set parts
-     *
-     * @param array $parts
-     * @return AbstractMime
-     */
-    public function setParts(array $parts)
+    public function setParts(array $parts): self
     {
         $this->clearParts();
         foreach ($parts as $part) {
@@ -66,12 +43,7 @@ abstract class AbstractMime extends AbstractPart
         return $this;
     }
 
-    /**
-     * Clear parts
-     *
-     * @return AbstractMime
-     */
-    public function clearParts()
+    public function clearParts(): self
     {
         $this->parts = array();
         return $this;
@@ -82,17 +54,12 @@ abstract class AbstractMime extends AbstractPart
      *
      * @return AbstractPart[]
      */
-    public function getParts()
+    public function getParts(): array
     {
         return $this->parts;
     }
 
-    /**
-     * To string
-     *
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
         $pieces = array();
         foreach ($this->getParts() as $part) {
@@ -119,7 +86,7 @@ abstract class AbstractMime extends AbstractPart
      * @param string $contentType
      * @return string
      */
-    protected function addContentTypeParameters($contentType)
+    protected function addContentTypeParameters(string $contentType): string
     {
         if ($this->boundary) {
             $contentType .= ";\r\n\tboundary=\"{$this->boundary}\"";

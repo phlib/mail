@@ -10,7 +10,7 @@ class Content extends AbstractContent
      *
      * @param string $type
      */
-    public function __construct($type = 'application/octet-stream')
+    public function __construct(string $type = 'application/octet-stream')
     {
         $this->type = $type;
     }
