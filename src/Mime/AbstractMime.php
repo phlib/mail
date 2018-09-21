@@ -10,7 +10,7 @@ abstract class AbstractMime extends AbstractPart
     /**
      * @var AbstractPart[]
      */
-    private $parts = array();
+    private $parts = [];
 
     /**
      * @var string
@@ -45,7 +45,7 @@ abstract class AbstractMime extends AbstractPart
 
     public function clearParts(): self
     {
-        $this->parts = array();
+        $this->parts = [];
         return $this;
     }
 
@@ -61,7 +61,7 @@ abstract class AbstractMime extends AbstractPart
 
     public function toString(): string
     {
-        $pieces = array();
+        $pieces = [];
         foreach ($this->getParts() as $part) {
             $pieces[] = $part->toString();
         }

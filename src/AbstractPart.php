@@ -15,7 +15,7 @@ abstract class AbstractPart
     /**
      * @var array
      */
-    private $headers = array();
+    private $headers = [];
 
     /**
      * @var array
@@ -76,7 +76,7 @@ abstract class AbstractPart
         $filteredValue = strtr($value, $rule);
 
         if (!array_key_exists($name, $this->headers)) {
-            $this->headers[$name] = array();
+            $this->headers[$name] = [];
         }
         $this->headers[$name][] = $filteredValue;
 
@@ -93,7 +93,7 @@ abstract class AbstractPart
 
     public function clearHeaders(): self
     {
-        $this->headers = array();
+        $this->headers = [];
         return $this;
     }
 
@@ -146,7 +146,7 @@ abstract class AbstractPart
 
     public function getEncodedHeaders(): string
     {
-        $headers = array();
+        $headers = [];
 
         foreach ($this->headers as $name => $values) {
             foreach ($values as $value) {

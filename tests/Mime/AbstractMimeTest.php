@@ -78,12 +78,12 @@ class AbstractMimeTest extends TestCase
         $this->assertEquals($expectedBefore, $this->part->getParts());
 
         $this->part->clearParts();
-        $this->assertEquals(array(), $this->part->getParts());
+        $this->assertEquals([], $this->part->getParts());
     }
 
     public function testGetPartsDefault()
     {
-        $this->assertEquals(array(), $this->part->getParts());
+        $this->assertEquals([], $this->part->getParts());
     }
 
     /**
@@ -93,7 +93,7 @@ class AbstractMimeTest extends TestCase
      */
     public function testToString()
     {
-        $expected = array();
+        $expected = [];
 
         $this->part->addHeader('test-header', 'header value');
         $expected[] = "Test-Header: header value\r\n";

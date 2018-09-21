@@ -90,7 +90,7 @@ class Mail extends AbstractPart
 
     public function getEncodedHeaders(): string
     {
-        $headers = array();
+        $headers = [];
 
         if ($this->returnPath) {
             $headers[] = "Return-Path: <$this->returnPath>";
@@ -106,7 +106,7 @@ class Mail extends AbstractPart
         }
 
         if (!empty($this->to)) {
-            $to = array();
+            $to = [];
             foreach ($this->to as $address => $name) {
                 $to[] = $this->formatAddress($address, $name);
             }
@@ -114,7 +114,7 @@ class Mail extends AbstractPart
         }
 
         if (!empty($this->cc)) {
-            $cc = array();
+            $cc = [];
             foreach ($this->cc as $address => $name) {
                 $cc[] = $this->formatAddress($address, $name);
             }
@@ -166,7 +166,7 @@ class Mail extends AbstractPart
 
     public function clearTo(): self
     {
-        $this->to = array();
+        $this->to = [];
 
         return $this;
     }
@@ -191,7 +191,7 @@ class Mail extends AbstractPart
 
     public function clearCc(): self
     {
-        $this->cc = array();
+        $this->cc = [];
 
         return $this;
     }

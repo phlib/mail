@@ -106,7 +106,7 @@ class MailTest extends TestCase
         $this->assertEquals($expectedBefore, $this->mail->getTo());
 
         $this->mail->clearTo();
-        $expectedAfter = array();
+        $expectedAfter = [];
         $this->assertEquals($expectedAfter, $this->mail->getTo());
     }
 
@@ -136,7 +136,7 @@ class MailTest extends TestCase
         $this->assertEquals($expectedBefore, $this->mail->getCc());
 
         $this->mail->clearCc();
-        $expectedAfter = array();
+        $expectedAfter = [];
         $this->assertEquals($expectedAfter, $this->mail->getCc());
     }
 

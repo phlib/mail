@@ -127,7 +127,7 @@ class AbstractPartTest extends TestCase
 
         $this->part->clearHeaders();
         $actualAfter = $this->part->getHeaders();
-        $this->assertEquals(array(), $actualAfter);
+        $this->assertEquals([], $actualAfter);
     }
 
     public function testHasHeaderFalse()
