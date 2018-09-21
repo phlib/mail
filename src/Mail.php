@@ -98,11 +98,11 @@ class Mail extends AbstractPart
 
         if ($this->from) {
             list($address, $name) = $this->from;
-            $headers[] = $this->encodeHeader('From: ' . $this->formatAddress($address, $name));
+            $headers[] = $this->encodeHeader('From', $this->formatAddress($address, $name));
         }
 
         if ($this->subject) {
-            $headers[] = $this->encodeHeader('Subject: ' . $this->subject);
+            $headers[] = $this->encodeHeader('Subject', $this->subject);
         }
 
         if (!empty($this->to)) {
@@ -110,7 +110,7 @@ class Mail extends AbstractPart
             foreach ($this->to as $address => $name) {
                 $to[] = $this->formatAddress($address, $name);
             }
-            $headers[] = $this->encodeHeader('To: ' . rtrim(implode(",\r\n ", $to)));
+            $headers[] = $this->encodeHeader('To', rtrim(implode(",\r\n ", $to)));
         }
 
         if (!empty($this->cc)) {
@@ -118,12 +118,12 @@ class Mail extends AbstractPart
             foreach ($this->cc as $address => $name) {
                 $cc[] = $this->formatAddress($address, $name);
             }
-            $headers[] = $this->encodeHeader('Cc: ' . rtrim(implode(",\r\n ", $cc)));
+            $headers[] = $this->encodeHeader('Cc', rtrim(implode(",\r\n ", $cc)));
         }
 
         if ($this->replyTo) {
             list($address, $name) = $this->replyTo;
-            $headers[] = $this->encodeHeader('Reply-To: ' . $this->formatAddress($address, $name));
+            $headers[] = $this->encodeHeader('Reply-To', $this->formatAddress($address, $name));
         }
 
         if ($this->getPart() instanceof Mime\AbstractMime) {
