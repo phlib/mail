@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.0] - 2018-09-24
 ### Added
 - PHP 7.1 scalar type declarations and return types
+### Changed
+- Prevent *Message-Id* header from being encoded, it will always be rendered
+  as provided
 ### Removed
 - **BC break**: Removed support for PHP 5.x and 7.0 as they are no longer
 [actively supported](https://php.net/supported-versions.php) by the PHP project
