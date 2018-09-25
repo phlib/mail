@@ -47,6 +47,13 @@ class AttachmentTest extends TestCase
         $this->assertEquals('application/octet-stream', $part->getType());
     }
 
+    public function testGetTypeDefaultExplicitNull()
+    {
+        $type = null;
+        $part = new Attachment('example-file-name.png', null, $type);
+        $this->assertEquals('application/octet-stream', $part->getType());
+    }
+
     public function testSetGetType()
     {
         $type = 'text/plain';

@@ -16,6 +16,11 @@ class Attachment extends AbstractContent
     /**
      * @var string
      */
+    protected $type = 'application/octet-stream';
+
+    /**
+     * @var string
+     */
     protected $encoding = 'base64';
 
     /**
@@ -52,13 +57,15 @@ class Attachment extends AbstractContent
      *
      * @param string $name
      * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
-     * @param string $type
+     * @param string? $type
      */
-    public function __construct(string $name, ?string $disposition = null, string $type = 'application/octet-stream')
+    public function __construct(string $name, ?string $disposition = null, ?string $type = null)
     {
         $this->name = $name;
         $this->disposition = $disposition;
-        $this->type = $type;
+        if (isset($type)) {
+            $this->type = $type;
+        }
 
         // Existing disposition headers are not allowed, as disposition must be defined in construct
         $this->prohibitedHeaders[] = 'content-disposition';

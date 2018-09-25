@@ -10,8 +10,10 @@ class Mime extends AbstractMime
      *
      * @param string $type
      */
-    public function __construct($type)
+    public function __construct(?string $type = null)
     {
-        $this->type = $type;
+        if (isset($type)) {
+            $this->type = $type;
+        }
     }
 }

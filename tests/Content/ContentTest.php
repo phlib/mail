@@ -14,6 +14,13 @@ class ContentTest extends TestCase
         $this->assertEquals('application/octet-stream', $part->getType());
     }
 
+    public function testGetTypeDefaultExplicitNull()
+    {
+        $type = null;
+        $part = new Content($type);
+        $this->assertEquals('application/octet-stream', $part->getType());
+    }
+
     public function testSetGetType()
     {
         $type = 'text/plain';
