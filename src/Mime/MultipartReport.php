@@ -33,7 +33,7 @@ class MultipartReport extends AbstractMime
      *
      * @return string
      */
-    public function getReportType(): string
+    public function getReportType(): ?string
     {
         return $this->reportType;
     }
