@@ -25,10 +25,10 @@ $ composer require phlib/mail
 use Phlib\Mail;
 
 // from string
-$email = Factory::fromString('... raw email');
+$email = (new Factory)->createFromString('... raw email');
 
 // from file
-$email = Factory::fromFile('/path/to/file.eml');
+$email = (new Factory)->createFromFile('/path/to/file.eml');
 ```
 
 ### Working with an email
