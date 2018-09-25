@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.1.0] - 2018-09-25
 ### Fixed
 - Handle content type/report type not being set with new strict typing
 - Ensure content type defaults are used when passing in explicit `null`
