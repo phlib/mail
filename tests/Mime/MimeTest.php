@@ -15,4 +15,11 @@ class MimeTest extends TestCase
 
         $this->assertEquals($type, $part->getType());
     }
+
+    public function testTypeNotSet()
+    {
+        $part = new Mime();
+
+        $this->assertNull($part->getType());
+    }
 }

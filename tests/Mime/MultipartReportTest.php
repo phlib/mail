@@ -34,4 +34,9 @@ class MultipartReportTest extends TestCase
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
     }
+
+    public function testReportTypeNotSet()
+    {
+        $this->assertNull($this->part->getReportType());
+    }
 }

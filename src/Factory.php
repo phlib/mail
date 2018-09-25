@@ -229,12 +229,12 @@ class Factory
         }
 
         // Create correct Mail part object
-        $type = false;
+        $type = null;
         if (array_key_exists('content-type', $partData)) {
             $type = $partData['content-type'];
         }
 
-        if (stripos($type, 'multipart') === 0) {
+        if (is_string($type) && stripos($type, 'multipart') === 0) {
             switch ($type) {
                 case 'multipart/alternative':
                     $mailPart = new Mime\MultipartAlternative();
