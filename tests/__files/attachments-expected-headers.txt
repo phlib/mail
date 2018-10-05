@@ -4,49 +4,43 @@ Subject: Attachments
 To: recipient@example.com
 MIME-Version: 1.0
 Received: from mail.example.com (LHLO mail.example.com) (10.1.9.1) by
- mail.example.com with LMTP; Thu, 16 Aug 2012 15:45:43 +0100 (BST)
-Received: from localhost (localhost [127.0.0.1]) by mail.example.com
- (Postfix) with ESMTP id ED35D161D86 for <recipient@example.com>; Thu, 16
- Aug 2012 15:45:43 +0100 (BST)
-Received: from mail.example.com ([127.0.0.1]) by localhost
- (mail.example.com [127.0.0.1]) (amavisd-new, port 10024) with ESMTP id
- x9xbo4ZNbRu7 for <recipient@example.com>; Thu, 16 Aug 2012 15:45:42 +0100
- (BST)
+    mail.example.com with LMTP; Thu, 16 Aug 2012 15:45:43 +0100 (BST)
+Received: from localhost (localhost [127.0.0.1]) by mail.example.com (Postfix)
+    with ESMTP id ED35D161D86 for <recipient@example.com>; Thu, 16 Aug 2012
+    15:45:43 +0100 (BST)
+Received: from mail.example.com ([127.0.0.1]) by localhost (mail.example.com
+    [127.0.0.1]) (amavisd-new, port 10024) with ESMTP id x9xbo4ZNbRu7 for
+    <recipient@example.com>; Thu, 16 Aug 2012 15:45:42 +0100 (BST)
 Received: from mail-yx0-f181.google.com (mail-yx0-f181.google.com
- [209.85.213.181]) by mail.example.com (Postfix) with ESMTPS id 92F4A161D85
- for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100 (BST)
+    [209.85.213.181]) by mail.example.com (Postfix) with ESMTPS id 92F4A161D85
+    for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100 (BST)
 Received: by yenq13 with SMTP id q13so3462367yen.40        for
- <recipient@example.com>; Thu, 16 Aug 2012 07:45:40 -0700 (PDT)
-Received: by 10.50.76.202 with SMTP id m10mr1877022igw.52.1345128339903;
- Thu, 16 Aug 2012 07:45:39 -0700 (PDT)
+    <recipient@example.com>; Thu, 16 Aug 2012 07:45:40 -0700 (PDT)
+Received: by 10.50.76.202 with SMTP id m10mr1877022igw.52.1345128339903; Thu,
+    16 Aug 2012 07:45:39 -0700 (PDT)
 Received: by 10.64.82.163 with HTTP; Thu, 16 Aug 2012 07:45:32 -0700 (PDT)
 X-Virus-Scanned: amavisd-new at example.com
 X-Spam-Flag: NO
 X-Spam-Score: -1.507
-X-Spam-Level:
-X-Spam-Status: No, =?UTF-8?B?c2NvcmU9LTEuNTA3IHRhZ2dlZF9hYm92ZT0tMTAgcmVx?=
- =?UTF-8?B?dWlyZWQ9Ni42IHRlc3RzPVtCQVlFU18wMD0tMS45LCBES0lNX1NJR05FRD0w?=
- =?UTF-8?B?LjEsIERLSU1fVkFMSUQ9LTAuMSwgREtJTV9WQUxJRF9BVT0tMC4xLCBGUkVF?=
- =?UTF-8?B?TUFJTF9GUk9NPTAuMDAxLCBIVE1MX0lNQUdFX09OTFlfMDQ9MS4xNzIsIEhU?=
- =?UTF-8?B?TUxfTUVTU0FHRT0wLjAwMSwgUkNWRF9JTl9ETlNXTF9MT1c9LTAuNywgU1BG?=
- =?UTF-8?B?X1BBU1M9LTAuMDAxLCBUX0ZSRUVNQUlMX0RPQ19QREY9MC4wMSwgVF9UT19O?=
- =?UTF-8?B?T19CUktUU19GUkVFTUFJTD0wLjAxXSBhdXRvbGVhcm49aGFt?=
-Authentication-Results: mail.example.com (amavisd-new);
- =?UTF-8?B?ZGtpbT1wYXNzIGhlYWRlci5pPUBnbWFpbC5jb20=?=
-Dkim-Signature: =?UTF-8?B?dj0xOyBhPXJzYS1zaGEyNTY7IGM9cmVsYXhlZC9yZWxh?=
- =?UTF-8?B?eGVkOyAgICAgICAgZD1nbWFpbC5jb207IHM9MjAxMjAxMTM7ICAgICAgICBo?=
- =?UTF-8?B?PW1pbWUtdmVyc2lvbjp4LWdvb21vamktYm9keTpkYXRlOm1lc3NhZ2UtaWQ6?=
- =?UTF-8?B?c3ViamVjdDpmcm9tOnRvICAgICAgICAgOmNvbnRlbnQtdHlwZTsgICAgICAg?=
- =?UTF-8?B?IGJoPWF4ZGNNUzlWU0lUOS9nOGgvbzY5R0R0YjROMWNZUTJyVU9ydm03LzQ2?=
- =?UTF-8?B?RFU9OyAgICAgICAgYj16dzBpT3JGb3lCMWduL3FpRmRndVhzNE9NN1VCMGQ0?=
- =?UTF-8?B?a1Q2T09CcThKWS8xQlFBbFM5aitpdHFBK25lem9GZzg0YTMgICAgICAgICBP?=
- =?UTF-8?B?TnhibjRteTJSWkx2OVNTS1lSc05yK1NPTVBzRUFqTkpKR29XYWNFNy9KbVc3?=
- =?UTF-8?B?aVZDV3BHQjBjbzdFanhocjNFd1VNMCAgICAgICAgIEcyZlpCNy9jUXJWN3pZ?=
- =?UTF-8?B?SXJra29ldFJXWVRxVHZPdDdXOGxmRUphTFhGT1NBVHFXL1hjYW9zNUJXbzg4?=
- =?UTF-8?B?ckpJbURXcmV3ICAgICAgICAgMWszWWJuTnMwanlYdlBPK2p5dFVmV0VrRFB1?=
- =?UTF-8?B?N3cxaytLOVRxdkh0R2Vhd3lqMjFRZU5tbzFaMVAvL2cyOU1PNjFtL04gICAg?=
- =?UTF-8?B?ICAgICBiVStJZXhkT0cvTzRYY2F1VTFRazhnR20weEEzc3pHWlhHYWFqaThl?=
- =?UTF-8?B?Qmdrblk4RTZieE5JdElpRGFKOXZIR0x2eU1aaiAgICAgICAgIDZTR2c9PQ==?=
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.507 tagged_above=-10 required=6.6
+    tests=[BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1,
+    DKIM_VALID_AU=-0.1, FREEMAIL_FROM=0.001, HTML_IMAGE_ONLY_04=1.172,
+    HTML_MESSAGE=0.001, RCVD_IN_DNSWL_LOW=-0.7, SPF_PASS=-0.001,
+    T_FREEMAIL_DOC_PDF=0.01, T_TO_NO_BRKTS_FREEMAIL=0.01] autolearn=ham
+Authentication-Results: mail.example.com (amavisd-new); dkim=pass
+    header.i=@gmail.com
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;        d=gmail.com;
+    s=20120113;       
+    h=mime-version:x-goomoji-body:date:message-id:subject:from:to        
+    :content-type;        bh=axdcMS9VSIT9/g8h/o69GDtb4N1cYQ2rUOrvm7/46DU=;    
+       b=zw0iOrFoyB1gn/qiFdguXs4OM7UB0d4kT6OOBq8JY/1BQAlS9j+itqA+nezoFg84a3   
+         ONxbn4my2RZLv9SSKYRsNr+SOMPsEAjNJJGoWacE7/JmW7iVCWpGB0co7Ejxhr3EwUM0 
+          
+    G2fZB7/cQrV7zYIrkkoetRWYTqTvOt7W8lfEJaLXFOSATqW/Xcaos5BWo88rJImDWrew      
+      1k3YbnNs0jyXvPO+jytUfWEkDPu7w1k+K9TqvHtGeawyj21QeNmo1Z1P//g29MO61m/N    
+        bU+IexdOG/O4XcauU1Qk8gGm0xA3szGZXGaaji8eBgknY8E6bxNItIiDaJ9vHGLvyMZj  
+          6SGg==
 X-Goomoji-Body: true
 Date: Thu, 16 Aug 2012 15:45:32 +0100
 Message-Id: <CAJ_TRnL=YMObf2FT9bU7NO0ziPYxpnxfxrtOz4r2-aBxkHSOrA@mail.gmail.com>

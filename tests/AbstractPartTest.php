@@ -248,8 +248,8 @@ class AbstractPartTest extends TestCase
             // Test very long
             ['Dkim-Signature', [
                 'v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;',
-                'h=mime-version:x-goomoji-body:date:message-id:subject:from:to:content-type;',
-                'bh=axdcMS9VSIT9/g8h/o69GDtb4N1cYQ2rUOrvm7/46DU=;',
+                'h=mime-version:x-goomoji-body:date:message-id:subject:from:to:',
+                'content-type;bh=axdcMS9VSIT9/g8h/o69GDtb4N1cYQ2rUOrvm7/46DU=;',
                 'b=zw0iOrFoyB1gn/qiFdguXs4OM7UB0d4kT6OOBq8JY/1BQAlS9j+itqA+nezoFg84a3',
                 'ONxbn4my2RZLv9SSKYRsNr+SOMPsEAjNJJGoWacE7/JmW7iVCWpGB0co7Ejxhr3EwUM0',
                 'G2fZB7/cQrV7zYIrkkoetRWYTqTvOt7W8lfEJaLXFOSATqW/Xcaos5BWo88rJImDWrew',

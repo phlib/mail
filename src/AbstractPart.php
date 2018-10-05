@@ -232,10 +232,19 @@ abstract class AbstractPart
         $header = "$name: " . trim($value);
         // RFC5335 Internationalized Email Headers, Section 4.3 disallows UTF-8 chars for Message-Id
         // RFC5322 Internet Message Format, Section 3.6.4 has strict control on the syntax of Message-Id
-        // mb_internal_encoding() does not check for this, and will encode the header value if any non-ASCII or reserved
+        // mb_encode_mimeheader() does not check for this, and will encode the header value if any non-ASCII or reserved
         // characters are present (eg. '_')
         if (strtolower($name) === 'message-id') {
             return $header;
+        }
+        // Even if content is all ASCII, mb_encode_mimeheader() would encode it if the header length exceeds 78 chars.
+        // wordwrap() doesn't account for the 4 spaces added after the new line-break, so break instead at 74.
+        if (mb_check_encoding($header, 'ASCII') === true) {
+            if (strlen($header) <= 78) {
+                return $header;
+            }
+            return substr($header, 0, 4) .
+                wordwrap(substr($header, 4), 74, "\r\n    ", false);
         }
         $charset = $this->charset;
         if (!$charset) {
