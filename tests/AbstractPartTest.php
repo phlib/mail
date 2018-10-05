@@ -158,6 +158,18 @@ class AbstractPartTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetEncodedHeadersWhitespace()
+    {
+        $name = 'From';
+        $value = ' "From" <from@mail.example.com> ';
+        $this->part->addHeader($name, $value);
+
+        $expected = "$name: " . trim($value) . "\r\n";
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
     /**
      * Message-Id header must never be encoded
      * An underscore triggers mb_encode_mimeheader() to encode the string even if not necessary
