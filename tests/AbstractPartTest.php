@@ -158,20 +158,105 @@ class AbstractPartTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testGetEncodedHeadersWhitespace()
+    {
+        $name = 'From';
+        $value = ' "From" <from@mail.example.com> ';
+        $this->part->addHeader($name, $value);
+
+        $expected = "$name: " . trim($value) . "\r\n";
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
     /**
      * Message-Id header must never be encoded
      * An underscore triggers mb_encode_mimeheader() to encode the string even if not necessary
+     * Even when longer than soft limit of 78 chars, we don't want Message-Id to be wrapped
      */
     public function testGetEncodedHeadersMessageId()
     {
         $name = 'Message-Id';
-        $value = '<5ba50e335feeb_58fbb46426474f8d8108b1f8e02bad29@mail.example.com>';
+        $value = '<5ba50e335feeb_58fbb46426474f8d8108b1f8e02bad29@mail.long.example.com>';
         $this->part->addHeader($name, $value);
 
         $expected = "$name: $value\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * An underscore triggers mb_encode_mimeheader() to encode the string even if not necessary
+     */
+    public function testGetEncodedHeadersNotEncodedForUnderscore()
+    {
+        $name = 'Subject';
+        $value = 'Latest _offers_';
+        $this->part->addHeader($name, $value);
+
+        $expected = "$name: $value\r\n";
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * An equals triggers mb_encode_mimeheader() to encode the string even if not necessary
+     */
+    public function testGetEncodedHeadersNotEncodedForEquals()
+    {
+        $name = 'From';
+        $value = '"From=" <equals@mail.example.com>';
+        $this->part->addHeader($name, $value);
+
+        $expected = "$name: $value\r\n";
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Long header in pure ASCII should not be encoded, but should be wrapped at 78 chars
+     * @dataProvider dataGetEncodedHeadersNotEncodedWillSoftWrap
+     */
+    public function testGetEncodedHeadersNotEncodedWillSoftWrap($name, $valueParts)
+    {
+        $this->part->addHeader($name, implode(' ', $valueParts));
+
+        $expected = "$name: " . implode("\r\n    ", $valueParts) . "\r\n";
+
+        $actual = $this->part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function dataGetEncodedHeadersNotEncodedWillSoftWrap()
+    {
+        return [
+            // First line is exactly 78 chars
+            ['Received', [
+                'by 10.50.76.202 with SMTP id m10mr1877022igw.52.1345128339903; Thu,',
+                '16 Aug 2012 07:45:39 -0700 (PDT)'
+            ]],
+            // Test multiple lines
+            ['Received', [
+                'from mail-yx0-f181.google.com (mail-yx0-f181.google.com',
+                '[209.85.213.181]) by mail.example.com (Postfix) with ESMTPS id 92F4A161D85',
+                'for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100 (BST)'
+            ]],
+            // Test very long
+            ['Dkim-Signature', [
+                'v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;',
+                'h=mime-version:x-goomoji-body:date:message-id:subject:from:to:',
+                'content-type;bh=axdcMS9VSIT9/g8h/o69GDtb4N1cYQ2rUOrvm7/46DU=;',
+                'b=zw0iOrFoyB1gn/qiFdguXs4OM7UB0d4kT6OOBq8JY/1BQAlS9j+itqA+nezoFg84a3',
+                'ONxbn4my2RZLv9SSKYRsNr+SOMPsEAjNJJGoWacE7/JmW7iVCWpGB0co7Ejxhr3EwUM0',
+                'G2fZB7/cQrV7zYIrkkoetRWYTqTvOt7W8lfEJaLXFOSATqW/Xcaos5BWo88rJImDWrew',
+                '1k3YbnNs0jyXvPO+jytUfWEkDPu7w1k+K9TqvHtGeawyj21QeNmo1Z1P//g29MO61m/N',
+                'bU+IexdOG/O4XcauU1Qk8gGm0xA3szGZXGaaji8eBgknY8E6bxNItIiDaJ9vHGLvyMZj6SGg=='
+            ]]
+        ];
     }
 
     /**
