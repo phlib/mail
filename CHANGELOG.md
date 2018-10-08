@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [3.2.0] - 2018-10-08
 ### Changed
 - No longer encode pure-ASCII headers.
  [RFC2047 'encoded-word'](https://tools.ietf.org/html/rfc2047#section-2)
