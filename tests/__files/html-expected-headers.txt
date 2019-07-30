@@ -5,17 +5,17 @@ Subject: London Olympics: Business Continuity Plan -
 To: recipient@example.com
 Reply-To: Events <eventmarketing@example.com>
 Received: from gbnthda3150srv.example.com ([10.67.121.52]) by
-    GBLONVMSX001.nsicorp.int with Microsoft SMTPSVC(6.0.3790.4675);  Thu, 29
-    Sep 2011 08:48:51 +0100
+ GBLONVMSX001.nsicorp.int with Microsoft SMTPSVC(6.0.3790.4675);  Thu, 29 Sep
+ 2011 08:48:51 +0100
 Received: from localhost (unknown [127.0.0.1]) by IMSVA80 (Postfix) with SMTP
-    id E307622003E for <recipient@example.com>; Thu, 29 Sep 2011 08:48:58
-    +0100 (BST)
+ id E307622003E for <recipient@example.com>; Thu, 29 Sep 2011 08:48:58 +0100
+ (BST)
 Received: from mta6551.example.com (unknown [109.68.65.51]) by
-    gbnthda3150srv.example.com (Postfix) with ESMTP id 6F72A220057 for
-    <recipient@example.com>; Fri, 23 Sep 2011 09:54:25 +0100 (BST)
+ gbnthda3150srv.example.com (Postfix) with ESMTP id 6F72A220057 for
+ <recipient@example.com>; Fri, 23 Sep 2011 09:54:25 +0100 (BST)
 Received: by mta6551.example.com (PowerMTA(TM) v3.5r14) id hfh4js0sv5km for
-    <recipient@example.com>; Fri, 23 Sep 2011 09:54:22 +0100 (envelope-from
-    <bounce-100-250-1831-live@mail.example.com>)
+ <recipient@example.com>; Fri, 23 Sep 2011 09:54:22 +0100 (envelope-from
+ <bounce-100-250-1831-live@mail.example.com>)
 X-Mailer: MXM-v5-MailEngine
 Message-Id: <0.0.24D.2F1.1CC79CE6346CBD8.0@mta6551.example.com>
 Date: Fri, 23 Sep 2011 09:54:22 +0100
@@ -25,19 +25,19 @@ X-Imss-Scan-Details: No--12.138-5.0-31-10
 X-Tm-As-User-Approved-Sender: No
 X-Tm-As-Result-Xfilter: Match text exemption rules:No
 X-Tmase-Matchedrid: Q2+zkeG6t3p+YGzLN7T7mqGIP6nmLu6LLw30/c3NkEDNcm2bW2t5nPvA
-    DvTnCf5vDYBVKmbeeQOVIU9/CM32kdWn59xnE0iHoMd8fz60W5eYrH5+aA00En4WoLVkiF5MrDF
-    tme53KvtDGFvBeB2nXEK7eJQWtfQOGbNuSeNqcN92KN90fG2iIujLQmIoVnOSG1CvAg7R8yRFxL
-    gyMr3q0aFI/hOhKe2if7FDYGpyXq3img94X0eg/ol1yzEgrR9NPGMCwqTcrWssXJM82Uy2JgQYC
-    cQrwdJfGSqdEmeD/nVEm2z04jGoEw1UcnuLpxYgVQqcStBKJr9uLA60aUCmmFVBWgEsQzu09Szz
-    aTBwGVB52IkwyV1HePn4mcXPgnU12UI6LaiL1lWZYZEz3zbAyntZCpfMKy9fNLOElW08UrbU3m2
-    KoscyCyz67EO943zmJKoUzP1GfbbbTWWstzOlSzW9LFay9u07Cbx7yn3FMqIDf5+W2YF4RXYiw8
-    L1nrYYh+w9Wz/xXDptPXRTHBlYsAIxQkXDtNe7Da6S/pucmjtaiKNTrM3yG19IvYJOgu3ChDqIQ
-    b7sQeeO74ZfTyAQsL6nzxSJcwn0YZPliWGvyajMgKQ8B6MJ9cKjqJxyhMunKMLj+jsQyO/wI5Ez
-    JETTVCI9VGugnfROACF5TKaad195Jkx0cWUhes4ygPHg/CeBfk8FD2cg0j/trubt8TkL4ZQ7SU/
-    QtiDSa/fioJ9l4HhhV/XBZzYTCF8baTVx8DUoCOVnyuVVgerk/4xeauuY7zo7wMLyyGiGIj0zFI
-    5DoJI823D/oVo0/Pk3SjZMcZFkK65JnO1roU3gT2zXYa9/ndIVnJomYwhGb7DHElGeXjlAvJccd
-    Uy2O++/6toO3Qr0dolnGXHXNVG1B40Q2mshs2f68H29kNmduzyDfZhR+hCCBXih2nLn09Pp5E5p
-    4w2BvEa5bfnrRrOkd4pnKHmSog==
+ DvTnCf5vDYBVKmbeeQOVIU9/CM32kdWn59xnE0iHoMd8fz60W5eYrH5+aA00En4WoLVkiF5MrDF
+ tme53KvtDGFvBeB2nXEK7eJQWtfQOGbNuSeNqcN92KN90fG2iIujLQmIoVnOSG1CvAg7R8yRFxL
+ gyMr3q0aFI/hOhKe2if7FDYGpyXq3img94X0eg/ol1yzEgrR9NPGMCwqTcrWssXJM82Uy2JgQYC
+ cQrwdJfGSqdEmeD/nVEm2z04jGoEw1UcnuLpxYgVQqcStBKJr9uLA60aUCmmFVBWgEsQzu09Szz
+ aTBwGVB52IkwyV1HePn4mcXPgnU12UI6LaiL1lWZYZEz3zbAyntZCpfMKy9fNLOElW08UrbU3m2
+ KoscyCyz67EO943zmJKoUzP1GfbbbTWWstzOlSzW9LFay9u07Cbx7yn3FMqIDf5+W2YF4RXYiw8
+ L1nrYYh+w9Wz/xXDptPXRTHBlYsAIxQkXDtNe7Da6S/pucmjtaiKNTrM3yG19IvYJOgu3ChDqIQ
+ b7sQeeO74ZfTyAQsL6nzxSJcwn0YZPliWGvyajMgKQ8B6MJ9cKjqJxyhMunKMLj+jsQyO/wI5Ez
+ JETTVCI9VGugnfROACF5TKaad195Jkx0cWUhes4ygPHg/CeBfk8FD2cg0j/trubt8TkL4ZQ7SU/
+ QtiDSa/fioJ9l4HhhV/XBZzYTCF8baTVx8DUoCOVnyuVVgerk/4xeauuY7zo7wMLyyGiGIj0zFI
+ 5DoJI823D/oVo0/Pk3SjZMcZFkK65JnO1roU3gT2zXYa9/ndIVnJomYwhGb7DHElGeXjlAvJccd
+ Uy2O++/6toO3Qr0dolnGXHXNVG1B40Q2mshs2f68H29kNmduzyDfZhR+hCCBXih2nLn09Pp5E5p
+ 4w2BvEa5bfnrRrOkd4pnKHmSog==
 X-Originalarrivaltime: 29 Sep 2011 07:48:51.0471 (UTC)
-    FILETIME=[3AD0D1F0:01CC7E7C]
+ FILETIME=[3AD0D1F0:01CC7E7C]
 X-Tm-As-User-Blocked-Sender: No

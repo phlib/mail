@@ -225,7 +225,7 @@ class AbstractPartTest extends TestCase
     {
         $this->part->addHeader($name, implode(' ', $valueParts));
 
-        $expected = "$name: " . implode("\r\n    ", $valueParts) . "\r\n";
+        $expected = "$name: " . implode("\r\n ", $valueParts) . "\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);

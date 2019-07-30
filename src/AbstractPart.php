@@ -238,13 +238,13 @@ abstract class AbstractPart
             return $header;
         }
         // Even if content is all ASCII, mb_encode_mimeheader() would encode it if the header length exceeds 78 chars.
-        // wordwrap() doesn't account for the 4 spaces added after the new line-break, so break instead at 74.
+        // wordwrap() doesn't account for the space added after the new line-break, so break instead at 77.
         if (mb_check_encoding($header, 'ASCII') === true) {
             if (strlen($header) <= 78) {
                 return $header;
             }
-            return substr($header, 0, 4) .
-                wordwrap(substr($header, 4), 74, "\r\n    ", false);
+            return substr($header, 0, 1) .
+                wordwrap(substr($header, 1), 77, "\r\n ", false);
         }
         $charset = $this->charset;
         if (!$charset) {

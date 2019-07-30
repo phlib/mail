@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Incorrectly adding 4 spaces to folded headers. Now only uses 1 as indicated
+ by [RFC5322 §2.2.3](https://tools.ietf.org/html/rfc5322#section-2.2.3).
 
 ## [3.2.0] - 2018-10-08
 ### Changed
