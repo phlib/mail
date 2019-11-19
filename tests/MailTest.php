@@ -80,6 +80,101 @@ class MailTest extends TestCase
         $this->assertEquals($expected, $this->mail->getEncodedHeaders());
     }
 
+    /**
+     * @dataProvider providerEncodedHeadersAddrSpec
+     */
+    public function testEncodedHeadersMailboxAddrSpec(
+        string $method,
+        array $params,
+        string $expected
+    ): void {
+        $part = new Mime('multipart/other');
+        $this->mail->setPart($part);
+
+        foreach ($params as $each) {
+            $this->mail->{$method}(...$each);
+        }
+
+        $expected .= "MIME-Version: 1.0";
+
+        // Remove line-breaks for character comparison
+        $actual = str_replace("\r\n", '', $this->mail->getEncodedHeaders());
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Annotation for IDE usage
+     *
+     * @see Mail::setFrom()
+     * @see Mail::setReplyTo()
+     * @see Mail::setReturnPath()
+     * @see Mail::addTo()
+     * @see Mail::addCc()
+     */
+    public function providerEncodedHeadersAddrSpec(): iterable
+    {
+        $singleHeaders = [
+            'From' => 'setFrom',
+            'Reply-To' => 'setReplyTo',
+        ];
+        $listHeaders = [
+            'To' => 'addTo',
+            'Cc' => 'addCc',
+        ];
+
+        /**
+         * @var array $names
+         *     string? Display Name parameter
+         *     string? Encoded Value (null for no Display Name)
+         */
+        $names = [
+            'No name' => [null, null],
+            'Empty name' => ['', null],
+            'One atom' => ['Atom0123=?*&789', 'Atom0123=?*&789'],
+            'Atom phrase' => ['Atom01 23=?*&789', 'Atom01 23=?*&789'],
+            'One extended' => ['Exténded', '=?UTF-8?Q?Ext=C3=A9nded?='],
+            'One extended in phrase' => ['Contains Exténded Word', 'Contains =?UTF-8?Q?Ext=C3=A9nded?= Word'],
+            'Extended whole phrase' => ['Âll Exténded Wörds', '=?UTF-8?Q?=C3=82ll_Ext=C3=A9nded_W=C3=B6rds?='],
+        ];
+
+        // For all headers,
+        foreach (array_merge($singleHeaders, $listHeaders) as $header => $method) {
+            foreach ($names as $providerName => $config) {
+                [$name, $expectedDisplay] = $config;
+                $address = uniqid() . '@example.com';
+                $expected = $header . ': ';
+                if ($expectedDisplay === null) {
+                    $expected .= $address;
+                } else {
+                    $expected .= "{$expectedDisplay} <$address>";
+                }
+                $params = [[$address, $name]];
+                yield "Single {$header} {$providerName}" => [$method, $params, $expected];
+            }
+        }
+
+        // For List headers, also build examples with multiple addresses
+        foreach ($listHeaders as $header => $method) {
+            foreach ($names as $providerName => $config) {
+                [$name, $expectedDisplay] = $config;
+                $expectedParts = [];
+                $params = [];
+                for ($i = 0; $i < 3; $i++) {
+                    $address = uniqid() . '@example.com';
+                    if ($expectedDisplay === null) {
+                        $expectedParts[] = $address;
+                    } else {
+                        $expectedParts[] = "{$expectedDisplay} <$address>";
+                    }
+                    $params[] = [$address, $name];
+                }
+                $expected = $header . ': ' . implode(', ', $expectedParts);
+                yield "Multi {$header} {$providerName}" => [$method, $params, $expected];
+            }
+        }
+    }
+
     public function testAddGetTo()
     {
         $data = [
