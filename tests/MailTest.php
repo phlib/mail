@@ -406,7 +406,7 @@ class MailTest extends TestCase
     {
         $this->mail->setReturnPath('return-path@example.com');
         $this->mail->setFrom('from@example.com', "From Alias \xf0\x9f\x93\xa7 envelope");
-        $this->mail->setSubject('subject line');
+        $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
@@ -415,8 +415,8 @@ class MailTest extends TestCase
         $expected = [
             "Return-Path" => '<return-path@example.com>',
             "From" => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
-            "Subject" => 'subject line',
-            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>,\r\n" .
+            "Subject" => "subject line with \xf0\x9f\x93\xa7 envelope",
+            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
             "Cc" => 'cc@example.com',
             "Reply-To" => 'reply-to@example.com'

@@ -5,6 +5,9 @@ namespace Phlib\Mail;
 
 use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Header\AbstractHeader;
+use Symfony\Component\Mime\Header\Headers;
 
 class Mail extends AbstractPart
 {
@@ -39,22 +42,22 @@ class Mail extends AbstractPart
     private $subject;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $to = [];
 
     /**
-     * @var array|null
+     * @var string[]|null
      */
     private $from;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $cc = [];
 
     /**
-     * @var array|null
+     * @var string[]|null
      */
     private $replyTo;
 
@@ -90,50 +93,57 @@ class Mail extends AbstractPart
 
     public function getEncodedHeaders(): string
     {
-        $headers = [];
+        $headers = new Headers();
 
         if ($this->returnPath) {
-            $headers[] = "Return-Path: <$this->returnPath>";
+            $headers->addPathHeader('Return-Path', new Address($this->returnPath));
         }
 
         if ($this->from) {
             list($address, $name) = $this->from;
-            $headers[] = $this->encodeHeader('From', $this->formatAddress($address, $name));
+            $fromAddress = new Address($address, (string)$name);
+            $headers->addMailboxListHeader('From', [$fromAddress]);
         }
 
         if ($this->subject) {
-            $headers[] = $this->encodeHeader('Subject', $this->subject);
+            $headers->addTextHeader('Subject', $this->subject);
         }
 
         if (!empty($this->to)) {
             $to = [];
             foreach ($this->to as $address => $name) {
-                $to[] = $this->formatAddress($address, $name);
+                $to[] = new Address($address, (string)$name);
             }
-            $headers[] = $this->encodeHeader('To', rtrim(implode(",\r\n ", $to)));
+            $headers->addMailboxListHeader('To', $to);
         }
 
         if (!empty($this->cc)) {
             $cc = [];
             foreach ($this->cc as $address => $name) {
-                $cc[] = $this->formatAddress($address, $name);
+                $cc[] = new Address($address, (string)$name);
             }
-            $headers[] = $this->encodeHeader('Cc', rtrim(implode(",\r\n ", $cc)));
+            $headers->addMailboxListHeader('Cc', $cc);
         }
 
         if ($this->replyTo) {
             list($address, $name) = $this->replyTo;
-            $headers[] = $this->encodeHeader('Reply-To', $this->formatAddress($address, $name));
+            $replyTo = new Address($address, (string)$name);
+            $headers->addMailboxListHeader('Reply-To', [$replyTo]);
         }
 
         if ($this->getPart() instanceof Mime\AbstractMime) {
-            $headers[] = 'MIME-Version: 1.0';
+            $headers->addTextHeader('MIME-Version', '1.0');
         }
 
-        $headersString = '';
-        if (!empty($headers)) {
-            $headersString = implode("\r\n", $headers) . "\r\n";
+        // Set correct charset on all headers
+        if ($this->charset) {
+            /** @var AbstractHeader $header */
+            foreach ($headers->all() as $header) {
+                $header->setCharset($this->charset);
+            }
         }
+
+        $headersString = $headers->toString();
 
         return $headersString . parent::getEncodedHeaders();
     }
