@@ -293,18 +293,6 @@ class MailTest extends TestCase
         $this->mail->setFrom('invalid address');
     }
 
-    public function testFilterName()
-    {
-        $address = 'dummy@example.com';
-        $name = "\r\n\t\"<>'[]";
-        $expected = [
-            $address => "'[]'[]"
-        ];
-        $this->mail->addTo($address, $name);
-
-        $this->assertEquals($expected, $this->mail->getTo());
-    }
-
     public function testSetGetSubject()
     {
         $subject = 'subject line';
