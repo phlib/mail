@@ -301,32 +301,6 @@ class MailTest extends TestCase
         $this->assertEquals($subject, $this->mail->getSubject());
     }
 
-    /**
-     * @covers \Phlib\Mail\Mail
-     */
-    public function testFormatAddress()
-    {
-        $address = 'dummy@example.com';
-        $name = 'Address Alias';
-        $expected = "{$name} <{$address}>";
-        $actual = $this->mail->formatAddress($address, $name);
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @covers \Phlib\Mail\Mail
-     */
-    public function testFormatAddressEscaped()
-    {
-        $address = 'dummy@example.com';
-        $name = 'Address,Alias';
-        $expected = "\"{$name}\" <{$address}>";
-        $actual = $this->mail->formatAddress($address, $name);
-
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testHasAttachmentFalse()
     {
         $this->assertEquals(false, $this->mail->hasAttachment());

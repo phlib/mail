@@ -289,19 +289,6 @@ class Mail extends AbstractPart
         return $this->subject;
     }
 
-    public function formatAddress(string $address, ?string $name = null): string
-    {
-        if (!$name) {
-            return $address;
-        }
-
-        if (strpos($name, ',') !== false) {
-            return "\"$name\" <$address>";
-        } else {
-            return "$name <$address>";
-        }
-    }
-
     public function hasAttachment(): bool
     {
         return ($this->attachmentCount > 0);

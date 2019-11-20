@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   Now only encode the affected part of the Display Name, so the address stays
   compliant with Address Specification
   [RFC5322 §3.4](https://tools.ietf.org/html/rfc5322#section-3.4).
+### Removed
+- **BC break**: Removed `Mail::formatAddress()`
 
 ## [3.2.1] - 2019-07-30
 ### Fixed
