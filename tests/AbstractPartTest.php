@@ -282,16 +282,17 @@ class AbstractPartTest extends TestCase
     /**
      * @dataProvider dataSetGetEncodingInvalid
      */
-    public function testSetGetEncodingInvalid($encoding)
+    public function testSetGetEncodingInvalid(string $encoding): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->part->setEncoding($encoding);
     }
 
-    public function dataSetGetEncodingInvalid()
+    public function dataSetGetEncodingInvalid(): iterable
     {
         return [
-            ['invalid-encoding']
+            ['invalid-encoding'],
+            [''],
         ];
     }
 
