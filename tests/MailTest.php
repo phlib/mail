@@ -205,6 +205,45 @@ class MailTest extends TestCase
         $this->assertSame(null, $this->mail->getReturnPath());
     }
 
+    public function testAddGetReceived()
+    {
+        $data = [
+            [
+                'from localhost (localhost [127.0.0.1]) by mail.example.com (Postfix) for <recipient@example.com>',
+                'Thu, 16 Aug 2012 15:45:43 +0100'
+            ],
+            [
+                'from gbnthda3150srv.example.com ([10.67.121.52]) by GBLONVMSX001.nsicorp.int',
+                'Thu, 29 Sep 2011 08:48:51 +0100'
+            ],
+        ];
+        $expected = [];
+        foreach ($data as $received) {
+            $this->mail->addReceived($received[0], new \DateTimeImmutable($received[1]));
+            $expected[] = implode('; ', $received);
+        }
+
+        $this->assertEquals($expected, $this->mail->getReceived());
+    }
+
+    public function testGetReceivedDefault(): void
+    {
+        $this->assertSame([], $this->mail->getReceived());
+    }
+
+    public function testSetGetOriginationDate()
+    {
+        $date = new \DateTimeImmutable('Mon, 20 Aug 2012 05:15:26 +0100');
+        $this->mail->setOriginationDate($date);
+
+        $this->assertEquals($date, $this->mail->getOriginationDate());
+    }
+
+    public function testGetOriginationDateDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getOriginationDate());
+    }
+
     public function testSetGetFrom()
     {
         $data = [
@@ -357,6 +396,66 @@ class MailTest extends TestCase
         $this->assertSame(null, $this->mail->getMessageId());
     }
 
+    public function testSetGetInReplyToSingle()
+    {
+        $messageId = 'abc123@example.com';
+        $this->mail->setInReplyTo([$messageId]);
+
+        $this->assertEquals([$messageId], $this->mail->getInReplyTo());
+    }
+
+    public function testSetGetInReplyToMultiple()
+    {
+        $messageIds = [
+            'abc123@example.com',
+            'def456@example.com',
+        ];
+        $this->mail->setInReplyTo($messageIds);
+
+        $this->assertEquals($messageIds, $this->mail->getInReplyTo());
+    }
+
+    public function testSetInReplyToInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setInReplyTo(['invalid address']);
+    }
+
+    public function testGetInReplyToDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getInReplyTo());
+    }
+
+    public function testSetGetReferencesSingle()
+    {
+        $messageId = 'abc123@example.com';
+        $this->mail->setReferences([$messageId]);
+
+        $this->assertEquals([$messageId], $this->mail->getReferences());
+    }
+
+    public function testSetGetReferencesMultiple()
+    {
+        $messageIds = [
+            'abc123@example.com',
+            'def456@example.com',
+        ];
+        $this->mail->setReferences($messageIds);
+
+        $this->assertEquals($messageIds, $this->mail->getReferences());
+    }
+
+    public function testSetReferencesInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setReferences(['invalid address']);
+    }
+
+    public function testGetReferencesDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReferences());
+    }
+
     public function testSetGetSubject()
     {
         $subject = 'subject line';
@@ -435,23 +534,38 @@ class MailTest extends TestCase
      */
     protected function addHeaders()
     {
+        $originationDate = new \DateTimeImmutable('2014-04-23 00:12:32 +0100');
+        $receivedDate1 = new \DateTimeImmutable('2014-04-22 23:12:45 +0000');
+        $receivedDate2 = new \DateTimeImmutable('2014-04-23 06:13:12 -0700');
         $this->mail->setReturnPath('return-path@example.com');
+        $this->mail->addReceived('from localhost by mail1.example.com', $receivedDate1);
+        $this->mail->addReceived('from mail1.example.com by mail2.example.com', $receivedDate2);
+        $this->mail->setOriginationDate($originationDate);
         $this->mail->setFrom('from@example.com', "From Alias \xf0\x9f\x93\xa7 envelope");
         $this->mail->setReplyTo('reply-to@example.com');
         $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
         $this->mail->setMessageId('abc.123.def@mail.example.com');
+        $this->mail->setInReplyTo(['abc.123@mail.example.com', 'def.456@mail.example.com']);
+        $this->mail->setReferences(['fed.098@mail.example.com', 'cba.765@mail.example.com']);
         $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
 
         $expected = [
             'Return-Path' => '<return-path@example.com>',
+            'Received' => [
+                'from localhost by mail1.example.com; ' . $receivedDate1->format(\DateTime::RFC2822),
+                'from mail1.example.com by mail2.example.com; ' . $receivedDate2->format(\DateTime::RFC2822),
+            ],
+            'Date' => $originationDate->format(\DateTime::RFC2822),
             'From' => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
             'Reply-To' => 'reply-to@example.com',
             'To' => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
             'Cc' => 'cc@example.com',
             'Message-Id' => '<abc.123.def@mail.example.com>',
+            'In-Reply-To' => '<abc.123@mail.example.com> <def.456@mail.example.com>',
+            'References' => '<fed.098@mail.example.com> <cba.765@mail.example.com>',
             'Subject' => "subject line with \xf0\x9f\x93\xa7 envelope",
         ];
 

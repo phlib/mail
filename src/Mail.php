@@ -9,8 +9,10 @@ use Phlib\Mail\Exception\RuntimeException;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Symfony\Component\Mime\Header\AbstractHeader;
+use Symfony\Component\Mime\Header\DateHeader;
 use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Header\IdentificationHeader;
+use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 class Mail extends AbstractPart
 {
@@ -32,11 +34,15 @@ class Mail extends AbstractPart
         'content-transfer-encoding',
         'mime-version',
         'return-path',
+        'received',
+        'date',
         'from',
         'reply-to',
         'to',
         'cc',
         'message-id',
+        'in-reply-to',
+        'references',
         'subject',
     ];
 
@@ -44,6 +50,16 @@ class Mail extends AbstractPart
      * @var Address?
      */
     private $returnPath;
+
+    /**
+     * @var UnstructuredHeader[]
+     */
+    private $received = [];
+
+    /**
+     * @var DateHeader
+     */
+    private $originationDate;
 
     /**
      * @var Address?
@@ -69,6 +85,16 @@ class Mail extends AbstractPart
      * @var IdentificationHeader
      */
     private $messageId;
+
+    /**
+     * @var IdentificationHeader
+     */
+    private $inReplyTo;
+
+    /**
+     * @var IdentificationHeader
+     */
+    private $references;
 
     /**
      * @var string?
@@ -106,9 +132,16 @@ class Mail extends AbstractPart
 
         // Add headers in order defined in RFC5322 §3.6
 
-        // Return-path is a 'trace' field so must be first - RFC5322 §3.6.7
+        // Return-path and Received are 'trace' fields so must be first - RFC5322 §3.6.7
         if ($this->returnPath) {
             $headers->addPathHeader('Return-Path', $this->returnPath);
+        }
+        foreach ($this->received as $received) {
+            $headers->add($received);
+        }
+
+        if ($this->originationDate) {
+            $headers->add($this->originationDate);
         }
 
         if ($this->from) {
@@ -129,6 +162,14 @@ class Mail extends AbstractPart
 
         if ($this->messageId) {
             $headers->add($this->messageId);
+        }
+
+        if ($this->inReplyTo) {
+            $headers->add($this->inReplyTo);
+        }
+
+        if ($this->references) {
+            $headers->add($this->references);
         }
 
         if ($this->subject) {
@@ -189,6 +230,38 @@ class Mail extends AbstractPart
         }
 
         return $this->returnPath->getAddress();
+    }
+
+    public function addReceived(string $received, \DateTimeImmutable $dateTime): self
+    {
+        // RFC5322 §3.6.7 https://tools.ietf.org/html/rfc5322#section-3.6.7
+        $value = $received . '; ' . $dateTime->format(\DateTime::RFC2822);
+        $this->received[] = new UnstructuredHeader('Received', $value);
+
+        return $this;
+    }
+
+    public function getReceived(): array
+    {
+        $received = [];
+        foreach ($this->received as $header) {
+            $received[] = $header->getBody();
+        }
+        return $received;
+    }
+
+    public function setOriginationDate(\DateTimeImmutable $originationDate): self
+    {
+        $this->originationDate = new DateHeader('Date', $originationDate);
+        return $this;
+    }
+
+    public function getOriginationDate(): ?\DateTimeImmutable
+    {
+        if ($this->originationDate === null) {
+            return null;
+        }
+        return $this->originationDate->getBody();
     }
 
     /**
@@ -315,6 +388,42 @@ class Mail extends AbstractPart
             return null;
         }
         return $this->messageId->getBody()[0];
+    }
+
+    public function setInReplyTo(array $messageIds): self
+    {
+        try {
+            $this->inReplyTo = new IdentificationHeader('In-Reply-To', $messageIds);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+        return $this;
+    }
+
+    public function getInReplyTo(): ?array
+    {
+        if ($this->inReplyTo === null) {
+            return null;
+        }
+        return $this->inReplyTo->getBody();
+    }
+
+    public function setReferences(array $messageIds): self
+    {
+        try {
+            $this->references = new IdentificationHeader('References', $messageIds);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+        return $this;
+    }
+
+    public function getReferences(): ?array
+    {
+        if ($this->references === null) {
+            return null;
+        }
+        return $this->references->getBody();
     }
 
     public function setSubject(string $subject): self

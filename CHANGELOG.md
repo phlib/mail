@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - *symfony/mime* added as a required dependency.
-- Dedicated setter and getter methods on `Mail` for Message-Id header.
+- Dedicated setter and getter methods for primary `Mail` headers: Message-Id,
+  (Origination) Date, Received, In-Reply-To and References. 
 ### Fixed
 - Encoding full mailbox header when Display Name contains extended characters.
   Now only encode the affected part of the Display Name, so the address stays
@@ -17,8 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - **BC break**: Removed support for PHP v7.1 and v7.2 as they are no longer
 [actively supported](https://php.net/supported-versions.php) by the PHP project
 - **BC break**: Removed `Mail::formatAddress()`
-- **BC break**: `Mail::addHeader()` no longer allows setting Message-Id.
-  Use the new dedicated `Mail::setMessageId()` method.
+- **BC break**: `Mail::addHeader()` no longer allows setting Message-Id,
+  (Origination) Date, Received, In-Reply-To and References.
+  Use the new dedicated setter methods.
 
 ## [3.2.1] - 2019-07-30
 ### Fixed
