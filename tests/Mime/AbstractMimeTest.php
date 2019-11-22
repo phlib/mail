@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace Phlib\Mail\Tests\Mime;
 
 use Phlib\Mail\Mime\AbstractMime;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 
 class AbstractMimeTest extends TestCase
 {
+    use PHPMock;
+
     /**
      * @var AbstractMime
      */
@@ -34,6 +37,36 @@ class AbstractMimeTest extends TestCase
     {
         $boundary = null;
         $this->assertEquals($boundary, $this->part->getBoundary());
+    }
+
+    /**
+     * When the boundary is created, it must not match any existing content
+     *
+     * Test is run in separate process as the mock needed for md5() cannot be declared early enough
+     * @runInSeparateProcess
+     */
+    public function testBoundaryIsUnique()
+    {
+        $boundary1 = 'test1boundary';
+        $boundary2 = 'test2boundary';
+        $expected = 'finalboundary';
+
+        $textPart = new \Phlib\Mail\Content\Text();
+        $contentText = $boundary1 . ' ' . $boundary2;
+        $textPart->setContent($contentText);
+        $this->part->setParts([$textPart]);
+
+        // Mock the md5() function, so the test can control the boundary being created
+        $mockMd5 = $this->getFunctionMock('Phlib\Mail\Mime', 'md5');
+        $mockMd5->expects(static::exactly(3))
+            ->willReturnOnConsecutiveCalls($boundary1, $boundary2, $expected);
+
+        // Boundary is generated during toString()
+        $this->part->toString();
+
+        $actual = $this->part->getBoundary();
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testAddPart()
