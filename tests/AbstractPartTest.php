@@ -260,6 +260,102 @@ class AbstractPartTest extends TestCase
     }
 
     /**
+     * Special handling for Content-Type, adds charset, encoding and additional params if available
+     * @dataProvider dataGetEncodedHeadersContentType
+     */
+    public function testGetEncodedHeadersContentType(
+        ?string $type,
+        ?string $charset,
+        string $encoding,
+        ?string $typeParam,
+        string $expected
+    ): void {
+        // Use anon class to set the immutable type and add additional params
+        $part = new class ($type, $typeParam) extends AbstractPart {
+            private $typeParam;
+            public function __construct(?string $type, ?string $typeParam)
+            {
+                $this->type = $type;
+                $this->typeParam = $typeParam;
+            }
+            public function toString(): string
+            {
+                return '';
+            }
+            protected function addContentTypeParameters(string $contentType): string
+            {
+                if ($this->typeParam) {
+                    $contentType .= "; {$this->typeParam}";
+                }
+                return $contentType;
+            }
+        };
+
+        if ($charset) {
+            $part->setCharset($charset);
+        }
+        if ($encoding) {
+            $part->setEncoding($encoding);
+        }
+
+        $actual = $part->getEncodedHeaders();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function dataGetEncodedHeadersContentType(): iterable
+    {
+        $types = [
+            null,
+            'text/html',
+            'application/octet-stream',
+        ];
+        $charsets = [
+            null,
+            'UTF-8',
+            'ascii',
+        ];
+        $encodings = [
+            // Encoding must be allowed type, `null` not allowed
+            AbstractPart::ENCODING_QPRINTABLE,
+            AbstractPart::ENCODING_BASE64,
+        ];
+        $typeParams = [
+            null,
+            'attr=value',
+        ];
+
+        foreach ($types as $type) {
+            foreach ($charsets as $charset) {
+                foreach ($encodings as $encoding) {
+                    foreach ($typeParams as $typeParam) {
+                        $name = ($type ?? 'NULL') . ' ' .
+                            ($charset ?? 'NULL') . ' ' .
+                            ($encoding ?? 'NULL') . ' ' .
+                            ($typeParam ?? 'NULL');
+                        $expected = '';
+                        if ($type !== null) {
+                            $expected = "Content-Type: {$type}";
+
+                            if ($charset !== null) {
+                                $expected .= "; charset=\"{$charset}\"";
+                            }
+                            if ($typeParam !== null) {
+                                $expected .= "; {$typeParam}";
+                            }
+                            $expected .= "\r\n";
+
+                            if ($encoding !== null) {
+                                $expected .= "Content-Transfer-Encoding: {$encoding}\r\n";
+                            }
+                        }
+                        yield $name => [$type, $charset, $encoding, $typeParam, $expected];
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * @dataProvider dataSetGetEncodingValid
      */
     public function testSetGetEncodingValid($encoding)
@@ -282,16 +378,17 @@ class AbstractPartTest extends TestCase
     /**
      * @dataProvider dataSetGetEncodingInvalid
      */
-    public function testSetGetEncodingInvalid($encoding)
+    public function testSetGetEncodingInvalid(string $encoding): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->part->setEncoding($encoding);
     }
 
-    public function dataSetGetEncodingInvalid()
+    public function dataSetGetEncodingInvalid(): iterable
     {
         return [
-            ['invalid-encoding']
+            ['invalid-encoding'],
+            [''],
         ];
     }
 
