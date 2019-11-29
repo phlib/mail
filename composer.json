@@ -26,7 +26,10 @@
         "php": "^7.1",
         "ext-fileinfo": "*",
         "ext-mailparse" : "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+
+        "egulias/email-validator": "^2",
+        "symfony/mime": "^4.4"
     },
     "require-dev": {
         "ext-iconv" : "*",
