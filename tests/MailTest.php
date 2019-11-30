@@ -110,6 +110,11 @@ class MailTest extends TestCase
         $this->assertEquals($expectedAfter, $this->mail->getTo());
     }
 
+    public function testGetToDefault(): void
+    {
+        $this->assertSame([], $this->mail->getTo());
+    }
+
     public function testAddGetCc()
     {
         $data = [
@@ -140,6 +145,11 @@ class MailTest extends TestCase
         $this->assertEquals($expectedAfter, $this->mail->getCc());
     }
 
+    public function testGetCcDefault(): void
+    {
+        $this->assertSame([], $this->mail->getCc());
+    }
+
     public function testSetGetReplyTo()
     {
         $data = [
@@ -155,6 +165,11 @@ class MailTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->mail->setReplyTo('invalid address');
+    }
+
+    public function testGetReplyToDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReplyTo());
     }
 
     public function testSetGetReturnPath()
@@ -181,6 +196,11 @@ class MailTest extends TestCase
         $this->assertEquals(null, $this->mail->getReturnPath());
     }
 
+    public function testGetReturnPathDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReturnPath());
+    }
+
     public function testSetGetFrom()
     {
         $data = [
@@ -196,6 +216,11 @@ class MailTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->mail->setFrom('invalid address');
+    }
+
+    public function testGetFromDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getFrom());
     }
 
     public function testFilterName()
@@ -216,6 +241,11 @@ class MailTest extends TestCase
         $this->mail->setSubject($subject);
 
         $this->assertEquals($subject, $this->mail->getSubject());
+    }
+
+    public function testGetSubjectDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getSubject());
     }
 
     /**
