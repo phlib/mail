@@ -80,6 +80,101 @@ class MailTest extends TestCase
         $this->assertEquals($expected, $this->mail->getEncodedHeaders());
     }
 
+    /**
+     * @dataProvider providerEncodedHeadersAddrSpec
+     */
+    public function testEncodedHeadersMailboxAddrSpec(
+        string $method,
+        array $params,
+        string $expected
+    ): void {
+        $part = new Mime('multipart/other');
+        $this->mail->setPart($part);
+
+        foreach ($params as $each) {
+            $this->mail->{$method}(...$each);
+        }
+
+        $expected .= "MIME-Version: 1.0";
+
+        // Remove line-breaks for character comparison
+        $actual = str_replace("\r\n", '', $this->mail->getEncodedHeaders());
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Annotation for IDE usage
+     *
+     * @see Mail::setFrom()
+     * @see Mail::setReplyTo()
+     * @see Mail::setReturnPath()
+     * @see Mail::addTo()
+     * @see Mail::addCc()
+     */
+    public function providerEncodedHeadersAddrSpec(): iterable
+    {
+        $singleHeaders = [
+            'From' => 'setFrom',
+            'Reply-To' => 'setReplyTo',
+        ];
+        $listHeaders = [
+            'To' => 'addTo',
+            'Cc' => 'addCc',
+        ];
+
+        /**
+         * @var array $names
+         *     string? Display Name parameter
+         *     string? Encoded Value (null for no Display Name)
+         */
+        $names = [
+            'No name' => [null, null],
+            'Empty name' => ['', null],
+            'One atom' => ['Atom0123=?*&789', 'Atom0123=?*&789'],
+            'Atom phrase' => ['Atom01 23=?*&789', 'Atom01 23=?*&789'],
+            'One extended' => ['Exténded', '=?UTF-8?Q?Ext=C3=A9nded?='],
+            'One extended in phrase' => ['Contains Exténded Word', 'Contains =?UTF-8?Q?Ext=C3=A9nded?= Word'],
+            'Extended whole phrase' => ['Âll Exténded Wörds', '=?UTF-8?Q?=C3=82ll_Ext=C3=A9nded_W=C3=B6rds?='],
+        ];
+
+        // For all headers,
+        foreach (array_merge($singleHeaders, $listHeaders) as $header => $method) {
+            foreach ($names as $providerName => $config) {
+                [$name, $expectedDisplay] = $config;
+                $address = uniqid() . '@example.com';
+                $expected = $header . ': ';
+                if ($expectedDisplay === null) {
+                    $expected .= $address;
+                } else {
+                    $expected .= "{$expectedDisplay} <$address>";
+                }
+                $params = [[$address, $name]];
+                yield "Single {$header} {$providerName}" => [$method, $params, $expected];
+            }
+        }
+
+        // For List headers, also build examples with multiple addresses
+        foreach ($listHeaders as $header => $method) {
+            foreach ($names as $providerName => $config) {
+                [$name, $expectedDisplay] = $config;
+                $expectedParts = [];
+                $params = [];
+                for ($i = 0; $i < 3; $i++) {
+                    $address = uniqid() . '@example.com';
+                    if ($expectedDisplay === null) {
+                        $expectedParts[] = $address;
+                    } else {
+                        $expectedParts[] = "{$expectedDisplay} <$address>";
+                    }
+                    $params[] = [$address, $name];
+                }
+                $expected = $header . ': ' . implode(', ', $expectedParts);
+                yield "Multi {$header} {$providerName}" => [$method, $params, $expected];
+            }
+        }
+    }
+
     public function testAddGetTo()
     {
         $data = [
@@ -223,18 +318,6 @@ class MailTest extends TestCase
         $this->assertSame(null, $this->mail->getFrom());
     }
 
-    public function testFilterName()
-    {
-        $address = 'dummy@example.com';
-        $name = "\r\n\t\"<>'[]";
-        $expected = [
-            $address => "'[]'[]"
-        ];
-        $this->mail->addTo($address, $name);
-
-        $this->assertEquals($expected, $this->mail->getTo());
-    }
-
     public function testSetGetSubject()
     {
         $subject = 'subject line';
@@ -247,33 +330,7 @@ class MailTest extends TestCase
     {
         $this->assertSame(null, $this->mail->getSubject());
     }
-
-    /**
-     * @covers \Phlib\Mail\Mail
-     */
-    public function testFormatAddress()
-    {
-        $address = 'dummy@example.com';
-        $name = 'Address Alias';
-        $expected = "{$name} <{$address}>";
-        $actual = $this->mail->formatAddress($address, $name);
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @covers \Phlib\Mail\Mail
-     */
-    public function testFormatAddressEscaped()
-    {
-        $address = 'dummy@example.com';
-        $name = 'Address,Alias';
-        $expected = "\"{$name}\" <{$address}>";
-        $actual = $this->mail->formatAddress($address, $name);
-
-        $this->assertEquals($expected, $actual);
-    }
-
+  
     public function testHasAttachmentFalse()
     {
         $this->assertEquals(false, $this->mail->hasAttachment());
@@ -341,7 +398,7 @@ class MailTest extends TestCase
     {
         $this->mail->setReturnPath('return-path@example.com');
         $this->mail->setFrom('from@example.com', "From Alias \xf0\x9f\x93\xa7 envelope");
-        $this->mail->setSubject('subject line');
+        $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
@@ -350,8 +407,8 @@ class MailTest extends TestCase
         $expected = [
             "Return-Path" => '<return-path@example.com>',
             "From" => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
-            "Subject" => 'subject line',
-            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>,\r\n" .
+            "Subject" => "subject line with \xf0\x9f\x93\xa7 envelope",
+            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
             "Cc" => 'cc@example.com',
             "Reply-To" => 'reply-to@example.com'

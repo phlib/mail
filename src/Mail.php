@@ -5,6 +5,10 @@ namespace Phlib\Mail;
 
 use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
+use Symfony\Component\Mime\Header\AbstractHeader;
+use Symfony\Component\Mime\Header\Headers;
 
 class Mail extends AbstractPart
 {
@@ -39,27 +43,27 @@ class Mail extends AbstractPart
     private $subject;
 
     /**
-     * @var array
+     * @var Address[]
      */
     private $to = [];
 
     /**
-     * @var array|null
+     * @var Address?
      */
     private $from;
 
     /**
-     * @var array
+     * @var Address[]
      */
     private $cc = [];
 
     /**
-     * @var array|null
+     * @var Address?
      */
     private $replyTo;
 
     /**
-     * @var string|null
+     * @var Address?
      */
     private $returnPath;
 
@@ -90,78 +94,67 @@ class Mail extends AbstractPart
 
     public function getEncodedHeaders(): string
     {
-        $headers = [];
+        $headers = new Headers();
 
         if ($this->returnPath) {
-            $headers[] = "Return-Path: <$this->returnPath>";
+            $headers->addPathHeader('Return-Path', $this->returnPath);
         }
 
         if ($this->from) {
-            list($address, $name) = $this->from;
-            $headers[] = $this->encodeHeader('From', $this->formatAddress($address, $name));
+            $headers->addMailboxListHeader('From', [$this->from]);
         }
 
         if ($this->subject) {
-            $headers[] = $this->encodeHeader('Subject', $this->subject);
+            $headers->addTextHeader('Subject', $this->subject);
         }
 
         if (!empty($this->to)) {
-            $to = [];
-            foreach ($this->to as $address => $name) {
-                $to[] = $this->formatAddress($address, $name);
-            }
-            $headers[] = $this->encodeHeader('To', rtrim(implode(",\r\n ", $to)));
+            $headers->addMailboxListHeader('To', $this->to);
         }
 
         if (!empty($this->cc)) {
-            $cc = [];
-            foreach ($this->cc as $address => $name) {
-                $cc[] = $this->formatAddress($address, $name);
-            }
-            $headers[] = $this->encodeHeader('Cc', rtrim(implode(",\r\n ", $cc)));
+            $headers->addMailboxListHeader('Cc', $this->cc);
         }
 
         if ($this->replyTo) {
-            list($address, $name) = $this->replyTo;
-            $headers[] = $this->encodeHeader('Reply-To', $this->formatAddress($address, $name));
+            $headers->addMailboxListHeader('Reply-To', [$this->replyTo]);
         }
 
         if ($this->getPart() instanceof Mime\AbstractMime) {
-            $headers[] = 'MIME-Version: 1.0';
+            $headers->addTextHeader('MIME-Version', '1.0');
         }
 
-        $headersString = '';
-        if (!empty($headers)) {
-            $headersString = implode("\r\n", $headers) . "\r\n";
+        // Set correct charset on all headers
+        if ($this->charset) {
+            /** @var AbstractHeader $header */
+            foreach ($headers->all() as $header) {
+                $header->setCharset($this->charset);
+            }
         }
+
+        $headersString = $headers->toString();
 
         return $headersString . parent::getEncodedHeaders();
     }
 
-    /**
-     * Add to
-     *
-     * @param string $address
-     * @param string $name
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function addTo(string $address, ?string $name = null): self
     {
-        if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException("Invalid email address ($address)");
+        try {
+            $this->to[] = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
-        if ($name) {
-            $name = $this->filterName($name);
-        }
-        $this->to[$address] = $name;
 
         return $this;
     }
 
     public function getTo(): array
     {
-        return $this->to;
+        $to = [];
+        foreach ($this->to as $address) {
+            $to[$address->getAddress()] = $address->getName();
+        }
+        return $to;
     }
 
     public function clearTo(): self
@@ -173,20 +166,22 @@ class Mail extends AbstractPart
 
     public function addCc(string $address, ?string $name = null): self
     {
-        if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException("Invalid email address ($address)");
+        try {
+            $this->cc[] = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
-        if ($name) {
-            $name = $this->filterName($name);
-        }
-        $this->cc[$address] = $name;
 
         return $this;
     }
 
     public function getCc(): array
     {
-        return $this->cc;
+        $cc = [];
+        foreach ($this->cc as $address) {
+            $cc[$address->getAddress()] = $address->getName();
+        }
+        return $cc;
     }
 
     public function clearCc(): self
@@ -196,46 +191,27 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Set reply to
-     *
-     * @param string $address
-     * @param string $name
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function setReplyTo(string $address, ?string $name = null): self
     {
-        if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException("Invalid email address ($address)");
+        try {
+            $this->replyTo = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
-        if ($name) {
-            $name = $this->filterName($name);
-        }
-        $this->replyTo = [
-            $address,
-            $name
-        ];
+
         return $this;
     }
 
     public function getReplyTo(): ?array
     {
-        return $this->replyTo;
-    }
+        if ($this->replyTo === null) {
+            return null;
+        }
 
-    private function filterName(string $name): string
-    {
-        $rule = [
-            "\r" => '',
-            "\n" => '',
-            "\t" => '',
-            '"'  => "'",
-            '<'  => '[',
-            '>'  => ']',
+        return [
+            $this->replyTo->getAddress(),
+            $this->replyTo->getName(),
         ];
-
-        return trim(strtr($name, $rule));
     }
 
     /**
@@ -247,10 +223,12 @@ class Mail extends AbstractPart
      */
     public function setReturnPath(string $address): self
     {
-        if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException("Invalid email address ($address)");
+        try {
+            $this->returnPath = new Address($address);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
-        $this->returnPath = $address;
+
         return $this;
     }
 
@@ -262,7 +240,11 @@ class Mail extends AbstractPart
 
     public function getReturnPath(): ?string
     {
-        return $this->returnPath;
+        if ($this->returnPath === null) {
+            return null;
+        }
+
+        return $this->returnPath->getAddress();
     }
 
     /**
@@ -275,22 +257,25 @@ class Mail extends AbstractPart
      */
     public function setFrom(string $address, ?string $name = null): self
     {
-        if (filter_var($address, FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException("Invalid email address ($address)");
+        try {
+            $this->from = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
-        if ($name) {
-            $name = $this->filterName($name);
-        }
-        $this->from = [
-            $address,
-            $name
-        ];
+
         return $this;
     }
 
     public function getFrom(): ?array
     {
-        return $this->from;
+        if ($this->from === null) {
+            return null;
+        }
+
+        return [
+            $this->from->getAddress(),
+            $this->from->getName(),
+        ];
     }
 
     public function setSubject(string $subject): self
@@ -302,19 +287,6 @@ class Mail extends AbstractPart
     public function getSubject(): ?string
     {
         return $this->subject;
-    }
-
-    public function formatAddress(string $address, ?string $name = null): string
-    {
-        if (!$name) {
-            return $address;
-        }
-
-        if (strpos($name, ',') !== false) {
-            return "\"$name\" <$address>";
-        } else {
-            return "$name <$address>";
-        }
     }
 
     public function hasAttachment(): bool

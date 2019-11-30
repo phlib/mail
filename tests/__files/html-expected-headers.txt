@@ -1,7 +1,7 @@
 Return-Path: <bounce-100-250-1831-live@mail.example.com>
 From: Events <eventmarketing@example.com>
-Subject: London Olympics: Business Continuity Plan -
- =?UTF-8?B?wqMxMDAgZGlzY291bnQgdG9kYXkgb25seSE=?=
+Subject: London Olympics: Business Continuity Plan - =?UTF-8?Q?=C2=A3100?=
+ discount today only!
 To: recipient@example.com
 Reply-To: Events <eventmarketing@example.com>
 Received: from gbnthda3150srv.example.com ([10.67.121.52]) by
