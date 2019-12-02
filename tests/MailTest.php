@@ -17,7 +17,7 @@ class MailTest extends TestCase
      */
     protected $mail;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mail = new Mail();
     }

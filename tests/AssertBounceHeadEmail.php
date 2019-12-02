@@ -29,7 +29,7 @@ class AssertBounceHeadEmail
         $primaryPart = $mail->getPart();
         Assert::assertInstanceOf(MultipartReport::class, $primaryPart);
         Assert::assertEquals('multipart/report', $primaryPart->getType());
-        Assert::assertContains('; report-type=delivery-status', $primaryPart->getEncodedHeaders());
+        Assert::assertStringContainsString('; report-type=delivery-status', $primaryPart->getEncodedHeaders());
 
         $reportParts = $primaryPart->getParts();
         Assert::assertCount(3, $reportParts);

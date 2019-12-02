@@ -119,14 +119,14 @@ class AssertAttachmentsEmail
                     $contentType .= " charset=\"{$details['charset']}\";";
                 }
                 $contentType .= " name=\"{$details['name']}\"";
-                Assert::assertContains($contentType, $partHeaders);
+                Assert::assertStringContainsString($contentType, $partHeaders);
                 if ($details['disposition'] === true) {
-                    Assert::assertContains(
+                    Assert::assertStringContainsString(
                         'Content-Disposition: attachment; filename="' . $details['name'] . '"',
                         $partHeaders
                     );
                 } else {
-                    Assert::assertNotContains('Content-Disposition', $partHeaders);
+                    Assert::assertStringNotContainsStringIgnoringCase('Content-Disposition', $partHeaders);
                 }
             }
         }

@@ -13,7 +13,7 @@ class FactoryTest extends TestCase
 {
     use PHPMock;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse');
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse_file');

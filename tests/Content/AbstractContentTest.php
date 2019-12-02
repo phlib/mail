@@ -14,7 +14,7 @@ class AbstractContentTest extends TestCase
      */
     protected $part;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->part = $this->getMockForAbstractClass(AbstractContent::class);
     }

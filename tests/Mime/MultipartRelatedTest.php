@@ -13,7 +13,7 @@ class MultipartRelatedTest extends TestCase
      */
     protected $part;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->part = new MultipartRelated();
     }
