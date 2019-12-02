@@ -8,10 +8,10 @@ use Phlib\Mail\Exception\InvalidArgumentException;
 
 abstract class AbstractPart
 {
-    const ENCODING_BASE64     = 'base64';
-    const ENCODING_QPRINTABLE = 'quoted-printable';
-    const ENCODING_7BIT       = '7bit';
-    const ENCODING_8BIT       = '8bit';
+    public const ENCODING_BASE64     = 'base64';
+    public const ENCODING_QPRINTABLE = 'quoted-printable';
+    public const ENCODING_7BIT       = '7bit';
+    public const ENCODING_8BIT       = '8bit';
 
     /**
      * @var array
