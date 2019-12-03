@@ -126,11 +126,17 @@ class Mail extends AbstractPart
         }
 
         // Set correct charset on all headers
-        if ($this->charset) {
-            /** @var AbstractHeader $header */
-            foreach ($headers->all() as $header) {
-                $header->setCharset($this->charset);
-            }
+        $charset = $this->charset;
+        if (!$charset) {
+            $charset = mb_internal_encoding();
+        }
+        /** @var AbstractHeader $header */
+        foreach ($headers->all() as $header) {
+            // Symfony/Mime AbstractHeader defaults to 76 !?
+            $header->setMaxLineLength(78);
+            // Set this part's charset to the headers
+            $header->setCharset($charset);
+
         }
 
         $headersString = $headers->toString();
