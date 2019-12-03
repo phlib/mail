@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Content;
@@ -113,7 +114,7 @@ class AttachmentTest extends TestCase
         $part = new Attachment('example-file-name.png');
 
         $actual = $part->getEncodedHeaders();
-        $this->assertNotContains('Content-Disposition:', $actual);
+        $this->assertStringNotContainsStringIgnoringCase('Content-Disposition:', $actual);
     }
 
     public function testNoDispositionNull()
@@ -121,7 +122,7 @@ class AttachmentTest extends TestCase
         $part = new Attachment('example-file-name.png', null);
 
         $actual = $part->getEncodedHeaders();
-        $this->assertNotContains('Content-Disposition:', $actual);
+        $this->assertStringNotContainsStringIgnoringCase('Content-Disposition:', $actual);
     }
 
     public function testGetEncodedHeaders()

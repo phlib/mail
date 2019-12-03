@@ -23,17 +23,17 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.3",
         "ext-fileinfo": "*",
         "ext-mailparse" : "*",
         "ext-mbstring": "*",
 
         "egulias/email-validator": "^2",
-        "symfony/mime": "^4.4"
+        "symfony/mime": "^5"
     },
     "require-dev": {
         "ext-iconv" : "*",
-        "phpunit/phpunit": "^7",
+        "phpunit/phpunit": "^8",
         "php-mock/php-mock-phpunit": "^2"
     },
     "autoload": {

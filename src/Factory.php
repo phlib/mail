@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail;
@@ -221,7 +222,8 @@ class Factory
     private function parsePart(string $name, Mail $mail): AbstractPart
     {
         // Get part resource
-        if (($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
+        if (
+            ($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
             ($partData = @mailparse_msg_get_part_data($part)) === false
         ) {
             $error = error_get_last();
@@ -240,7 +242,7 @@ class Factory
                     $mailPart = new Mime\MultipartAlternative();
                     break;
                 case 'multipart/mixed':
-                    $mailPart = new Mime\MultipartMixed;
+                    $mailPart = new Mime\MultipartMixed();
                     break;
                 case 'multipart/related':
                     $mailPart = new Mime\MultipartRelated();

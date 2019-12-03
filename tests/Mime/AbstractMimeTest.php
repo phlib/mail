@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
@@ -16,7 +17,7 @@ class AbstractMimeTest extends TestCase
      */
     protected $part;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->part = $this->getMockForAbstractClass(AbstractMime::class);
     }

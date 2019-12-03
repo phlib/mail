@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail\Tests;
@@ -14,7 +15,7 @@ class AbstractPartTest extends TestCase
      */
     protected $part;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->part = $this->getMockForAbstractClass(AbstractPart::class);
     }

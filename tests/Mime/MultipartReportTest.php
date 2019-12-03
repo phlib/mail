@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Mime;
@@ -13,7 +14,7 @@ class MultipartReportTest extends TestCase
      */
     protected $part;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->part = new MultipartReport();
     }

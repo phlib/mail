@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail\Tests;
@@ -17,7 +18,7 @@ class MailTest extends TestCase
      */
     protected $mail;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mail = new Mail();
     }

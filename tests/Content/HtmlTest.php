@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Phlib\Mail\Tests\Content;
@@ -14,7 +15,7 @@ class HtmlTest extends TestCase
     protected $part;
 
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->part = new Html();
     }
