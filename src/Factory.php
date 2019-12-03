@@ -151,9 +151,9 @@ class Factory
 
                 try {
                     switch (strtolower($headerKey)) {
+                        case 'return-path':
                         case 'from':
                         case 'reply-to':
-                        case 'return-path':
                             $addresses = $this->parseEmailAddresses($headerText);
                             $method = 'set' . str_replace(' ', '', ucwords(
                                 str_replace('-', ' ', strtolower($headerKey))
@@ -165,8 +165,8 @@ class Factory
                                 );
                             }
                             break;
-                        case 'cc':
                         case 'to':
+                        case 'cc':
                             $addresses = $this->parseEmailAddresses($headerText);
                             $method = 'add' . ucwords(strtolower($headerKey));
                             foreach ($addresses as $address) {

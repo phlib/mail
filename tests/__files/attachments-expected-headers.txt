@@ -1,7 +1,7 @@
 Return-Path: <sender@example.com>
 From: From Name <from@example.com>
-Subject: Attachments
 To: recipient@example.com
+Subject: Attachments
 MIME-Version: 1.0
 Received: from mail.example.com (LHLO mail.example.com) (10.1.9.1) by
  mail.example.com with LMTP; Thu, 16 Aug 2012 15:45:43 +0100 (BST)

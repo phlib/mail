@@ -30,23 +30,18 @@ class Mail extends AbstractPart
         'content-type',
         'content-transfer-encoding',
         'mime-version',
-        'subject',
-        'to',
-        'from',
-        'cc',
-        'reply-to',
         'return-path',
+        'from',
+        'reply-to',
+        'to',
+        'cc',
+        'subject',
     ];
 
     /**
-     * @var string|null
+     * @var Address?
      */
-    private $subject;
-
-    /**
-     * @var Address[]
-     */
-    private $to = [];
+    private $returnPath;
 
     /**
      * @var Address?
@@ -54,19 +49,24 @@ class Mail extends AbstractPart
     private $from;
 
     /**
-     * @var Address[]
-     */
-    private $cc = [];
-
-    /**
      * @var Address?
      */
     private $replyTo;
 
     /**
-     * @var Address?
+     * @var Address[]
      */
-    private $returnPath;
+    private $to = [];
+
+    /**
+     * @var Address[]
+     */
+    private $cc = [];
+
+    /**
+     * @var string?
+     */
+    private $subject;
 
     /**
      * @var int The number of attachments in any of this mail's descendants
@@ -97,6 +97,9 @@ class Mail extends AbstractPart
     {
         $headers = new Headers();
 
+        // Add headers in order defined in RFC5322 §3.6
+
+        // Return-path is a 'trace' field so must be first - RFC5322 §3.6.7
         if ($this->returnPath) {
             $headers->addPathHeader('Return-Path', $this->returnPath);
         }
@@ -105,8 +108,8 @@ class Mail extends AbstractPart
             $headers->addMailboxListHeader('From', [$this->from]);
         }
 
-        if ($this->subject) {
-            $headers->addTextHeader('Subject', $this->subject);
+        if ($this->replyTo) {
+            $headers->addMailboxListHeader('Reply-To', [$this->replyTo]);
         }
 
         if (!empty($this->to)) {
@@ -117,8 +120,8 @@ class Mail extends AbstractPart
             $headers->addMailboxListHeader('Cc', $this->cc);
         }
 
-        if ($this->replyTo) {
-            $headers->addMailboxListHeader('Reply-To', [$this->replyTo]);
+        if ($this->subject) {
+            $headers->addTextHeader('Subject', $this->subject);
         }
 
         if ($this->getPart() instanceof Mime\AbstractMime) {
@@ -142,83 +145,6 @@ class Mail extends AbstractPart
         $headersString = $headers->toString();
 
         return $headersString . parent::getEncodedHeaders();
-    }
-
-    public function addTo(string $address, ?string $name = null): self
-    {
-        try {
-            $this->to[] = new Address($address, (string)$name);
-        } catch (RfcComplianceException $e) {
-            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        return $this;
-    }
-
-    public function getTo(): array
-    {
-        $to = [];
-        foreach ($this->to as $address) {
-            $to[$address->getAddress()] = $address->getName();
-        }
-        return $to;
-    }
-
-    public function clearTo(): self
-    {
-        $this->to = [];
-
-        return $this;
-    }
-
-    public function addCc(string $address, ?string $name = null): self
-    {
-        try {
-            $this->cc[] = new Address($address, (string)$name);
-        } catch (RfcComplianceException $e) {
-            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        return $this;
-    }
-
-    public function getCc(): array
-    {
-        $cc = [];
-        foreach ($this->cc as $address) {
-            $cc[$address->getAddress()] = $address->getName();
-        }
-        return $cc;
-    }
-
-    public function clearCc(): self
-    {
-        $this->cc = [];
-
-        return $this;
-    }
-
-    public function setReplyTo(string $address, ?string $name = null): self
-    {
-        try {
-            $this->replyTo = new Address($address, (string)$name);
-        } catch (RfcComplianceException $e) {
-            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        return $this;
-    }
-
-    public function getReplyTo(): ?array
-    {
-        if ($this->replyTo === null) {
-            return null;
-        }
-
-        return [
-            $this->replyTo->getAddress(),
-            $this->replyTo->getName(),
-        ];
     }
 
     /**
@@ -283,6 +209,83 @@ class Mail extends AbstractPart
             $this->from->getAddress(),
             $this->from->getName(),
         ];
+    }
+
+    public function setReplyTo(string $address, ?string $name = null): self
+    {
+        try {
+            $this->replyTo = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $this;
+    }
+
+    public function getReplyTo(): ?array
+    {
+        if ($this->replyTo === null) {
+            return null;
+        }
+
+        return [
+            $this->replyTo->getAddress(),
+            $this->replyTo->getName(),
+        ];
+    }
+
+    public function addTo(string $address, ?string $name = null): self
+    {
+        try {
+            $this->to[] = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $this;
+    }
+
+    public function getTo(): array
+    {
+        $to = [];
+        foreach ($this->to as $address) {
+            $to[$address->getAddress()] = $address->getName();
+        }
+        return $to;
+    }
+
+    public function clearTo(): self
+    {
+        $this->to = [];
+
+        return $this;
+    }
+
+    public function addCc(string $address, ?string $name = null): self
+    {
+        try {
+            $this->cc[] = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $this;
+    }
+
+    public function getCc(): array
+    {
+        $cc = [];
+        foreach ($this->cc as $address) {
+            $cc[$address->getAddress()] = $address->getName();
+        }
+        return $cc;
+    }
+
+    public function clearCc(): self
+    {
+        $this->cc = [];
+
+        return $this;
     }
 
     public function setSubject(string $subject): self

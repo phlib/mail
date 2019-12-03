@@ -1,9 +1,9 @@
 Return-Path: <bounce-100-250-1831-live@mail.example.com>
 From: Events <eventmarketing@example.com>
+Reply-To: Events <eventmarketing@example.com>
+To: recipient@example.com
 Subject: London Olympics: Business Continuity Plan - =?UTF-8?Q?=C2=A3100?=
  discount today only!
-To: recipient@example.com
-Reply-To: Events <eventmarketing@example.com>
 Received: from gbnthda3150srv.example.com ([10.67.121.52]) by
  GBLONVMSX001.nsicorp.int with Microsoft SMTPSVC(6.0.3790.4675);  Thu, 29 Sep
  2011 08:48:51 +0100

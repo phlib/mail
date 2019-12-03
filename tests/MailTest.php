@@ -176,6 +176,79 @@ class MailTest extends TestCase
         }
     }
 
+    public function testSetGetReturnPath()
+    {
+        $address = 'return-path@example.com';
+        $this->mail->setReturnPath($address);
+
+        $this->assertEquals($address, $this->mail->getReturnPath());
+    }
+
+    public function testSetReturnPathInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setReturnPath('invalid address');
+    }
+
+    public function testClearReturnPath()
+    {
+        $address = 'return-path@example.com';
+        $this->mail->setReturnPath($address);
+        $this->assertEquals($address, $this->mail->getReturnPath());
+
+        $this->mail->clearReturnPath();
+        $this->assertEquals(null, $this->mail->getReturnPath());
+    }
+
+    public function testGetReturnPathDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReturnPath());
+    }
+
+    public function testSetGetFrom()
+    {
+        $data = [
+            'from@example.com',
+            'From Alias'
+        ];
+        $this->mail->setFrom($data[0], $data[1]);
+
+        $this->assertEquals($data, $this->mail->getFrom());
+    }
+
+    public function testSetFromInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setFrom('invalid address');
+    }
+
+    public function testGetFromDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getFrom());
+    }
+
+    public function testSetGetReplyTo()
+    {
+        $data = [
+            'reply-to@example.com',
+            'Reply-To Alias'
+        ];
+        $this->mail->setReplyTo($data[0], $data[1]);
+
+        $this->assertEquals($data, $this->mail->getReplyTo());
+    }
+
+    public function testSetReplyToInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setReplyTo('invalid address');
+    }
+
+    public function testGetReplyToDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReplyTo());
+    }
+
     public function testAddGetTo()
     {
         $data = [
@@ -246,79 +319,6 @@ class MailTest extends TestCase
         $this->assertSame([], $this->mail->getCc());
     }
 
-    public function testSetGetReplyTo()
-    {
-        $data = [
-            'reply-to@example.com',
-            'Reply-To Alias'
-        ];
-        $this->mail->setReplyTo($data[0], $data[1]);
-
-        $this->assertEquals($data, $this->mail->getReplyTo());
-    }
-
-    public function testSetReplyToInvalid()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->mail->setReplyTo('invalid address');
-    }
-
-    public function testGetReplyToDefault(): void
-    {
-        $this->assertSame(null, $this->mail->getReplyTo());
-    }
-
-    public function testSetGetReturnPath()
-    {
-        $address = 'return-path@example.com';
-        $this->mail->setReturnPath($address);
-
-        $this->assertEquals($address, $this->mail->getReturnPath());
-    }
-
-    public function testSetReturnPathInvalid()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->mail->setReturnPath('invalid address');
-    }
-
-    public function testClearReturnPath()
-    {
-        $address = 'return-path@example.com';
-        $this->mail->setReturnPath($address);
-        $this->assertEquals($address, $this->mail->getReturnPath());
-
-        $this->mail->clearReturnPath();
-        $this->assertEquals(null, $this->mail->getReturnPath());
-    }
-
-    public function testGetReturnPathDefault(): void
-    {
-        $this->assertSame(null, $this->mail->getReturnPath());
-    }
-
-    public function testSetGetFrom()
-    {
-        $data = [
-            'from@example.com',
-            'From Alias'
-        ];
-        $this->mail->setFrom($data[0], $data[1]);
-
-        $this->assertEquals($data, $this->mail->getFrom());
-    }
-
-    public function testSetFromInvalid()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->mail->setFrom('invalid address');
-    }
-
-    public function testGetFromDefault(): void
-    {
-        $this->assertSame(null, $this->mail->getFrom());
-    }
-
     public function testSetGetSubject()
     {
         $subject = 'subject line';
@@ -331,7 +331,7 @@ class MailTest extends TestCase
     {
         $this->assertSame(null, $this->mail->getSubject());
     }
-  
+
     public function testHasAttachmentFalse()
     {
         $this->assertEquals(false, $this->mail->hasAttachment());
@@ -399,20 +399,20 @@ class MailTest extends TestCase
     {
         $this->mail->setReturnPath('return-path@example.com');
         $this->mail->setFrom('from@example.com', "From Alias \xf0\x9f\x93\xa7 envelope");
-        $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
+        $this->mail->setReplyTo('reply-to@example.com');
         $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
-        $this->mail->setReplyTo('reply-to@example.com');
+        $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
 
         $expected = [
-            "Return-Path" => '<return-path@example.com>',
-            "From" => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
-            "Subject" => "subject line with \xf0\x9f\x93\xa7 envelope",
-            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
+            'Return-Path' => '<return-path@example.com>',
+            'From' => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
+            'Reply-To' => 'reply-to@example.com',
+            'To' => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
-            "Cc" => 'cc@example.com',
-            "Reply-To" => 'reply-to@example.com'
+            'Cc' => 'cc@example.com',
+            'Subject' => "subject line with \xf0\x9f\x93\xa7 envelope",
         ];
 
         return $expected;
