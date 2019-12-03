@@ -10,6 +10,7 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Symfony\Component\Mime\Header\AbstractHeader;
 use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Header\IdentificationHeader;
 
 class Mail extends AbstractPart
 {
@@ -35,6 +36,7 @@ class Mail extends AbstractPart
         'reply-to',
         'to',
         'cc',
+        'message-id',
         'subject',
     ];
 
@@ -62,6 +64,11 @@ class Mail extends AbstractPart
      * @var Address[]
      */
     private $cc = [];
+
+    /**
+     * @var IdentificationHeader
+     */
+    private $messageId;
 
     /**
      * @var string?
@@ -118,6 +125,10 @@ class Mail extends AbstractPart
 
         if (!empty($this->cc)) {
             $headers->addMailboxListHeader('Cc', $this->cc);
+        }
+
+        if ($this->messageId) {
+            $headers->add($this->messageId);
         }
 
         if ($this->subject) {
@@ -286,6 +297,24 @@ class Mail extends AbstractPart
         $this->cc = [];
 
         return $this;
+    }
+
+    public function setMessageId(string $messageId): self
+    {
+        try {
+            $this->messageId = new IdentificationHeader('Message-Id', $messageId);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+        return $this;
+    }
+
+    public function getMessageId(): ?string
+    {
+        if ($this->messageId === null) {
+            return null;
+        }
+        return $this->messageId->getBody()[0];
     }
 
     public function setSubject(string $subject): self

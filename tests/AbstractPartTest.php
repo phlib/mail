@@ -172,23 +172,6 @@ class AbstractPartTest extends TestCase
     }
 
     /**
-     * Message-Id header must never be encoded
-     * An underscore triggers mb_encode_mimeheader() to encode the string even if not necessary
-     * Even when longer than soft limit of 78 chars, we don't want Message-Id to be wrapped
-     */
-    public function testGetEncodedHeadersMessageId()
-    {
-        $name = 'Message-Id';
-        $value = '<5ba50e335feeb_58fbb46426474f8d8108b1f8e02bad29@mail.long.example.com>';
-        $this->part->addHeader($name, $value);
-
-        $expected = "$name: $value\r\n";
-
-        $actual = $this->part->getEncodedHeaders();
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
      * An underscore triggers mb_encode_mimeheader() to encode the string even if not necessary
      */
     public function testGetEncodedHeadersNotEncodedForUnderscore()

@@ -2,6 +2,7 @@ Return-Path: <bounce-100-250-1831-live@mail.example.com>
 From: Events <eventmarketing@example.com>
 Reply-To: Events <eventmarketing@example.com>
 To: recipient@example.com
+Message-Id: <0.0.24D.2F1.1CC79CE6346CBD8.0@mta6551.example.com>
 Subject: London Olympics: Business Continuity Plan - =?UTF-8?Q?=C2=A3100?=
  discount today only!
 Received: from gbnthda3150srv.example.com ([10.67.121.52]) by
@@ -17,7 +18,6 @@ Received: by mta6551.example.com (PowerMTA(TM) v3.5r14) id hfh4js0sv5km for
  <recipient@example.com>; Fri, 23 Sep 2011 09:54:22 +0100 (envelope-from
  <bounce-100-250-1831-live@mail.example.com>)
 X-Mailer: MXM-v5-MailEngine
-Message-Id: <0.0.24D.2F1.1CC79CE6346CBD8.0@mta6551.example.com>
 Date: Fri, 23 Sep 2011 09:54:22 +0100
 X-Tm-As-Product-Ver: SMEX-8.0.0.1181-6.500.1024-18336.002
 X-Tm-As-Result: No--4.601200-8.000000-31

@@ -1,6 +1,7 @@
 Return-Path: <sender@example.com>
 From: From Name <from@example.com>
 To: recipient@example.com
+Message-Id: <CAJ_TRnL=YMObf2FT9bU7NO0ziPYxpnxfxrtOz4r2-aBxkHSOrA@mail.gmail.com>
 Subject: Attachments
 MIME-Version: 1.0
 Received: from mail.example.com (LHLO mail.example.com) (10.1.9.1) by
@@ -42,4 +43,3 @@ Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;        d=gmail.com;
  6SGg==
 X-Goomoji-Body: true
 Date: Thu, 16 Aug 2012 15:45:32 +0100
-Message-Id: <CAJ_TRnL=YMObf2FT9bU7NO0ziPYxpnxfxrtOz4r2-aBxkHSOrA@mail.gmail.com>

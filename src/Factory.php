@@ -176,6 +176,10 @@ class Factory
                                 );
                             }
                             break;
+                        case 'message-id':
+                            $messageId = $this->parseEmailAddresses($headerText);
+                            $mail->setMessageId($messageId[0]['address']);
+                            break;
                         case 'subject':
                             $mail->setSubject($headerText);
                             break;

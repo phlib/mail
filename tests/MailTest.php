@@ -319,6 +319,44 @@ class MailTest extends TestCase
         $this->assertSame([], $this->mail->getCc());
     }
 
+    public function testSetGetMessageId()
+    {
+        $messageId = 'abc123@example.com';
+        $this->mail->setMessageId($messageId);
+
+        $this->assertEquals($messageId, $this->mail->getMessageId());
+    }
+
+    public function testSetMessageIdInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setMessageId('invalid address');
+    }
+
+    /**
+     * Message-Id header must never be encoded
+     * When using mb_encode_mimeheader() an underscore triggered it to encode the string even though unnecessary
+     * Even when longer than soft limit of 78 chars, we don't want Message-Id to be wrapped
+     */
+    public function testSetMessageIdNotEncoded()
+    {
+        $part = new Mime('multipart/other');
+        $this->mail->setPart($part);
+
+        $messageId = '5ba50e335feeb_58fbb46426474f8d8108b1f8e02bad29@mail.long.example.com';
+        $this->mail->setMessageId($messageId);
+
+        $expected = "Message-Id: <{$messageId}>\r\n" .
+            "MIME-Version: 1.0\r\n";
+
+        $this->assertEquals($expected, $this->mail->getEncodedHeaders());
+    }
+
+    public function testGetMessageIdDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getMessageId());
+    }
+
     public function testSetGetSubject()
     {
         $subject = 'subject line';
@@ -403,6 +441,7 @@ class MailTest extends TestCase
         $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
+        $this->mail->setMessageId('abc.123.def@mail.example.com');
         $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
 
         $expected = [
@@ -412,6 +451,7 @@ class MailTest extends TestCase
             'To' => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
             'Cc' => 'cc@example.com',
+            'Message-Id' => '<abc.123.def@mail.example.com>',
             'Subject' => "subject line with \xf0\x9f\x93\xa7 envelope",
         ];
 

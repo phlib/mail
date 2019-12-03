@@ -13,6 +13,5 @@ Received: from uspexhub02.example.com (10.50.51.21) by smtp2.example.com
  2012 07:02:33 -0400
 Date: Mon, 20 Aug 2012 07:02:24 -0400
 Content-Language: en-US
-Message-Id: <2b2c1a86-066f-47e6-a318-6a206ce97d78>
 In-Reply-To: <0.0.F4.BD6.1CD7EC2FB28D3A2.0@mta65117.example.com>
 References: <0.0.F4.BD6.1CD7EC2FB28D3A2.0@mta65117.example.com>
