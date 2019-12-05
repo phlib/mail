@@ -7,6 +7,7 @@ namespace Phlib\Mail\Tests;
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mime\Header\ParameterizedHeader;
 
 class AbstractPartTest extends TestCase
 {
@@ -28,14 +29,6 @@ class AbstractPartTest extends TestCase
         $expected = ['value1', 'value2'];
         $actual = $this->part->getHeader('test');
 
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testAddHeaderFilterValue()
-    {
-        $this->part->addHeader('test', "va\rl\nu\te");
-        $expected = ['value'];
-        $actual = $this->part->getHeader('test');
         $this->assertEquals($expected, $actual);
     }
 
@@ -93,24 +86,6 @@ class AbstractPartTest extends TestCase
         $this->assertEquals($expectedAfter, $actualAfter);
     }
 
-    public function testRemoveHeader()
-    {
-        $this->part->addHeader('test', 'value1');
-        $this->part->addHeader('test', 'value2');
-        $expectedBefore = ['value1', 'value2'];
-        $actualBefore = $this->part->getHeader('test');
-        $this->assertEquals($expectedBefore, $actualBefore);
-
-        $this->part->removeHeader('test', 'value1');
-        $actualAfter = $this->part->getHeader('test');
-        $this->assertNotContains('value1', $actualAfter);
-        $this->assertContains('value2', $actualAfter);
-
-        $this->part->removeHeader('test', 'value2');
-        $this->assertEmpty($this->part->getHeader('test'));
-        $this->assertFalse($this->part->hasHeader('test'));
-    }
-
     public function testGetHeaders()
     {
         $expected = $this->addHeaders();
@@ -153,7 +128,8 @@ class AbstractPartTest extends TestCase
         // Check encoding
         $value = "line1\r\nline2, high ascii > é <\r\n";
         $this->part->addHeader('Subject', $value);
-        $expected .= "Subject: line1line2, high ascii > =?UTF-8?B?" . base64_encode('é <') . "?=\r\n";
+        $expected .= "Subject: =?UTF-8?Q?line1?=\r\n" .
+            " =?UTF-8?Q?line2=2C?= high ascii > =?UTF-8?Q?=C3=A9?= <\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -161,28 +137,11 @@ class AbstractPartTest extends TestCase
 
     public function testGetEncodedHeadersWhitespace()
     {
-        $name = 'From';
-        $value = ' "From" <from@mail.example.com> ';
+        $name = 'X-Test';
+        $value = ' "Name" <from@mail.example.com> ';
         $this->part->addHeader($name, $value);
 
         $expected = "$name: " . trim($value) . "\r\n";
-
-        $actual = $this->part->getEncodedHeaders();
-        $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * Message-Id header must never be encoded
-     * An underscore triggers mb_encode_mimeheader() to encode the string even if not necessary
-     * Even when longer than soft limit of 78 chars, we don't want Message-Id to be wrapped
-     */
-    public function testGetEncodedHeadersMessageId()
-    {
-        $name = 'Message-Id';
-        $value = '<5ba50e335feeb_58fbb46426474f8d8108b1f8e02bad29@mail.long.example.com>';
-        $this->part->addHeader($name, $value);
-
-        $expected = "$name: $value\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -208,8 +167,8 @@ class AbstractPartTest extends TestCase
      */
     public function testGetEncodedHeadersNotEncodedForEquals()
     {
-        $name = 'From';
-        $value = '"From=" <equals@mail.example.com>';
+        $name = 'X-Test';
+        $value = '"Name=" <equals@mail.example.com>';
         $this->part->addHeader($name, $value);
 
         $expected = "$name: $value\r\n";
@@ -268,13 +227,13 @@ class AbstractPartTest extends TestCase
         ?string $type,
         ?string $charset,
         string $encoding,
-        ?string $typeParam,
+        ?array $typeParam,
         string $expected
     ): void {
         // Use anon class to set the immutable type and add additional params
         $part = new class ($type, $typeParam) extends AbstractPart {
             private $typeParam;
-            public function __construct(?string $type, ?string $typeParam)
+            public function __construct(?string $type, ?array $typeParam)
             {
                 $this->type = $type;
                 $this->typeParam = $typeParam;
@@ -283,12 +242,14 @@ class AbstractPartTest extends TestCase
             {
                 return '';
             }
-            protected function addContentTypeParameters(string $contentType): string
+            protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
             {
                 if ($this->typeParam) {
-                    $contentType .= "; {$this->typeParam}";
+                    foreach ($this->typeParam as $paramKey => $paramValue) {
+                        $contentTypeHeader->setParameter($paramKey, $paramValue);
+                    }
                 }
-                return $contentType;
+                parent::addContentTypeParameters($contentTypeHeader);
             }
         };
 
@@ -322,7 +283,7 @@ class AbstractPartTest extends TestCase
         ];
         $typeParams = [
             null,
-            'attr=value',
+            ['attr' => 'value'],
         ];
 
         foreach ($types as $type) {
@@ -332,16 +293,18 @@ class AbstractPartTest extends TestCase
                         $name = ($type ?? 'NULL') . ' ' .
                             ($charset ?? 'NULL') . ' ' .
                             ($encoding ?? 'NULL') . ' ' .
-                            ($typeParam ?? 'NULL');
+                            ($typeParam ? implode(':', $typeParam) : 'NULL');
                         $expected = '';
                         if ($type !== null) {
                             $expected = "Content-Type: {$type}";
 
                             if ($charset !== null) {
-                                $expected .= "; charset=\"{$charset}\"";
+                                $expected .= "; charset={$charset}";
                             }
-                            if ($typeParam !== null) {
-                                $expected .= "; {$typeParam}";
+                            if (is_array($typeParam)) {
+                                foreach ($typeParam as $paramKey => $paramValue) {
+                                    $expected .= "; {$paramKey}={$paramValue}";
+                                }
                             }
                             $expected .= "\r\n";
 

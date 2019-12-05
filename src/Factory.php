@@ -9,6 +9,8 @@ use Phlib\Mail\Exception\RuntimeException;
 
 class Factory
 {
+    private const RECEIVED_REGEX = '/^(.*);\s*((?:\w{3},\s)?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
+
     /**
      * @var bool
      */
@@ -151,9 +153,18 @@ class Factory
 
                 try {
                     switch (strtolower($headerKey)) {
+                        case 'date':
+                            $date = new \DateTimeImmutable($headerText);
+                            $mail->setOriginationDate($date);
+                            break;
+                        case 'received':
+                            if (preg_match(self::RECEIVED_REGEX, $headerText, $received) > 0) {
+                                $mail->addReceived(trim($received[1]), new \DateTimeImmutable($received[2]));
+                            }
+                            break;
+                        case 'return-path':
                         case 'from':
                         case 'reply-to':
-                        case 'return-path':
                             $addresses = $this->parseEmailAddresses($headerText);
                             $method = 'set' . str_replace(' ', '', ucwords(
                                 str_replace('-', ' ', strtolower($headerKey))
@@ -165,8 +176,8 @@ class Factory
                                 );
                             }
                             break;
-                        case 'cc':
                         case 'to':
+                        case 'cc':
                             $addresses = $this->parseEmailAddresses($headerText);
                             $method = 'add' . ucwords(strtolower($headerKey));
                             foreach ($addresses as $address) {
@@ -175,6 +186,18 @@ class Factory
                                     ($address['display'] == $address['address']) ? null : $address['display']
                                 );
                             }
+                            break;
+                        case 'message-id':
+                            $messageId = $this->parseEmailAddresses($headerText);
+                            $mail->setMessageId($messageId[0]['address']);
+                            break;
+                        case 'in-reply-to':
+                            $addresses = $this->parseEmailAddresses($headerText);
+                            $mail->setInReplyTo(array_column($addresses, 'address'));
+                            break;
+                        case 'references':
+                            $addresses = $this->parseEmailAddresses($headerText);
+                            $mail->setReferences(array_column($addresses, 'address'));
                             break;
                         case 'subject':
                             $mail->setSubject($headerText);

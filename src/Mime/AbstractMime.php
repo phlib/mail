@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Phlib\Mail\Mime;
 
 use Phlib\Mail\AbstractPart;
+use Symfony\Component\Mime\Header\ParameterizedHeader;
 
 abstract class AbstractMime extends AbstractPart
 {
@@ -81,18 +82,12 @@ abstract class AbstractMime extends AbstractPart
         return $this->getEncodedHeaders() . $content;
     }
 
-    /**
-     * Add additional content type parameters to the base value.
-     *
-     * @param string $contentType
-     * @return string
-     */
-    protected function addContentTypeParameters(string $contentType): string
+    protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
     {
         if ($this->boundary) {
-            $contentType .= ";\r\n\tboundary=\"{$this->boundary}\"";
+            $contentTypeHeader->setParameter('boundary', $this->boundary);
         }
 
-        return $contentType;
+        parent::addContentTypeParameters($contentTypeHeader);
     }
 }

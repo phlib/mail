@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Phlib\Mail;
 
 use Phlib\Mail\Exception\InvalidArgumentException;
+use Symfony\Component\Mime\Header\HeaderInterface;
+use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Header\ParameterizedHeader;
+use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 abstract class AbstractPart
 {
@@ -62,24 +66,21 @@ abstract class AbstractPart
      */
     public function addHeader(string $name, string $value): self
     {
-        $name = strtolower($name);
-        if (in_array($name, $this->prohibitedHeaders)) {
-            throw new InvalidArgumentException("Header name is prohibited ($name)");
-        } elseif (!preg_match('/^[a-z]+[a-z0-9-]+$/i', $name)) {
-            throw new InvalidArgumentException("Name doesn't match expected format ($name)");
+        $nameLower = strtolower($name);
+
+        if (in_array($nameLower, $this->prohibitedHeaders)) {
+            throw new InvalidArgumentException("Header name is prohibited ({$nameLower})");
+        } elseif (!preg_match('/^[a-z]+[a-z0-9-]+$/', $nameLower)) {
+            throw new InvalidArgumentException("Name doesn't match expected format ({$nameLower})");
         }
 
-        $rule = [
-            "\r" => '',
-            "\n" => '',
-            "\t" => '',
-        ];
-        $filteredValue = strtr($value, $rule);
+        $nameProper = str_replace(' ', '-', ucwords(str_replace('-', ' ', $nameLower)));
+        $value = trim($value);
 
-        if (!array_key_exists($name, $this->headers)) {
-            $this->headers[$name] = [];
+        if (!array_key_exists($nameLower, $this->headers)) {
+            $this->headers[$nameLower] = [];
         }
-        $this->headers[$name][] = $filteredValue;
+        $this->headers[$nameLower][] = new UnstructuredHeader($nameProper, $value);
 
         return $this;
     }
@@ -106,33 +107,32 @@ abstract class AbstractPart
         return $this;
     }
 
-    public function removeHeader(string $name, string $value): self
-    {
-        $name = strtolower($name);
-        if (array_key_exists($name, $this->headers)) {
-            foreach ($this->headers[$name] as $idx => $headerValue) {
-                if ($headerValue == $value) {
-                    unset($this->headers[$name][$idx]);
-                    break;
-                }
-            }
-        }
-
-        return $this;
-    }
-
     public function getHeaders(): array
     {
-        return $this->headers;
+        $values = [];
+        foreach ($this->headers as $name => $headerCollection) {
+            $values[$name] = [];
+            /** @var HeaderInterface $header */
+            foreach ($headerCollection as $header) {
+                $values[$name][] = $header->getBody();
+            }
+        }
+        return $values;
     }
 
     public function getHeader(string $name): array
     {
         $name = strtolower($name);
-        if (!array_key_exists($name, $this->headers)) {
+        if (!isset($this->headers[$name])) {
             return [];
         }
-        return $this->headers[$name];
+
+        $values = [];
+        /** @var HeaderInterface $header */
+        foreach ($this->headers[$name] as $header) {
+            $values[] = $header->getBody();
+        }
+        return $values;
     }
 
     public function hasHeader(string $name): bool
@@ -145,48 +145,61 @@ abstract class AbstractPart
         return false;
     }
 
-    public function getEncodedHeaders(): string
+    final public function getEncodedHeaders(): string
     {
-        $headers = [];
+        $headers = new Headers();
 
-        foreach ($this->headers as $name => $values) {
-            foreach ($values as $value) {
-                $name = str_replace(' ', '-', ucwords(str_replace('-', ' ', $name)));
-                $headers[] = $this->encodeHeader($name, $value);
+        $this->buildHeaders($headers);
+
+        // Set correct charset on all headers
+        $charset = $this->charset;
+        if (!$charset) {
+            $charset = mb_internal_encoding();
+        }
+        /** @var HeaderInterface $header */
+        foreach ($headers->all() as $header) {
+            // Symfony/Mime AbstractHeader defaults to 76 !?
+            $header->setMaxLineLength(78);
+            // Set this part's charset to the headers
+            $header->setCharset($charset);
+        }
+
+        return $headers->toString();
+    }
+
+    protected function buildHeaders(Headers $headers): void
+    {
+        foreach ($this->headers as $name => $headerCollection) {
+            foreach ($headerCollection as $header) {
+                $headers->add($header);
             }
         }
 
         if ($this->type) {
-            $contentType = $this->type;
+            $contentTypeHeader = new ParameterizedHeader('Content-Type', $this->type);
             if ($this->charset && !($this instanceof Mime\AbstractMime)) {
-                $contentType .= "; charset=\"{$this->charset}\"";
+                $contentTypeHeader->setParameter('charset', $this->charset);
             }
 
-            $contentType = $this->addContentTypeParameters($contentType);
+            $this->addContentTypeParameters($contentTypeHeader);
 
-            $headers[] = "Content-Type: {$contentType}";
+            $headers->add($contentTypeHeader);
 
             if ($this->encoding) {
-                $headers[] = "Content-Transfer-Encoding: {$this->encoding}";
+                $headers->addTextHeader('Content-Transfer-Encoding', $this->encoding);
             }
         }
-
-        if (empty($headers)) {
-            return '';
-        }
-
-        return implode("\r\n", $headers) . "\r\n";
     }
 
     /**
      * Allow concrete classes to add additional content type parameters to the base value
      *
-     * @param string $contentType
-     * @return string
+     * @param ParameterizedHeader $contentTypeHeader
+     * @return void
      */
-    protected function addContentTypeParameters(string $contentType): string
+    protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
     {
-        return $contentType;
+        // void
     }
 
     public function setCharset(string $charset): self
@@ -226,32 +239,6 @@ abstract class AbstractPart
     public function getType(): ?string
     {
         return $this->type;
-    }
-
-    protected function encodeHeader(string $name, string $value): string
-    {
-        $header = "$name: " . trim($value);
-        // RFC5335 Internationalized Email Headers, Section 4.3 disallows UTF-8 chars for Message-Id
-        // RFC5322 Internet Message Format, Section 3.6.4 has strict control on the syntax of Message-Id
-        // mb_encode_mimeheader() does not check for this, and will encode the header value if any non-ASCII or reserved
-        // characters are present (eg. '_')
-        if (strtolower($name) === 'message-id') {
-            return $header;
-        }
-        // Even if content is all ASCII, mb_encode_mimeheader() would encode it if the header length exceeds 78 chars.
-        // wordwrap() doesn't account for the space added after the new line-break, so break instead at 77.
-        if (mb_check_encoding($header, 'ASCII') === true) {
-            if (strlen($header) <= 78) {
-                return $header;
-            }
-            return substr($header, 0, 1) .
-                wordwrap(substr($header, 1), 77, "\r\n ", false);
-        }
-        $charset = $this->charset;
-        if (!$charset) {
-            $charset = mb_internal_encoding();
-        }
-        return mb_encode_mimeheader($header, $charset);
     }
 
     abstract public function toString(): string;

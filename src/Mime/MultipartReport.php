@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Phlib\Mail\Mime;
 
+use Symfony\Component\Mime\Header\ParameterizedHeader;
+
 class MultipartReport extends AbstractMime
 {
     /**
@@ -39,18 +41,12 @@ class MultipartReport extends AbstractMime
         return $this->reportType;
     }
 
-    /**
-     * Add additional content type parameters to the base value
-     *
-     * @param string $contentType
-     * @return string
-     */
-    protected function addContentTypeParameters(string $contentType): string
+    protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
     {
         if ($this->reportType) {
-            $contentType .= "; report-type={$this->reportType}";
+            $contentTypeHeader->setParameter('report-type', $this->reportType);
         }
 
-        return parent::addContentTypeParameters($contentType);
+        parent::addContentTypeParameters($contentTypeHeader);
     }
 }

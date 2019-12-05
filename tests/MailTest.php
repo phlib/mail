@@ -176,6 +176,118 @@ class MailTest extends TestCase
         }
     }
 
+    public function testSetGetReturnPath()
+    {
+        $address = 'return-path@example.com';
+        $this->mail->setReturnPath($address);
+
+        $this->assertEquals($address, $this->mail->getReturnPath());
+    }
+
+    public function testSetReturnPathInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setReturnPath('invalid address');
+    }
+
+    public function testClearReturnPath()
+    {
+        $address = 'return-path@example.com';
+        $this->mail->setReturnPath($address);
+        $this->assertEquals($address, $this->mail->getReturnPath());
+
+        $this->mail->clearReturnPath();
+        $this->assertEquals(null, $this->mail->getReturnPath());
+    }
+
+    public function testGetReturnPathDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReturnPath());
+    }
+
+    public function testAddGetReceived()
+    {
+        $data = [
+            [
+                'from localhost (localhost [127.0.0.1]) by mail.example.com (Postfix) for <recipient@example.com>',
+                'Thu, 16 Aug 2012 15:45:43 +0100'
+            ],
+            [
+                'from gbnthda3150srv.example.com ([10.67.121.52]) by GBLONVMSX001.nsicorp.int',
+                'Thu, 29 Sep 2011 08:48:51 +0100'
+            ],
+        ];
+        $expected = [];
+        foreach ($data as $received) {
+            $this->mail->addReceived($received[0], new \DateTimeImmutable($received[1]));
+            $expected[] = implode('; ', $received);
+        }
+
+        $this->assertEquals($expected, $this->mail->getReceived());
+    }
+
+    public function testGetReceivedDefault(): void
+    {
+        $this->assertSame([], $this->mail->getReceived());
+    }
+
+    public function testSetGetOriginationDate()
+    {
+        $date = new \DateTimeImmutable('Mon, 20 Aug 2012 05:15:26 +0100');
+        $this->mail->setOriginationDate($date);
+
+        $this->assertEquals($date, $this->mail->getOriginationDate());
+    }
+
+    public function testGetOriginationDateDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getOriginationDate());
+    }
+
+    public function testSetGetFrom()
+    {
+        $data = [
+            'from@example.com',
+            'From Alias'
+        ];
+        $this->mail->setFrom($data[0], $data[1]);
+
+        $this->assertEquals($data, $this->mail->getFrom());
+    }
+
+    public function testSetFromInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setFrom('invalid address');
+    }
+
+    public function testGetFromDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getFrom());
+    }
+
+    public function testSetGetReplyTo()
+    {
+        $data = [
+            'reply-to@example.com',
+            'Reply-To Alias'
+        ];
+        $this->mail->setReplyTo($data[0], $data[1]);
+
+        $this->assertEquals($data, $this->mail->getReplyTo());
+    }
+
+    public function testSetReplyToInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setReplyTo('invalid address');
+    }
+
+    public function testGetReplyToDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getReplyTo());
+    }
+
     public function testAddGetTo()
     {
         $data = [
@@ -246,77 +358,102 @@ class MailTest extends TestCase
         $this->assertSame([], $this->mail->getCc());
     }
 
-    public function testSetGetReplyTo()
+    public function testSetGetMessageId()
     {
-        $data = [
-            'reply-to@example.com',
-            'Reply-To Alias'
+        $messageId = 'abc123@example.com';
+        $this->mail->setMessageId($messageId);
+
+        $this->assertEquals($messageId, $this->mail->getMessageId());
+    }
+
+    public function testSetMessageIdInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setMessageId('invalid address');
+    }
+
+    /**
+     * Message-Id header must never be encoded
+     * When using mb_encode_mimeheader() an underscore triggered it to encode the string even though unnecessary
+     * Even when longer than soft limit of 78 chars, we don't want Message-Id to be wrapped
+     */
+    public function testSetMessageIdNotEncoded()
+    {
+        $part = new Mime('multipart/other');
+        $this->mail->setPart($part);
+
+        $messageId = '5ba50e335feeb_58fbb46426474f8d8108b1f8e02bad29@mail.long.example.com';
+        $this->mail->setMessageId($messageId);
+
+        $expected = "Message-Id: <{$messageId}>\r\n" .
+            "MIME-Version: 1.0\r\n";
+
+        $this->assertEquals($expected, $this->mail->getEncodedHeaders());
+    }
+
+    public function testGetMessageIdDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getMessageId());
+    }
+
+    public function testSetGetInReplyToSingle()
+    {
+        $messageId = 'abc123@example.com';
+        $this->mail->setInReplyTo([$messageId]);
+
+        $this->assertEquals([$messageId], $this->mail->getInReplyTo());
+    }
+
+    public function testSetGetInReplyToMultiple()
+    {
+        $messageIds = [
+            'abc123@example.com',
+            'def456@example.com',
         ];
-        $this->mail->setReplyTo($data[0], $data[1]);
+        $this->mail->setInReplyTo($messageIds);
 
-        $this->assertEquals($data, $this->mail->getReplyTo());
+        $this->assertEquals($messageIds, $this->mail->getInReplyTo());
     }
 
-    public function testSetReplyToInvalid()
+    public function testSetInReplyToInvalid()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->mail->setReplyTo('invalid address');
+        $this->mail->setInReplyTo(['invalid address']);
     }
 
-    public function testGetReplyToDefault(): void
+    public function testGetInReplyToDefault(): void
     {
-        $this->assertSame(null, $this->mail->getReplyTo());
+        $this->assertSame(null, $this->mail->getInReplyTo());
     }
 
-    public function testSetGetReturnPath()
+    public function testSetGetReferencesSingle()
     {
-        $address = 'return-path@example.com';
-        $this->mail->setReturnPath($address);
+        $messageId = 'abc123@example.com';
+        $this->mail->setReferences([$messageId]);
 
-        $this->assertEquals($address, $this->mail->getReturnPath());
+        $this->assertEquals([$messageId], $this->mail->getReferences());
     }
 
-    public function testSetReturnPathInvalid()
+    public function testSetGetReferencesMultiple()
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->mail->setReturnPath('invalid address');
-    }
-
-    public function testClearReturnPath()
-    {
-        $address = 'return-path@example.com';
-        $this->mail->setReturnPath($address);
-        $this->assertEquals($address, $this->mail->getReturnPath());
-
-        $this->mail->clearReturnPath();
-        $this->assertEquals(null, $this->mail->getReturnPath());
-    }
-
-    public function testGetReturnPathDefault(): void
-    {
-        $this->assertSame(null, $this->mail->getReturnPath());
-    }
-
-    public function testSetGetFrom()
-    {
-        $data = [
-            'from@example.com',
-            'From Alias'
+        $messageIds = [
+            'abc123@example.com',
+            'def456@example.com',
         ];
-        $this->mail->setFrom($data[0], $data[1]);
+        $this->mail->setReferences($messageIds);
 
-        $this->assertEquals($data, $this->mail->getFrom());
+        $this->assertEquals($messageIds, $this->mail->getReferences());
     }
 
-    public function testSetFromInvalid()
+    public function testSetReferencesInvalid()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->mail->setFrom('invalid address');
+        $this->mail->setReferences(['invalid address']);
     }
 
-    public function testGetFromDefault(): void
+    public function testGetReferencesDefault(): void
     {
-        $this->assertSame(null, $this->mail->getFrom());
+        $this->assertSame(null, $this->mail->getReferences());
     }
 
     public function testSetGetSubject()
@@ -331,7 +468,7 @@ class MailTest extends TestCase
     {
         $this->assertSame(null, $this->mail->getSubject());
     }
-  
+
     public function testHasAttachmentFalse()
     {
         $this->assertEquals(false, $this->mail->hasAttachment());
@@ -374,7 +511,7 @@ class MailTest extends TestCase
     public function testToString()
     {
         $expectedHeaders = $this->addHeaders();
-        $expectedHeaders['Content-Type'] = 'application/octet-stream; charset="UTF-8"';
+        $expectedHeaders['Content-Type'] = 'application/octet-stream; charset=UTF-8';
         $expectedHeaders['Content-Transfer-Encoding'] = 'quoted-printable';
 
         $content = 'test content';
@@ -397,22 +534,39 @@ class MailTest extends TestCase
      */
     protected function addHeaders()
     {
+        $originationDate = new \DateTimeImmutable('2014-04-23 00:12:32 +0100');
+        $receivedDate1 = new \DateTimeImmutable('2014-04-22 23:12:45 +0000');
+        $receivedDate2 = new \DateTimeImmutable('2014-04-23 06:13:12 -0700');
         $this->mail->setReturnPath('return-path@example.com');
+        $this->mail->addReceived('from localhost by mail1.example.com', $receivedDate1);
+        $this->mail->addReceived('from mail1.example.com by mail2.example.com', $receivedDate2);
+        $this->mail->setOriginationDate($originationDate);
         $this->mail->setFrom('from@example.com', "From Alias \xf0\x9f\x93\xa7 envelope");
-        $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
+        $this->mail->setReplyTo('reply-to@example.com');
         $this->mail->addTo('to+1@example.com', "To Alias 1 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addTo('to+2@example.com', "To Alias 2 \xf0\x9f\x93\xa7 envelope");
         $this->mail->addCc('cc@example.com');
-        $this->mail->setReplyTo('reply-to@example.com');
+        $this->mail->setMessageId('abc.123.def@mail.example.com');
+        $this->mail->setInReplyTo(['abc.123@mail.example.com', 'def.456@mail.example.com']);
+        $this->mail->setReferences(['fed.098@mail.example.com', 'cba.765@mail.example.com']);
+        $this->mail->setSubject("subject line with \xf0\x9f\x93\xa7 envelope");
 
         $expected = [
-            "Return-Path" => '<return-path@example.com>',
-            "From" => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
-            "Subject" => "subject line with \xf0\x9f\x93\xa7 envelope",
-            "To" => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
+            'Return-Path' => '<return-path@example.com>',
+            'Received' => [
+                'from localhost by mail1.example.com; ' . $receivedDate1->format(\DateTime::RFC2822),
+                'from mail1.example.com by mail2.example.com; ' . $receivedDate2->format(\DateTime::RFC2822),
+            ],
+            'Date' => $originationDate->format(\DateTime::RFC2822),
+            'From' => "From Alias \xf0\x9f\x93\xa7 envelope <from@example.com>",
+            'Reply-To' => 'reply-to@example.com',
+            'To' => "To Alias 1 \xf0\x9f\x93\xa7 envelope <to+1@example.com>," .
                 " To Alias 2 \xf0\x9f\x93\xa7 envelope <to+2@example.com>",
-            "Cc" => 'cc@example.com',
-            "Reply-To" => 'reply-to@example.com'
+            'Cc' => 'cc@example.com',
+            'Message-Id' => '<abc.123.def@mail.example.com>',
+            'In-Reply-To' => '<abc.123@mail.example.com> <def.456@mail.example.com>',
+            'References' => '<fed.098@mail.example.com> <cba.765@mail.example.com>',
+            'Subject' => "subject line with \xf0\x9f\x93\xa7 envelope",
         ];
 
         return $expected;

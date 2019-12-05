@@ -1,9 +1,9 @@
-From: Owner <owner@example.com>
-Subject: Welcome NAME HERE
-To: Recipient Name <recipient@example.com>
-Reply-To: Owner <owner@example.com>
 Received: from localhost (track.example.com. [10.1.6.5]) by trx.example.com
  with ESMTP (stage ESMTP Postfix); Wed, 19 Dec 2012 10:26:22 +0000
-Content-Disposition: inline
+Date: Wed, 19 Dec 2012 10:26:23 +0000
+From: Owner <owner@example.com>
+Reply-To: Owner <owner@example.com>
+To: Recipient Name <recipient@example.com>
 Message-Id: <20121219102623.0D45A1620AA@mail.example.com>
-Date: Wed, 19 Dec 2012 10:26:23 +0000 (GMT)
+Subject: Welcome NAME HERE
+Content-Disposition: inline

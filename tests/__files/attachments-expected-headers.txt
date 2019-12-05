@@ -1,28 +1,29 @@
 Return-Path: <sender@example.com>
-From: From Name <from@example.com>
-Subject: Attachments
-To: recipient@example.com
-MIME-Version: 1.0
 Received: from mail.example.com (LHLO mail.example.com) (10.1.9.1) by
- mail.example.com with LMTP; Thu, 16 Aug 2012 15:45:43 +0100 (BST)
+ mail.example.com with LMTP; Thu, 16 Aug 2012 15:45:43 +0100
 Received: from localhost (localhost [127.0.0.1]) by mail.example.com (Postfix)
  with ESMTP id ED35D161D86 for <recipient@example.com>; Thu, 16 Aug 2012
- 15:45:43 +0100 (BST)
+ 15:45:43 +0100
 Received: from mail.example.com ([127.0.0.1]) by localhost (mail.example.com
  [127.0.0.1]) (amavisd-new, port 10024) with ESMTP id x9xbo4ZNbRu7 for
- <recipient@example.com>; Thu, 16 Aug 2012 15:45:42 +0100 (BST)
+ <recipient@example.com>; Thu, 16 Aug 2012 15:45:42 +0100
 Received: from mail-yx0-f181.google.com (mail-yx0-f181.google.com
  [209.85.213.181]) by mail.example.com (Postfix) with ESMTPS id 92F4A161D85
- for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100 (BST)
+ for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100
 Received: by yenq13 with SMTP id q13so3462367yen.40        for
- <recipient@example.com>; Thu, 16 Aug 2012 07:45:40 -0700 (PDT)
+ <recipient@example.com>; Thu, 16 Aug 2012 07:45:40 -0700
 Received: by 10.50.76.202 with SMTP id m10mr1877022igw.52.1345128339903; Thu,
- 16 Aug 2012 07:45:39 -0700 (PDT)
-Received: by 10.64.82.163 with HTTP; Thu, 16 Aug 2012 07:45:32 -0700 (PDT)
+ 16 Aug 2012 07:45:39 -0700
+Received: by 10.64.82.163 with HTTP; Thu, 16 Aug 2012 07:45:32 -0700
+Date: Thu, 16 Aug 2012 15:45:32 +0100
+From: From Name <from@example.com>
+To: recipient@example.com
+Message-Id: <CAJ_TRnL=YMObf2FT9bU7NO0ziPYxpnxfxrtOz4r2-aBxkHSOrA@mail.gmail.com>
+Subject: Attachments
+MIME-Version: 1.0
 X-Virus-Scanned: amavisd-new at example.com
 X-Spam-Flag: NO
 X-Spam-Score: -1.507
-X-Spam-Level: 
 X-Spam-Status: No, score=-1.507 tagged_above=-10 required=6.6
  tests=[BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1,
  FREEMAIL_FROM=0.001, HTML_IMAGE_ONLY_04=1.172, HTML_MESSAGE=0.001,
@@ -41,5 +42,3 @@ Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;        d=gmail.com;
  bU+IexdOG/O4XcauU1Qk8gGm0xA3szGZXGaaji8eBgknY8E6bxNItIiDaJ9vHGLvyMZj        
  6SGg==
 X-Goomoji-Body: true
-Date: Thu, 16 Aug 2012 15:45:32 +0100
-Message-Id: <CAJ_TRnL=YMObf2FT9bU7NO0ziPYxpnxfxrtOz4r2-aBxkHSOrA@mail.gmail.com>
