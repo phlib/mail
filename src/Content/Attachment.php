@@ -7,6 +7,7 @@ namespace Phlib\Mail\Content;
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
 use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Header\ParameterizedHeader;
 
 /**
  * Attachment class used to represent attachments as Mail content
@@ -95,20 +96,14 @@ class Attachment extends AbstractContent
 
         if ($this->disposition) {
             // RFC 2183
-            $headers->addTextHeader('Content-Disposition', "{$this->disposition}; filename=\"{$this->name}\"");
+            $headers->addParameterizedHeader('Content-Disposition', $this->disposition, ['filename' => $this->name]);
         }
     }
 
-    /**
-     * Add additional content type parameters to the base value
-     *
-     * @param string $contentType
-     * @return string
-     */
-    protected function addContentTypeParameters(string $contentType): string
+    protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
     {
-        $contentType .= "; name=\"{$this->name}\"";
+        $contentTypeHeader->setParameter('name', $this->name);
 
-        return parent::addContentTypeParameters($contentType);
+        parent::addContentTypeParameters($contentTypeHeader);
     }
 }

@@ -7,6 +7,7 @@ namespace Phlib\Mail\Tests;
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mime\Header\ParameterizedHeader;
 
 class AbstractPartTest extends TestCase
 {
@@ -226,13 +227,13 @@ class AbstractPartTest extends TestCase
         ?string $type,
         ?string $charset,
         string $encoding,
-        ?string $typeParam,
+        ?array $typeParam,
         string $expected
     ): void {
         // Use anon class to set the immutable type and add additional params
         $part = new class ($type, $typeParam) extends AbstractPart {
             private $typeParam;
-            public function __construct(?string $type, ?string $typeParam)
+            public function __construct(?string $type, ?array $typeParam)
             {
                 $this->type = $type;
                 $this->typeParam = $typeParam;
@@ -241,12 +242,14 @@ class AbstractPartTest extends TestCase
             {
                 return '';
             }
-            protected function addContentTypeParameters(string $contentType): string
+            protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
             {
                 if ($this->typeParam) {
-                    $contentType .= "; {$this->typeParam}";
+                    foreach ($this->typeParam as $paramKey => $paramValue) {
+                        $contentTypeHeader->setParameter($paramKey, $paramValue);
+                    }
                 }
-                return $contentType;
+                parent::addContentTypeParameters($contentTypeHeader);
             }
         };
 
@@ -280,7 +283,7 @@ class AbstractPartTest extends TestCase
         ];
         $typeParams = [
             null,
-            'attr=value',
+            ['attr' => 'value'],
         ];
 
         foreach ($types as $type) {
@@ -290,16 +293,18 @@ class AbstractPartTest extends TestCase
                         $name = ($type ?? 'NULL') . ' ' .
                             ($charset ?? 'NULL') . ' ' .
                             ($encoding ?? 'NULL') . ' ' .
-                            ($typeParam ?? 'NULL');
+                            ($typeParam ? implode(':', $typeParam) : 'NULL');
                         $expected = '';
                         if ($type !== null) {
                             $expected = "Content-Type: {$type}";
 
                             if ($charset !== null) {
-                                $expected .= "; charset=\"{$charset}\"";
+                                $expected .= "; charset={$charset}";
                             }
-                            if ($typeParam !== null) {
-                                $expected .= "; {$typeParam}";
+                            if (is_array($typeParam)) {
+                                foreach ($typeParam as $paramKey => $paramValue) {
+                                    $expected .= "; {$paramKey}={$paramValue}";
+                                }
                             }
                             $expected .= "\r\n";
 

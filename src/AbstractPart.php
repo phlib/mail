@@ -7,6 +7,7 @@ namespace Phlib\Mail;
 use Phlib\Mail\Exception\InvalidArgumentException;
 use Symfony\Component\Mime\Header\HeaderInterface;
 use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Header\ParameterizedHeader;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 abstract class AbstractPart
@@ -175,14 +176,14 @@ abstract class AbstractPart
         }
 
         if ($this->type) {
-            $contentType = $this->type;
+            $contentTypeHeader = new ParameterizedHeader('Content-Type', $this->type);
             if ($this->charset && !($this instanceof Mime\AbstractMime)) {
-                $contentType .= "; charset=\"{$this->charset}\"";
+                $contentTypeHeader->setParameter('charset', $this->charset);
             }
 
-            $contentType = $this->addContentTypeParameters($contentType);
+            $this->addContentTypeParameters($contentTypeHeader);
 
-            $headers->addTextHeader('Content-Type', $contentType);
+            $headers->add($contentTypeHeader);
 
             if ($this->encoding) {
                 $headers->addTextHeader('Content-Transfer-Encoding', $this->encoding);
@@ -193,12 +194,12 @@ abstract class AbstractPart
     /**
      * Allow concrete classes to add additional content type parameters to the base value
      *
-     * @param string $contentType
-     * @return string
+     * @param ParameterizedHeader $contentTypeHeader
+     * @return void
      */
-    protected function addContentTypeParameters(string $contentType): string
+    protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
     {
-        return $contentType;
+        // void
     }
 
     public function setCharset(string $charset): self

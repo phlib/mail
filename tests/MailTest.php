@@ -511,7 +511,7 @@ class MailTest extends TestCase
     public function testToString()
     {
         $expectedHeaders = $this->addHeaders();
-        $expectedHeaders['Content-Type'] = 'application/octet-stream; charset="UTF-8"';
+        $expectedHeaders['Content-Type'] = 'application/octet-stream; charset=UTF-8';
         $expectedHeaders['Content-Transfer-Encoding'] = 'quoted-printable';
 
         $content = 'test content';

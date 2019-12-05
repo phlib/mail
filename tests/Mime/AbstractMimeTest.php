@@ -136,7 +136,7 @@ class AbstractMimeTest extends TestCase
         $contentHtml = '<b>HTML Content</b>';
         $htmlPart->setContent($contentHtml);
         $htmlPart->setCharset('UTF-8');
-        $expected[] = "Content-Type: text/html; charset=\"UTF-8\"\r\n"
+        $expected[] = "Content-Type: text/html; charset=UTF-8\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
             . "\r\n{$contentHtml}";
 
@@ -144,7 +144,7 @@ class AbstractMimeTest extends TestCase
         $contentText = 'Text Content';
         $textPart->setContent($contentText);
         $textPart->setCharset('UTF-8');
-        $expected[] = "Content-Type: text/plain; charset=\"UTF-8\"\r\n"
+        $expected[] = "Content-Type: text/plain; charset=UTF-8\r\n"
             . "Content-Transfer-Encoding: quoted-printable\r\n"
             . "\r\n{$contentText}";
 

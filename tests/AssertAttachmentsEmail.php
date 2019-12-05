@@ -117,13 +117,13 @@ class AssertAttachmentsEmail
                 $partHeaders = $part->getEncodedHeaders();
                 $contentTypeRegex = '/Content-Type: ' . preg_quote($details['type'], '/') . ';';
                 if ($details['charset']) {
-                    $contentTypeRegex .= '\s+charset="' . preg_quote($details['charset'], '/') . '";';
+                    $contentTypeRegex .= '\s+charset=' . preg_quote($details['charset'], '/') . ';';
                 }
-                $contentTypeRegex .= '\s+name="' . preg_quote($details['name'], '/') . '"/';
+                $contentTypeRegex .= '\s+name=' . preg_quote($details['name'], '/') . '/';
                 Assert::assertRegExp($contentTypeRegex, $partHeaders);
                 if ($details['disposition'] === true) {
                     Assert::assertRegExp(
-                        '/Content-Disposition: attachment;\s+filename="' . $details['name'] . '"/',
+                        '/Content-Disposition: attachment;\s+filename=' . $details['name'] . '/',
                         $partHeaders
                     );
                 } else {

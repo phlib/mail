@@ -26,9 +26,9 @@ class AttachmentTest extends TestCase
         $this->assertEquals($content, $part->getContent());
 
         // Name
-        $expected = "Content-Type: {$expectedType}; name=\"{$basename}\"\r\n"
+        $expected = "Content-Type: {$expectedType}; name={$basename}\r\n"
                     . "Content-Transfer-Encoding: base64\r\n"
-                    . "Content-Disposition: attachment; filename=\"{$basename}\"\r\n";
+                    . "Content-Disposition: attachment; filename={$basename}\r\n";
 
         $actual = $part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -105,8 +105,8 @@ class AttachmentTest extends TestCase
         $part = new Attachment($filename, $disposition, 'application/octet-stream');
 
         $actual = $part->getEncodedHeaders();
-        $this->assertRegExp("/Content-Type: [^;]+; name=\"{$filename}\"/", $actual);
-        $this->assertRegExp("/Content-Disposition: {$disposition}; filename=\"{$filename}\"/", $actual);
+        $this->assertRegExp("/Content-Type: [^;]+; name={$filename}/", $actual);
+        $this->assertRegExp("/Content-Disposition: {$disposition}; filename={$filename}/", $actual);
     }
 
     public function testNoDispositionDefault()
@@ -132,9 +132,9 @@ class AttachmentTest extends TestCase
 
         $part = new Attachment($filename, $disposition);
 
-        $expected = "Content-Type: application/octet-stream; name=\"{$filename}\"\r\n"
+        $expected = "Content-Type: application/octet-stream; name={$filename}\r\n"
             . "Content-Transfer-Encoding: base64\r\n"
-            . "Content-Disposition: {$disposition}; filename=\"{$filename}\"\r\n";
+            . "Content-Disposition: {$disposition}; filename={$filename}\r\n";
 
         $actual = $part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
