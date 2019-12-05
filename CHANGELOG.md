@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - **BC break**: Removed support for PHP v7.1 and v7.2 as they are no longer
 [actively supported](https://php.net/supported-versions.php) by the PHP project
+- **BC break**: Removed `AbstractPart::removeHeader()` for specific name and
+  value combination. All values for a single name can still be removed using
+  `AbstractPart::clearHeader($name)`
 - **BC break**: Removed `Mail::formatAddress()`
 - **BC break**: `Mail::addHeader()` no longer allows setting Message-Id,
   (Origination) Date, Received, In-Reply-To and References.

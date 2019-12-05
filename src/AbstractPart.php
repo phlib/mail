@@ -106,21 +106,6 @@ abstract class AbstractPart
         return $this;
     }
 
-    public function removeHeader(string $name, string $value): self
-    {
-        $name = strtolower($name);
-        if (array_key_exists($name, $this->headers)) {
-            foreach ($this->headers[$name] as $idx => $headerValue) {
-                if ($headerValue == $value) {
-                    unset($this->headers[$name][$idx]);
-                    break;
-                }
-            }
-        }
-
-        return $this;
-    }
-
     public function getHeaders(): array
     {
         return $this->headers;

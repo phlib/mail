@@ -93,24 +93,6 @@ class AbstractPartTest extends TestCase
         $this->assertEquals($expectedAfter, $actualAfter);
     }
 
-    public function testRemoveHeader()
-    {
-        $this->part->addHeader('test', 'value1');
-        $this->part->addHeader('test', 'value2');
-        $expectedBefore = ['value1', 'value2'];
-        $actualBefore = $this->part->getHeader('test');
-        $this->assertEquals($expectedBefore, $actualBefore);
-
-        $this->part->removeHeader('test', 'value1');
-        $actualAfter = $this->part->getHeader('test');
-        $this->assertNotContains('value1', $actualAfter);
-        $this->assertContains('value2', $actualAfter);
-
-        $this->part->removeHeader('test', 'value2');
-        $this->assertEmpty($this->part->getHeader('test'));
-        $this->assertFalse($this->part->hasHeader('test'));
-    }
-
     public function testGetHeaders()
     {
         $expected = $this->addHeaders();
