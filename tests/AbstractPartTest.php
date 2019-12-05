@@ -31,14 +31,6 @@ class AbstractPartTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testAddHeaderFilterValue()
-    {
-        $this->part->addHeader('test', "va\rl\nu\te");
-        $expected = ['value'];
-        $actual = $this->part->getHeader('test');
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testAddHeaderInvalidName()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -135,7 +127,8 @@ class AbstractPartTest extends TestCase
         // Check encoding
         $value = "line1\r\nline2, high ascii > é <\r\n";
         $this->part->addHeader('Subject', $value);
-        $expected .= "Subject: line1line2, high ascii > =?UTF-8?B?" . base64_encode('é <') . "?=\r\n";
+        $expected .= "Subject: =?UTF-8?Q?line1?=\r\n" .
+            " =?UTF-8?Q?line2=2C?= high ascii > =?UTF-8?Q?=C3=A9?= <\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -143,8 +136,8 @@ class AbstractPartTest extends TestCase
 
     public function testGetEncodedHeadersWhitespace()
     {
-        $name = 'From';
-        $value = ' "From" <from@mail.example.com> ';
+        $name = 'X-Test';
+        $value = ' "Name" <from@mail.example.com> ';
         $this->part->addHeader($name, $value);
 
         $expected = "$name: " . trim($value) . "\r\n";
@@ -173,8 +166,8 @@ class AbstractPartTest extends TestCase
      */
     public function testGetEncodedHeadersNotEncodedForEquals()
     {
-        $name = 'From';
-        $value = '"From=" <equals@mail.example.com>';
+        $name = 'X-Test';
+        $value = '"Name=" <equals@mail.example.com>';
         $this->part->addHeader($name, $value);
 
         $expected = "$name: $value\r\n";

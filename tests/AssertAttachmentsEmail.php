@@ -115,15 +115,15 @@ class AssertAttachmentsEmail
             // Test attachments
             if ($part instanceof Attachment || $part instanceof Content) {
                 $partHeaders = $part->getEncodedHeaders();
-                $contentType = "Content-Type: {$details['type']};";
+                $contentTypeRegex = '/Content-Type: ' . preg_quote($details['type'], '/') . ';';
                 if ($details['charset']) {
-                    $contentType .= " charset=\"{$details['charset']}\";";
+                    $contentTypeRegex .= '\s+charset="' . preg_quote($details['charset'], '/') . '";';
                 }
-                $contentType .= " name=\"{$details['name']}\"";
-                Assert::assertStringContainsString($contentType, $partHeaders);
+                $contentTypeRegex .= '\s+name="' . preg_quote($details['name'], '/') . '"/';
+                Assert::assertRegExp($contentTypeRegex, $partHeaders);
                 if ($details['disposition'] === true) {
-                    Assert::assertStringContainsString(
-                        'Content-Disposition: attachment; filename="' . $details['name'] . '"',
+                    Assert::assertRegExp(
+                        '/Content-Disposition: attachment;\s+filename="' . $details['name'] . '"/',
                         $partHeaders
                     );
                 } else {

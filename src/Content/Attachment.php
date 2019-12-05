@@ -6,6 +6,7 @@ namespace Phlib\Mail\Content;
 
 use Phlib\Mail\AbstractPart;
 use Phlib\Mail\Exception\InvalidArgumentException;
+use Symfony\Component\Mime\Header\Headers;
 
 /**
  * Attachment class used to represent attachments as Mail content
@@ -88,15 +89,14 @@ class Attachment extends AbstractContent
         return $this;
     }
 
-    public function getEncodedHeaders(): string
+    protected function buildHeaders(Headers $headers): void
     {
-        $headers = parent::getEncodedHeaders();
+        parent::buildHeaders($headers);
+
         if ($this->disposition) {
             // RFC 2183
-            $headers .= "Content-Disposition: {$this->disposition}; filename=\"{$this->name}\"\r\n";
+            $headers->addTextHeader('Content-Disposition', "{$this->disposition}; filename=\"{$this->name}\"");
         }
-
-        return $headers;
     }
 
     /**

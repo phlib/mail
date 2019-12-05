@@ -24,7 +24,6 @@ MIME-Version: 1.0
 X-Virus-Scanned: amavisd-new at example.com
 X-Spam-Flag: NO
 X-Spam-Score: -1.507
-X-Spam-Level: 
 X-Spam-Status: No, score=-1.507 tagged_above=-10 required=6.6
  tests=[BAYES_00=-1.9, DKIM_SIGNED=0.1, DKIM_VALID=-0.1, DKIM_VALID_AU=-0.1,
  FREEMAIL_FROM=0.001, HTML_IMAGE_ONLY_04=1.172, HTML_MESSAGE=0.001,

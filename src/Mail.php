@@ -8,7 +8,6 @@ use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
-use Symfony\Component\Mime\Header\AbstractHeader;
 use Symfony\Component\Mime\Header\DateHeader;
 use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Header\IdentificationHeader;
@@ -126,10 +125,8 @@ class Mail extends AbstractPart
         return $this->part;
     }
 
-    public function getEncodedHeaders(): string
+    protected function buildHeaders(Headers $headers): void
     {
-        $headers = new Headers();
-
         // Add headers in order defined in RFC5322 §3.6
 
         // Return-path and Received are 'trace' fields so must be first - RFC5322 §3.6.7
@@ -180,23 +177,7 @@ class Mail extends AbstractPart
             $headers->addTextHeader('MIME-Version', '1.0');
         }
 
-        // Set correct charset on all headers
-        $charset = $this->charset;
-        if (!$charset) {
-            $charset = mb_internal_encoding();
-        }
-        /** @var AbstractHeader $header */
-        foreach ($headers->all() as $header) {
-            // Symfony/Mime AbstractHeader defaults to 76 !?
-            $header->setMaxLineLength(78);
-            // Set this part's charset to the headers
-            $header->setCharset($charset);
-
-        }
-
-        $headersString = $headers->toString();
-
-        return $headersString . parent::getEncodedHeaders();
+        parent::buildHeaders($headers);
     }
 
     /**
