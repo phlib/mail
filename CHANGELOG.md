@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [4.0.0] - 2019-12-05
 ### Added
 - *symfony/mime* added as a required dependency.
 - Dedicated setter and getter methods for primary `Mail` headers: Message-Id,
