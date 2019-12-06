@@ -189,15 +189,21 @@ class Factory
                             break;
                         case 'message-id':
                             $messageId = $this->parseEmailAddresses($headerText);
-                            $mail->setMessageId($messageId[0]['address']);
+                            if (!empty($messageId)) {
+                                $mail->setMessageId($messageId[0]['address']);
+                            }
                             break;
                         case 'in-reply-to':
                             $addresses = $this->parseEmailAddresses($headerText);
-                            $mail->setInReplyTo(array_column($addresses, 'address'));
+                            if (!empty($addresses)) {
+                                $mail->setInReplyTo(array_column($addresses, 'address'));
+                            }
                             break;
                         case 'references':
                             $addresses = $this->parseEmailAddresses($headerText);
-                            $mail->setReferences(array_column($addresses, 'address'));
+                            if (!empty($addresses)) {
+                                $mail->setReferences(array_column($addresses, 'address'));
+                            }
                             break;
                         case 'subject':
                             $mail->setSubject($headerText);
