@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [4.0.1] - 2019-12-06
 ### Fixed
 - *Undefined offset* PHP Notice in `Factory` when `Message-Id` header is blank.
 
