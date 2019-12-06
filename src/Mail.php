@@ -36,6 +36,7 @@ class Mail extends AbstractPart
         'received',
         'date',
         'from',
+        'sender',
         'reply-to',
         'to',
         'cc',
@@ -64,6 +65,11 @@ class Mail extends AbstractPart
      * @var Address?
      */
     private $from;
+
+    /**
+     * @var Address?
+     */
+    private $sender;
 
     /**
      * @var Address?
@@ -273,6 +279,29 @@ class Mail extends AbstractPart
         return [
             $this->from->getAddress(),
             $this->from->getName(),
+        ];
+    }
+
+    public function setSender(string $address, ?string $name = null): self
+    {
+        try {
+            $this->sender = new Address($address, (string)$name);
+        } catch (RfcComplianceException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $this;
+    }
+
+    public function getSender(): ?array
+    {
+        if ($this->sender === null) {
+            return null;
+        }
+
+        return [
+            $this->sender->getAddress(),
+            $this->sender->getName(),
         ];
     }
 

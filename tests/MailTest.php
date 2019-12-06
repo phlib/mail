@@ -266,6 +266,28 @@ class MailTest extends TestCase
         $this->assertSame(null, $this->mail->getFrom());
     }
 
+    public function testSetGetSender()
+    {
+        $data = [
+            'sender@example.com',
+            'Sender Alias'
+        ];
+        $this->mail->setSender($data[0], $data[1]);
+
+        $this->assertEquals($data, $this->mail->getSender());
+    }
+
+    public function testSetSenderInvalid()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->mail->setSender('invalid address');
+    }
+
+    public function testGetSenderDefault(): void
+    {
+        $this->assertSame(null, $this->mail->getSender());
+    }
+
     public function testSetGetReplyTo()
     {
         $data = [
