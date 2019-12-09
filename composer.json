@@ -7,19 +7,17 @@
     "homepage": "https://github.com/phlib/mail",
     "authors": [
         {
-            "name": "James Dempster",
-            "email": "james.dempster@emailcenteruk.com",
-            "role": "developer"
+            "name": "James Dempster"
         },
         {
-            "name": "Chris Minett",
-            "email": "chris.minett@emailcenteruk.com",
-            "role": "developer"
+            "name": "Chris Minett"
         },
         {
-            "name": "Luke Richards",
-            "email": "luke.richards@emailcenteruk.com",
-            "role": "developer"
+            "name": "Luke Richards"
+        },
+        {
+            "name": "Phlib Team",
+            "homepage": "https://github.com/phlib/mail/contributors"
         }
     ],
     "require": {
