@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Exception thrown from Factory when Original Date header value does not match
+  the expected standard and cannot be parsed by PHP.
+  Now try to find standards-compliant date within the string, and fall back to
+  trying the string directly but ignoring any values which still fail.
 
 ## [4.0.1] - 2019-12-06
 ### Fixed
