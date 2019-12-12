@@ -9,6 +9,27 @@ use Phlib\Mail\Exception\RuntimeException;
 
 class Factory
 {
+    /**
+     * Capture the valid date string within a header containing non-standard values RFC5322 §3.3
+     * https://tools.ietf.org/html/rfc5322#section-3.3
+     * Eg. "Mon, 9 Dec 2019 18:36:20 +0800" from "Mon, 9 Dec 2019 18:36:20 +0800 (GMT+08:00)"
+     *
+     * @var string
+     */
+    private const DATE_REGEX = '/((?:\w{3},\s)?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
+
+    /**
+     * Capture the date part separately from the rest of the header, matching RFC5322 §3.6.7
+     * https://tools.ietf.org/html/rfc5322#section-3.6.7
+     * Latter part matches self::DATE_REGEX
+     *
+     * Eg.
+     * "by mta6551.example.com (PowerMTA(TM) v3.5r14)" and "Fri, 23 Sep 2011 09:54:22 +0100"
+     * from:
+     * "by mta6551.example.com (PowerMTA(TM) v3.5r14); Fri, 23 Sep 2011 09:54:22 +0100
+     * (envelope-from <bounce-100-250-1831-live@mail.example.com>)"
+     * @var string
+     */
     private const RECEIVED_REGEX = '/^(.*);\s*((?:\w{3},\s)?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
 
     /**
@@ -154,7 +175,16 @@ class Factory
                 try {
                     switch (strtolower($headerKey)) {
                         case 'date':
-                            $date = new \DateTimeImmutable($headerText);
+                            if (preg_match(self::DATE_REGEX, $headerText, $dateMatch) > 0) {
+                                $date = new \DateTimeImmutable($dateMatch[1]);
+                            } else {
+                                // Failing a match to the standard, let PHP see if it can handle it
+                                try {
+                                    $date = new \DateTimeImmutable($headerText);
+                                } catch (\Exception $e) {
+                                    break;
+                                }
+                            }
                             $mail->setOriginationDate($date);
                             break;
                         case 'received':

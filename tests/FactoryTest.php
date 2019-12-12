@@ -228,6 +228,45 @@ class FactoryTest extends TestCase
         $factory->createFromString(file_get_contents($source));
     }
 
+    public function testAddHeadersDateInvalidTimezone()
+    {
+        // Date string has double-timezone, not standards-compliant with RFC5322 §3.3. First part is valid.
+        $mailString = "Date: Mon, 9 Dec 2019 18:36:20 +0800 (GMT+08:00)\r\n" .
+            "\r\n" .
+            "plain text\r\n";
+
+        $factory = new Factory();
+        $mail = $factory->createFromString($mailString);
+
+        static::assertEquals('2019-12-09T18:36:20+08:00', $mail->getOriginationDate()->format('c'));
+    }
+
+    public function testAddHeadersDateInvalidFormat()
+    {
+        // Date format not valid for RFC5322 §3.3
+        $mailString = "Date: 2019-08-03 18:36:20 UTC\r\n" .
+            "\r\n" .
+            "plain text\r\n";
+
+        $factory = new Factory();
+        $mail = $factory->createFromString($mailString);
+
+        static::assertEquals('2019-08-03T18:36:20+00:00', $mail->getOriginationDate()->format('c'));
+    }
+
+    public function testAddHeadersDateInvalidError()
+    {
+        // Date format is too wacky to be decoded at all
+        $mailString = "Date: nope\r\n" .
+            "\r\n" .
+            "plain text\r\n";
+
+        $factory = new Factory();
+        $mail = $factory->createFromString($mailString);
+
+        static::assertNull($mail->getOriginationDate());
+    }
+
     /**
      * Tests for an issue (#10) where the Factory was incorrectly handling emails with 9 child parts, as it would
      * incorrectly try to parse a 10th part (e.g. "1.10") because of non-strict checking for the value "1.10" in the
