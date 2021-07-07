@@ -1,10 +1,10 @@
 # phlib/mail
 
-[![Build Status](https://img.shields.io/travis/phlib/mail/master.svg?style=flat-square)](https://travis-ci.org/phlib/mail)
-[![Codecov](https://img.shields.io/codecov/c/github/phlib/mail.svg?style=flat-square)](https://codecov.io/gh/phlib/mail)
-[![Latest Stable Version](https://img.shields.io/packagist/v/phlib/mail.svg?style=flat-square)](https://packagist.org/packages/phlib/mail)
-[![Total Downloads](https://img.shields.io/packagist/dt/phlib/mail.svg?style=flat-square)](https://packagist.org/packages/phlib/mail)
-![Licence](https://img.shields.io/github/license/phlib/mail.svg?style=flat-square)
+[![Code Checks](https://img.shields.io/github/workflow/status/phlib/mail/CodeChecks?logo=github)](https://github.com/phlib/mail/actions/workflows/code-checks.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/phlib/mail.svg?logo=codecov)](https://codecov.io/gh/phlib/mail)
+[![Latest Stable Version](https://img.shields.io/packagist/v/phlib/mail.svg?logo=packagist)](https://packagist.org/packages/phlib/mail)
+[![Total Downloads](https://img.shields.io/packagist/dt/phlib/mail.svg?logo=packagist)](https://packagist.org/packages/phlib/mail)
+![Licence](https://img.shields.io/github/license/phlib/mail.svg)
 
 Classes for working with emails
 
