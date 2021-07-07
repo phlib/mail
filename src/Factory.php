@@ -16,7 +16,7 @@ class Factory
      *
      * @var string
      */
-    private const DATE_REGEX = '/((?:\w{3},\s)?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
+    private const DATE_REGEX = '/((?:\w{3},\s{1,2})?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
 
     /**
      * Capture the date part separately from the rest of the header, matching RFC5322 §3.6.7
@@ -30,7 +30,7 @@ class Factory
      * (envelope-from <bounce-100-250-1831-live@mail.example.com>)"
      * @var string
      */
-    private const RECEIVED_REGEX = '/^(.*);\s*((?:\w{3},\s)?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
+    private const RECEIVED_REGEX = '/^(.*);\s*((?:\w{3},\s{1,2})?\d{1,2}\s\w{3}\s\d{4}\s\d{2}:\d{2}(?::\d{2})?\s(?:\+|-)\d{4})/';
 
     /**
      * @var bool

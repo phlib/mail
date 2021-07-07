@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Add support for a space used for a single-digit date (i.e. instead of leading 
+  zero) in the origination date and received headers.
 
 ## [4.0.2] - 2019-12-12
 ### Fixed

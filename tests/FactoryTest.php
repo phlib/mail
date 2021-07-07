@@ -254,6 +254,19 @@ class FactoryTest extends TestCase
         static::assertEquals('2019-08-03T18:36:20+00:00', $mail->getOriginationDate()->format('c'));
     }
 
+    public function testAddHeadersDateSpace()
+    {
+        // Extra space after day for single-digit date
+        $mailString = "Date: Mon,  2 May 2016 19:15:14 +0100 (BST)\r\n" .
+            "\r\n" .
+            "plain text\r\n";
+
+        $factory = new Factory();
+        $mail = $factory->createFromString($mailString);
+
+        static::assertEquals('2016-05-02T19:15:14+01:00', $mail->getOriginationDate()->format('c'));
+    }
+
     public function testAddHeadersDateInvalidError()
     {
         // Date format is too wacky to be decoded at all
@@ -265,6 +278,46 @@ class FactoryTest extends TestCase
         $mail = $factory->createFromString($mailString);
 
         static::assertNull($mail->getOriginationDate());
+    }
+
+    public function testAddHeadersReceived(): void
+    {
+        $expected = [
+            'from localhost (localhost [127.0.0.1]) by mail.example.com (Postfix) for <recipient@example.com>;' .
+                ' Thu, 16 Aug 2012 15:45:43 +0100',
+            'from gbnthda3150srv.example.com ([10.67.121.52]) by GBLONVMSX001.nsicorp.int;' .
+                ' Thu, 29 Sep 2011 08:48:51 +0100',
+        ];
+
+        $mailString = '';
+        foreach ($expected as $received) {
+            $mailString .= "Received: {$received}\r\n";
+        }
+        $mailString .= "\r\nplain text\r\n";
+
+        $factory = new Factory();
+        $mail = $factory->createFromString($mailString);
+
+        static::assertEquals($expected, $mail->getReceived());
+    }
+
+    public function testAddHeadersReceivedDateSpace(): void
+    {
+        // Extra space after day for single-digit date
+        $received = 'from COL004-OMC4S11.outlook.com (col004-omc4s11.outlook.com [65.55.34.213])' .
+            ' by mail.example.com (Postfix) with ESMTP id B55877E0585' .
+            ' for <bounce-2497-107-151073-received@mxm.mxmfb.com>';
+        $originalDate = 'Mon,  2 May 2016 19:15:14 +0100 (BST)';
+        $expectedDate = 'Mon, 02 May 2016 19:15:14 +0100';
+
+        $mailString = "Received: {$received}; {$originalDate}\r\n" .
+            "\r\nplain text\r\n";
+
+        $factory = new Factory();
+        $mail = $factory->createFromString($mailString);
+
+        $expected = "{$received}; {$expectedDate}";
+        static::assertEquals($expected, $mail->getReceived()[0]);
     }
 
     /**
