@@ -105,8 +105,8 @@ class AttachmentTest extends TestCase
         $part = new Attachment($filename, $disposition, 'application/octet-stream');
 
         $actual = $part->getEncodedHeaders();
-        $this->assertRegExp("/Content-Type: [^;]+; name={$filename}/", $actual);
-        $this->assertRegExp("/Content-Disposition: {$disposition}; filename={$filename}/", $actual);
+        $this->assertMatchesRegularExpression("/Content-Type: [^;]+; name={$filename}/", $actual);
+        $this->assertMatchesRegularExpression("/Content-Disposition: {$disposition}; filename={$filename}/", $actual);
     }
 
     public function testNoDispositionDefault()

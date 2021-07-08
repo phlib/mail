@@ -120,9 +120,9 @@ class AssertAttachmentsEmail
                     $contentTypeRegex .= '\s+charset=' . preg_quote($details['charset'], '/') . ';';
                 }
                 $contentTypeRegex .= '\s+name=' . preg_quote($details['name'], '/') . '/';
-                Assert::assertRegExp($contentTypeRegex, $partHeaders);
+                Assert::assertMatchesRegularExpression($contentTypeRegex, $partHeaders);
                 if ($details['disposition'] === true) {
-                    Assert::assertRegExp(
+                    Assert::assertMatchesRegularExpression(
                         '/Content-Disposition: attachment;\s+filename=' . $details['name'] . '/',
                         $partHeaders
                     );
