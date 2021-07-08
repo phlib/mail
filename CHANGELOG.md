@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Add specific support for PHP v8
 ### Changed
 - Add support for a space used for a single-digit date (i.e. instead of leading 
   zero) in the origination date and received headers.
