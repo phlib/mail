@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- `In-Reply-To` and `References` headers for BC break in `Symfony/Mime` v4.4.
 
 ## [4.0.3] - 2021-07-08
 ### Added

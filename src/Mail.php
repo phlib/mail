@@ -168,11 +168,19 @@ class Mail extends AbstractPart
         }
 
         if ($this->inReplyTo) {
-            $headers->add($this->inReplyTo);
+            $inReplyToUnstructured = new UnstructuredHeader(
+                $this->inReplyTo->getName(),
+                $this->inReplyTo->getBodyAsString(),
+            );
+            $headers->add($inReplyToUnstructured);
         }
 
         if ($this->references) {
-            $headers->add($this->references);
+            $referencesUnstructured = new UnstructuredHeader(
+                $this->references->getName(),
+                $this->references->getBodyAsString(),
+            );
+            $headers->add($referencesUnstructured);
         }
 
         if ($this->subject) {
