@@ -75,9 +75,9 @@ abstract class AbstractMime extends AbstractPart
         }
         $this->setBoundary($boundary);
 
-        $content = "\r\n--$boundary\r\n"
-            . implode("\r\n--$boundary\r\n", $pieces)
-            . "\r\n--$boundary--\r\n";
+        $content = "\r\n--{$boundary}\r\n"
+            . implode("\r\n--{$boundary}\r\n", $pieces)
+            . "\r\n--{$boundary}--\r\n";
 
         return $this->getEncodedHeaders() . $content;
     }

@@ -12,9 +12,6 @@ class AssertHtmlEmail
 {
     /**
      * Assert the Mail object has the expected parts
-     *
-     * @param Mail $mail
-     * @return void
      */
     public static function assertEquals(Mail $mail)
     {
@@ -28,7 +25,7 @@ class AssertHtmlEmail
         Assert::assertInstanceOf(Html::class, $primaryPart);
 
         // Check content
-        $expectedContent = __DIR__ . "/__files/html-expected-html.txt";
+        $expectedContent = __DIR__ . '/__files/html-expected-html.txt';
         $expected = file_get_contents($expectedContent);
         $actual = $primaryPart->encodeContent($primaryPart->getContent());
         Assert::assertEquals($expected, $actual);

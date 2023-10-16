@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 
 class IntegrationTest extends TestCase
 {
-
     public function testRecreateMultipartMail()
     {
         $originalMail = new \Phlib\Mail\Mail();
@@ -38,7 +37,7 @@ class IntegrationTest extends TestCase
         /** @var AbstractMime $mainPart */
         $mainPart = $mail->getPart();
         $this->assertInstanceOf(AbstractMime::class, $mainPart);
-        $parts    = $mainPart->getParts();
+        $parts = $mainPart->getParts();
         $this->assertCount(2, $parts);
         /** @var AbstractContent $htmlPart */
         /** @var AbstractContent $textPart */

@@ -32,7 +32,8 @@
     "require-dev": {
         "ext-iconv" : "*",
         "phpunit/phpunit": "^9",
-        "php-mock/php-mock-phpunit": "^2"
+        "php-mock/php-mock-phpunit": "^2",
+        "symplify/easy-coding-standard": "^12"
     },
     "autoload": {
         "psr-4": {

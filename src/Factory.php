@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Phlib\Mail;
 
-use Phlib\Mail\Exception\InvalidArgumentException;
 use Phlib\Mail\Exception\RuntimeException;
 
 class Factory
@@ -52,13 +51,6 @@ class Factory
      */
     private $structure;
 
-    /**
-     * Load email from file
-     *
-     * @param string $filename path to file
-     * @return Mail
-     * @throws RuntimeException
-     */
     public function createFromFile(string $filename): Mail
     {
         try {
@@ -88,13 +80,6 @@ class Factory
         }
     }
 
-    /**
-     * Load email from string
-     *
-     * @param string $source email as string
-     * @return Mail
-     * @throws RuntimeException
-     */
     public function createFromString(string $source): Mail
     {
         try {
@@ -122,12 +107,6 @@ class Factory
         }
     }
 
-    /**
-     * Parse the email
-     *
-     * @return Mail
-     * @throws RuntimeException
-     */
     private function parseEmail(): Mail
     {
         $mail = new Mail();
@@ -165,7 +144,7 @@ class Factory
             foreach ($header as $headerEncoded) {
                 // Decode
                 $headerDecoded = $this->decodeHeader($headerEncoded, $charset);
-                if (is_null($charset) && !is_null($headerDecoded['charset'])) {
+                if ($charset === null && $headerDecoded['charset'] !== null) {
                     // Set first discovered charset
                     $charset = $headerDecoded['charset'];
                     $mail->setCharset($charset);
@@ -202,7 +181,7 @@ class Factory
                             foreach ($addresses as $address) {
                                 $mail->{$method}(
                                     $address['address'],
-                                    ($address['display'] == $address['address']) ? null : $address['display']
+                                    ($address['display'] === $address['address']) ? null : $address['display']
                                 );
                             }
                             break;
@@ -213,7 +192,7 @@ class Factory
                             foreach ($addresses as $address) {
                                 $mail->{$method}(
                                     $address['address'],
-                                    ($address['display'] == $address['address']) ? null : $address['display']
+                                    ($address['display'] === $address['address']) ? null : $address['display']
                                 );
                             }
                             break;
@@ -273,20 +252,16 @@ class Factory
 
     /**
      * Recursively parse structure parts starting from the specified part
-     *
-     * @param string $name
-     * @param Mail $mail
-     * @return AbstractPart
      */
     private function parsePart(string $name, Mail $mail): AbstractPart
     {
         // Get part resource
         if (
-            ($part     = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
+            ($part = @mailparse_msg_get_part($this->mimeMail, $name)) === false ||
             ($partData = @mailparse_msg_get_part_data($part)) === false
         ) {
             $error = error_get_last();
-            throw new RuntimeException("Unable to parse part $name: {$error['message']}");
+            throw new RuntimeException("Unable to parse part {$name}: {$error['message']}");
         }
 
         // Create correct Mail part object
@@ -320,8 +295,8 @@ class Factory
             // This part should have children
             $childId = 1;
             // Check if the next part matches the expected child name
-            while (in_array("$name.$childId", $this->structure, true)) {
-                $child = $this->parsePart("$name.$childId", $mail);
+            while (in_array("{$name}.{$childId}", $this->structure, true)) {
+                $child = $this->parsePart("{$name}.{$childId}", $mail);
                 $mailPart->addPart($child);
 
                 // Calculate next
@@ -329,7 +304,7 @@ class Factory
             }
         } else {
             // Must be some sort of content, can't be an attachment for the primary part
-            if ($name != '1' && isset($partData['content-name'])) {
+            if ($name !== '1' && isset($partData['content-name'])) {
                 // It's an attachment
                 $mail->incrementAttachmentCount();
                 $disposition = isset($partData['content-disposition']) ? $partData['content-disposition'] : null;
@@ -372,7 +347,7 @@ class Factory
         }
 
         // Add any extra headers if this isn't the primary part
-        if ($name != '1') {
+        if ($name !== '1') {
             $this->addHeaders($mailPart, $partData['headers']);
         }
 
@@ -383,12 +358,11 @@ class Factory
      * Decode header
      *
      * @param string $header Encoded header
-     * @param string $charset Target charset. Optional. Default will use source charset where available.
+     * @param string|null $charset Target charset. Optional. Default will use source charset where available.
      * @return array {
      *     @var string $text    Decoded header
      *     @var string $charset Charset of the decoded header
      * }
-     * @throws InvalidArgumentException
      */
     private function decodeHeader(string $header, ?string $charset = null): array
     {
@@ -407,7 +381,7 @@ class Factory
 
         return [
             'charset' => $charset,
-            'text' => $header
+            'text' => $header,
         ];
     }
 
@@ -415,7 +389,6 @@ class Factory
      * Parse RFC 822 formatted email addresses string
      *
      * @see mailparse_rfc822_parse_addresses()
-     * @param string $addresses
      * @return array 'display', 'address' and 'is_group'
      */
     private function parseEmailAddresses(string $addresses): array

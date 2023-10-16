@@ -117,12 +117,6 @@ class Mail extends AbstractPart
         return $this;
     }
 
-    /**
-     * Get part
-     *
-     * @return AbstractPart
-     * @throws RuntimeException
-     */
     public function getPart(): AbstractPart
     {
         if (!$this->part) {
@@ -194,13 +188,6 @@ class Mail extends AbstractPart
         parent::buildHeaders($headers);
     }
 
-    /**
-     * Set return path
-     *
-     * @param string $address
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function setReturnPath(string $address): self
     {
         try {
@@ -259,14 +246,6 @@ class Mail extends AbstractPart
         return $this->originationDate->getBody();
     }
 
-    /**
-     * Set from
-     *
-     * @param string $address
-     * @param string $name
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function setFrom(string $address, ?string $name = null): self
     {
         try {

@@ -15,9 +15,6 @@ class AssertBounceHeadEmail
 {
     /**
      * Assert the Mail object has the expected parts
-     *
-     * @param Mail $mail
-     * @return void
      */
     public static function assertEquals(Mail $mail)
     {
@@ -45,7 +42,7 @@ class AssertBounceHeadEmail
         $content = [
             'text' => $reportParts[0],
             'status' => $reportParts[1],
-            'message' => $reportParts[2]
+            'message' => $reportParts[2],
         ];
 
         foreach ($content as $name => $part) {

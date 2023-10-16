@@ -39,11 +39,9 @@ class Attachment extends AbstractContent
     /**
      * Create a new Attachment part from a local file
      *
-     * @param string $filename
      * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
-     * @return $this
      */
-    public static function createFromFile(string $filename, ?string $disposition = null): Attachment
+    public static function createFromFile(string $filename, ?string $disposition = null): self
     {
         if (!is_readable($filename)) {
             throw new InvalidArgumentException('Attachment file cannot be read');
@@ -58,7 +56,6 @@ class Attachment extends AbstractContent
     /**
      * Constructor to set immutable values
      *
-     * @param string $name
      * @param string $disposition Optional disposition, eg. 'attachment'. NULL to ignore.
      * @param string? $type
      */
@@ -74,13 +71,6 @@ class Attachment extends AbstractContent
         $this->prohibitedHeaders[] = 'content-disposition';
     }
 
-    /**
-     * Set encoding
-     *
-     * @param string $encoding
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function setEncoding(string $encoding): AbstractPart
     {
         if ($encoding !== 'base64') {
@@ -96,7 +86,9 @@ class Attachment extends AbstractContent
 
         if ($this->disposition) {
             // RFC 2183
-            $headers->addParameterizedHeader('Content-Disposition', $this->disposition, ['filename' => $this->name]);
+            $headers->addParameterizedHeader('Content-Disposition', $this->disposition, [
+                'filename' => $this->name,
+            ]);
         }
     }
 

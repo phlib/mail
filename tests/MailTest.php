@@ -54,7 +54,7 @@ class MailTest extends TestCase
         $part = new Content();
         $this->mail->setPart($part);
 
-        $expected = "";
+        $expected = '';
         $this->assertEquals($expected, $this->mail->getEncodedHeaders());
     }
 
@@ -77,7 +77,7 @@ class MailTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        $expected = "";
+        $expected = '';
         $this->assertEquals($expected, $this->mail->getEncodedHeaders());
     }
 
@@ -96,7 +96,7 @@ class MailTest extends TestCase
             $this->mail->{$method}(...$each);
         }
 
-        $expected .= "MIME-Version: 1.0";
+        $expected .= 'MIME-Version: 1.0';
 
         // Remove line-breaks for character comparison
         $actual = str_replace("\r\n", '', $this->mail->getEncodedHeaders());
@@ -148,7 +148,7 @@ class MailTest extends TestCase
                 if ($expectedDisplay === null) {
                     $expected .= $address;
                 } else {
-                    $expected .= "{$expectedDisplay} <$address>";
+                    $expected .= "{$expectedDisplay} <{$address}>";
                 }
                 $params = [[$address, $name]];
                 yield "Single {$header} {$providerName}" => [$method, $params, $expected];
@@ -166,7 +166,7 @@ class MailTest extends TestCase
                     if ($expectedDisplay === null) {
                         $expectedParts[] = $address;
                     } else {
-                        $expectedParts[] = "{$expectedDisplay} <$address>";
+                        $expectedParts[] = "{$expectedDisplay} <{$address}>";
                     }
                     $params[] = [$address, $name];
                 }
@@ -210,11 +210,11 @@ class MailTest extends TestCase
         $data = [
             [
                 'from localhost (localhost [127.0.0.1]) by mail.example.com (Postfix) for <recipient@example.com>',
-                'Thu, 16 Aug 2012 15:45:43 +0100'
+                'Thu, 16 Aug 2012 15:45:43 +0100',
             ],
             [
                 'from gbnthda3150srv.example.com ([10.67.121.52]) by GBLONVMSX001.nsicorp.int',
-                'Thu, 29 Sep 2011 08:48:51 +0100'
+                'Thu, 29 Sep 2011 08:48:51 +0100',
             ],
         ];
         $expected = [];
@@ -248,7 +248,7 @@ class MailTest extends TestCase
     {
         $data = [
             'from@example.com',
-            'From Alias'
+            'From Alias',
         ];
         $this->mail->setFrom($data[0], $data[1]);
 
@@ -270,7 +270,7 @@ class MailTest extends TestCase
     {
         $data = [
             'sender@example.com',
-            'Sender Alias'
+            'Sender Alias',
         ];
         $this->mail->setSender($data[0], $data[1]);
 
@@ -292,7 +292,7 @@ class MailTest extends TestCase
     {
         $data = [
             'reply-to@example.com',
-            'Reply-To Alias'
+            'Reply-To Alias',
         ];
         $this->mail->setReplyTo($data[0], $data[1]);
 
@@ -314,7 +314,7 @@ class MailTest extends TestCase
     {
         $data = [
             'to-1@example.com' => 'To Alias 1',
-            'to-2@example.com' => null
+            'to-2@example.com' => null,
         ];
         foreach ($data as $address => $name) {
             $this->mail->addTo($address, $name);
@@ -332,7 +332,9 @@ class MailTest extends TestCase
     public function testClearTo()
     {
         $this->mail->addTo('to@example.com');
-        $expectedBefore = ['to@example.com' => null];
+        $expectedBefore = [
+            'to@example.com' => null,
+        ];
         $this->assertEquals($expectedBefore, $this->mail->getTo());
 
         $this->mail->clearTo();
@@ -349,7 +351,7 @@ class MailTest extends TestCase
     {
         $data = [
             'cc-1@example.com' => 'Cc Alias 1',
-            'cc-2@example.com' => null
+            'cc-2@example.com' => null,
         ];
         foreach ($data as $address => $name) {
             $this->mail->addCc($address, $name);
@@ -367,7 +369,9 @@ class MailTest extends TestCase
     public function testClearCc()
     {
         $this->mail->addCc('cc@example.com');
-        $expectedBefore = ['cc@example.com' => null];
+        $expectedBefore = [
+            'cc@example.com' => null,
+        ];
         $this->assertEquals($expectedBefore, $this->mail->getCc());
 
         $this->mail->clearCc();

@@ -56,7 +56,7 @@ class AbstractPartTest extends TestCase
         return [
             ['content-type'],
             ['content-transfer-encoding'],
-            ['mime-version']
+            ['mime-version'],
         ];
     }
 
@@ -141,7 +141,7 @@ class AbstractPartTest extends TestCase
         $value = ' "Name" <from@mail.example.com> ';
         $this->part->addHeader($name, $value);
 
-        $expected = "$name: " . trim($value) . "\r\n";
+        $expected = "{$name}: " . trim($value) . "\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -156,7 +156,7 @@ class AbstractPartTest extends TestCase
         $value = 'Latest _offers_';
         $this->part->addHeader($name, $value);
 
-        $expected = "$name: $value\r\n";
+        $expected = "{$name}: {$value}\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -171,7 +171,7 @@ class AbstractPartTest extends TestCase
         $value = '"Name=" <equals@mail.example.com>';
         $this->part->addHeader($name, $value);
 
-        $expected = "$name: $value\r\n";
+        $expected = "{$name}: {$value}\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -185,7 +185,7 @@ class AbstractPartTest extends TestCase
     {
         $this->part->addHeader($name, implode(' ', $valueParts));
 
-        $expected = "$name: " . implode("\r\n ", $valueParts) . "\r\n";
+        $expected = "{$name}: " . implode("\r\n ", $valueParts) . "\r\n";
 
         $actual = $this->part->getEncodedHeaders();
         $this->assertEquals($expected, $actual);
@@ -197,13 +197,13 @@ class AbstractPartTest extends TestCase
             // First line is exactly 78 chars
             ['Received', [
                 'by 10.50.76.202 with SMTP id m10mr1877022igw.52.1345128339903; Thu,',
-                '16 Aug 2012 07:45:39 -0700 (PDT)'
+                '16 Aug 2012 07:45:39 -0700 (PDT)',
             ]],
             // Test multiple lines
             ['Received', [
                 'from mail-yx0-f181.google.com (mail-yx0-f181.google.com',
                 '[209.85.213.181]) by mail.example.com (Postfix) with ESMTPS id 92F4A161D85',
-                'for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100 (BST)'
+                'for <recipient@example.com>; Thu, 16 Aug 2012 15:45:41 +0100 (BST)',
             ]],
             // Test very long
             ['Dkim-Signature', [
@@ -214,8 +214,8 @@ class AbstractPartTest extends TestCase
                 'ONxbn4my2RZLv9SSKYRsNr+SOMPsEAjNJJGoWacE7/JmW7iVCWpGB0co7Ejxhr3EwUM0',
                 'G2fZB7/cQrV7zYIrkkoetRWYTqTvOt7W8lfEJaLXFOSATqW/Xcaos5BWo88rJImDWrew',
                 '1k3YbnNs0jyXvPO+jytUfWEkDPu7w1k+K9TqvHtGeawyj21QeNmo1Z1P//g29MO61m/N',
-                'bU+IexdOG/O4XcauU1Qk8gGm0xA3szGZXGaaji8eBgknY8E6bxNItIiDaJ9vHGLvyMZj6SGg=='
-            ]]
+                'bU+IexdOG/O4XcauU1Qk8gGm0xA3szGZXGaaji8eBgknY8E6bxNItIiDaJ9vHGLvyMZj6SGg==',
+            ]],
         ];
     }
 
@@ -231,17 +231,20 @@ class AbstractPartTest extends TestCase
         string $expected
     ): void {
         // Use anon class to set the immutable type and add additional params
-        $part = new class ($type, $typeParam) extends AbstractPart {
+        $part = new class($type, $typeParam) extends AbstractPart {
             private $typeParam;
+
             public function __construct(?string $type, ?array $typeParam)
             {
                 $this->type = $type;
                 $this->typeParam = $typeParam;
             }
+
             public function toString(): string
             {
                 return '';
             }
+
             protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
             {
                 if ($this->typeParam) {
@@ -283,7 +286,9 @@ class AbstractPartTest extends TestCase
         ];
         $typeParams = [
             null,
-            ['attr' => 'value'],
+            [
+                'attr' => 'value',
+            ],
         ];
 
         foreach ($types as $type) {
@@ -335,7 +340,7 @@ class AbstractPartTest extends TestCase
             [AbstractPart::ENCODING_BASE64],
             [AbstractPart::ENCODING_QPRINTABLE],
             [AbstractPart::ENCODING_7BIT],
-            [AbstractPart::ENCODING_8BIT]
+            [AbstractPart::ENCODING_8BIT],
         ];
     }
 
@@ -372,12 +377,12 @@ class AbstractPartTest extends TestCase
         $data = [
             'test1' => [
                 'value1',
-                'value2'
+                'value2',
             ],
             'test2' => [
                 'value3',
-                'value4'
-            ]
+                'value4',
+            ],
         ];
 
         $expected = '';

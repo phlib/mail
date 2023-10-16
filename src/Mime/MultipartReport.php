@@ -18,12 +18,6 @@ class MultipartReport extends AbstractMime
      */
     private $reportType;
 
-    /**
-     * Set report type
-     *
-     * @param string $reportType
-     * @return $this
-     */
     public function setReportType(string $reportType): self
     {
         $this->reportType = $reportType;
@@ -31,11 +25,6 @@ class MultipartReport extends AbstractMime
         return $this;
     }
 
-    /**
-     * Get report type
-     *
-     * @return string
-     */
     public function getReportType(): ?string
     {
         return $this->reportType;

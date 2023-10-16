@@ -14,7 +14,6 @@ class HtmlTest extends TestCase
      */
     protected $part;
 
-
     protected function setUp(): void
     {
         $this->part = new Html();

@@ -21,9 +21,6 @@ class AssertAttachmentsEmail
 {
     /**
      * Assert the Mail object has the expected parts
-     *
-     * @param Mail $mail
-     * @return void
      */
     public static function assertEquals(Mail $mail)
     {
@@ -60,46 +57,46 @@ class AssertAttachmentsEmail
         // Check part content
         $content = [
             'text' => [
-                'part' => $alternateParts[0]
+                'part' => $alternateParts[0],
             ],
             'html' => [
-                'part' => $alternateParts[1]
+                'part' => $alternateParts[1],
             ],
             'attch1' => [
                 'part' => $relatedParts[1],
                 'disposition' => false,
                 'name' => '330.gif',
                 'charset' => false,
-                'type' => 'image/gif'
+                'type' => 'image/gif',
             ],
             'attch2' => [
                 'part' => $mixedParts[1],
                 'disposition' => true,
                 'name' => 'protocol.txt',
                 'charset' => 'US-ASCII',
-                'type' => 'text/plain'
+                'type' => 'text/plain',
             ],
             'attch3' => [
                 'part' => $mixedParts[2],
                 'disposition' => true,
                 'name' => 'example-logo.png',
                 'charset' => false,
-                'type' => 'image/png'
+                'type' => 'image/png',
             ],
             'attch4' => [
                 'part' => $mixedParts[3],
                 'disposition' => true,
                 'name' => 'Tech_specs-letter_Crucial_m4_ssd_v3-11-11_online.pdf',
                 'charset' => false,
-                'type' => 'application/pdf'
+                'type' => 'application/pdf',
             ],
             'attch5' => [
                 'part' => $mixedParts[4],
                 'disposition' => true,
                 'name' => 'plain.eml',
                 'charset' => 'US-ASCII',
-                'type' => 'text/plain'
-            ]
+                'type' => 'text/plain',
+            ],
         ];
 
         foreach ($content as $name => $details) {

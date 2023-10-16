@@ -66,7 +66,7 @@ class AbstractContentTest extends TestCase
             [AbstractPart::ENCODING_BASE64, $value, $b64],
             [AbstractPart::ENCODING_QPRINTABLE, $value, $qp],
             [AbstractPart::ENCODING_7BIT, $value, $bit7],
-            [AbstractPart::ENCODING_8BIT, $value, $bit8]
+            [AbstractPart::ENCODING_8BIT, $value, $bit8],
         ];
     }
 
@@ -77,7 +77,7 @@ class AbstractContentTest extends TestCase
         $content = "some content\r\nsome more content";
         $this->part->setContent($content);
 
-        $expected = "Test: value\r\n\r\n"  . $content;
+        $expected = "Test: value\r\n\r\n" . $content;
         $this->assertEquals($expected, $this->part->toString());
     }
 }

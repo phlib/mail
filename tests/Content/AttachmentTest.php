@@ -94,7 +94,7 @@ class AttachmentTest extends TestCase
             [AbstractPart::ENCODING_QPRINTABLE],
             [AbstractPart::ENCODING_7BIT],
             [AbstractPart::ENCODING_8BIT],
-            ['invalid-encoding']
+            ['invalid-encoding'],
         ];
     }
 

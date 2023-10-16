@@ -12,10 +12,13 @@ use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 abstract class AbstractPart
 {
-    public const ENCODING_BASE64     = 'base64';
+    public const ENCODING_BASE64 = 'base64';
+
     public const ENCODING_QPRINTABLE = 'quoted-printable';
-    public const ENCODING_7BIT       = '7bit';
-    public const ENCODING_8BIT       = '8bit';
+
+    public const ENCODING_7BIT = '7bit';
+
+    public const ENCODING_8BIT = '8bit';
 
     /**
      * @var array
@@ -28,7 +31,7 @@ abstract class AbstractPart
     protected $prohibitedHeaders = [
         'content-type',
         'content-transfer-encoding',
-        'mime-version'
+        'mime-version',
     ];
 
     /**
@@ -56,19 +59,11 @@ abstract class AbstractPart
      */
     protected $charset;
 
-    /**
-     * Add header
-     *
-     * @param string $name
-     * @param string $value
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function addHeader(string $name, string $value): self
     {
         $nameLower = strtolower($name);
 
-        if (in_array($nameLower, $this->prohibitedHeaders)) {
+        if (in_array($nameLower, $this->prohibitedHeaders, true)) {
             throw new InvalidArgumentException("Header name is prohibited ({$nameLower})");
         } elseif (!preg_match('/^[a-z]+[a-z0-9-]+$/', $nameLower)) {
             throw new InvalidArgumentException("Name doesn't match expected format ({$nameLower})");
@@ -193,9 +188,6 @@ abstract class AbstractPart
 
     /**
      * Allow concrete classes to add additional content type parameters to the base value
-     *
-     * @param ParameterizedHeader $contentTypeHeader
-     * @return void
      */
     protected function addContentTypeParameters(ParameterizedHeader $contentTypeHeader): void
     {
@@ -218,18 +210,11 @@ abstract class AbstractPart
         return $this->encoding;
     }
 
-    /**
-     * Set encoding
-     *
-     * @param string $encoding
-     * @return $this
-     * @throws InvalidArgumentException
-     */
     public function setEncoding(string $encoding): self
     {
         $encoding = strtolower($encoding);
-        if (!in_array($encoding, $this->validEncodings)) {
-            throw new InvalidArgumentException("Invalid encoding '$encoding'");
+        if (!in_array($encoding, $this->validEncodings, true)) {
+            throw new InvalidArgumentException("Invalid encoding '{$encoding}'");
         }
         $this->encoding = $encoding;
 

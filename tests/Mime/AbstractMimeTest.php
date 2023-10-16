@@ -80,7 +80,7 @@ class AbstractMimeTest extends TestCase
 
         $expected = [
             $htmlPart,
-            $textPart
+            $textPart,
         ];
         $this->assertEquals($expected, $this->part->getParts());
     }
@@ -97,7 +97,7 @@ class AbstractMimeTest extends TestCase
 
         $parts = [
             $htmlPart,
-            $textPart
+            $textPart,
         ];
         $this->part->setParts($parts);
 
@@ -150,7 +150,7 @@ class AbstractMimeTest extends TestCase
 
         $parts = [
             $htmlPart,
-            $textPart
+            $textPart,
         ];
         $this->part->setParts($parts);
 

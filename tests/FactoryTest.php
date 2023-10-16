@@ -14,7 +14,7 @@ class FactoryTest extends TestCase
 {
     use PHPMock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse');
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse_file');
@@ -33,7 +33,7 @@ class FactoryTest extends TestCase
      */
     public function testCreateFromFileAttachments()
     {
-        $source   = __DIR__ . '/__files/attachments-source.eml';
+        $source = __DIR__ . '/__files/attachments-source.eml';
 
         $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
         $mailparse_msg_free->expects(self::once())
@@ -58,7 +58,7 @@ class FactoryTest extends TestCase
      */
     public function testCreateFromStringAttachments()
     {
-        $source   = __DIR__ . '/__files/attachments-source.eml';
+        $source = __DIR__ . '/__files/attachments-source.eml';
 
         $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
         $mailparse_msg_free->expects(self::once())
@@ -83,7 +83,7 @@ class FactoryTest extends TestCase
      */
     public function testCreateFromFileBounceHead()
     {
-        $source   = __DIR__ . '/__files/bounce_head-source.eml';
+        $source = __DIR__ . '/__files/bounce_head-source.eml';
 
         $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
         $mailparse_msg_free->expects(self::once())
@@ -108,7 +108,7 @@ class FactoryTest extends TestCase
      */
     public function testCreateFromFileBounceMsg()
     {
-        $source   = __DIR__ . '/__files/bounce_msg-source.eml';
+        $source = __DIR__ . '/__files/bounce_msg-source.eml';
 
         $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
         $mailparse_msg_free->expects(self::once())
@@ -130,7 +130,7 @@ class FactoryTest extends TestCase
      */
     public function testCreateFromFileHtml()
     {
-        $source   = __DIR__ . '/__files/html-source.eml';
+        $source = __DIR__ . '/__files/html-source.eml';
 
         $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
         $mailparse_msg_free->expects(self::once())
@@ -152,7 +152,7 @@ class FactoryTest extends TestCase
      */
     public function testCreateFromContentAttachment()
     {
-        $source   = __DIR__ . '/__files/content_attachment-source.eml';
+        $source = __DIR__ . '/__files/content_attachment-source.eml';
 
         $mailparse_msg_free = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
         $mailparse_msg_free->expects(self::once())
@@ -327,7 +327,7 @@ class FactoryTest extends TestCase
      */
     public function testNineChildParts()
     {
-        $source   = __DIR__ . '/__files/mime-9-parts-source.eml';
+        $source = __DIR__ . '/__files/mime-9-parts-source.eml';
 
         $factory = new Factory();
 
@@ -353,7 +353,7 @@ class FactoryTest extends TestCase
                 return false;
             });
 
-        $source   = __DIR__ . '/__files/bounce_msg-source.eml';
+        $source = __DIR__ . '/__files/bounce_msg-source.eml';
 
         (new Factory())->createFromFile($source);
     }
@@ -365,7 +365,7 @@ class FactoryTest extends TestCase
 
         $expected = [
             'charset' => 'UTF-8',
-            'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
+            'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!',
         ];
 
         $actual = $this->invokeDecodeHeader($header);
@@ -378,7 +378,7 @@ class FactoryTest extends TestCase
 
         $expected = [
             'charset' => 'ISO-8859-1',
-            'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
+            'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!',
         ];
 
         $actual = $this->invokeDecodeHeader($header);
@@ -391,7 +391,7 @@ class FactoryTest extends TestCase
 
         $expected = [
             'charset' => 'ISO-8859-1',
-            'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!'
+            'text' => 'London Olympics: Business Continuity Plan - £100 discount today only!',
         ];
 
         $actual = $this->invokeDecodeHeader($header);
@@ -405,7 +405,7 @@ class FactoryTest extends TestCase
 
         $expected = [
             'charset' => 'UTF-8',
-            'text' => 'London Olympics: Business ContinKeld Jørn Simonsen'
+            'text' => 'London Olympics: Business ContinKeld Jørn Simonsen',
         ];
 
         $actual = $this->invokeDecodeHeader($header);
