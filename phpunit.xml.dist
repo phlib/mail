@@ -8,7 +8,7 @@
     colors="true"
 >
     <testsuites>
-        <testsuite name="Mail Test Suite">
+        <testsuite name="Phlib Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

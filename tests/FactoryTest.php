@@ -19,6 +19,7 @@ class FactoryTest extends TestCase
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse');
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_parse_file');
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
+        $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part_data');
         $this->defineFunctionMock('\Phlib\Mail', 'mailparse_msg_free');
     }
 
