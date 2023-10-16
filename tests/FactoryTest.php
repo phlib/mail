@@ -341,16 +341,39 @@ class FactoryTest extends TestCase
 
     public function testGetPartFail()
     {
-        $warningMsg = 'Couldn\'t get the part';
+        $warningMsg = sha1(uniqid('warning'));
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage($warningMsg);
+        $this->expectExceptionMessage('Unable to parse part 1: ' . $warningMsg);
 
         $mailparse_msg_get_part = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part');
-        $mailparse_msg_get_part->expects($this->once())
+        $mailparse_msg_get_part->expects(static::once())
             ->willReturnCallback(function () use ($warningMsg) {
                 trigger_error($warningMsg, E_USER_WARNING);
                 return false;
+            });
+
+        $source = __DIR__ . '/__files/bounce_msg-source.eml';
+
+        (new Factory())->createFromFile($source);
+    }
+
+    public function testGetPartDataFail()
+    {
+        $warningMsg = sha1(uniqid('warning'));
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to parse part 1: ' . $warningMsg);
+
+        $mailparse_msg_get_part_data = $this->getFunctionMock('\Phlib\Mail', 'mailparse_msg_get_part_data');
+        $mailparse_msg_get_part_data->expects(static::exactly(2))
+            ->willReturnCallback(function ($part) use ($warningMsg) {
+                static $callCount = 0;
+                if (++$callCount === 2) {
+                    trigger_error($warningMsg, E_USER_WARNING);
+                    return false;
+                }
+                return \mailparse_msg_get_part_data($part);
             });
 
         $source = __DIR__ . '/__files/bounce_msg-source.eml';
