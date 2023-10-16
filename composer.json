@@ -27,7 +27,7 @@
         "ext-mbstring": "*",
 
         "egulias/email-validator": "^2",
-        "symfony/mime": "^5"
+        "symfony/mime": "^5 || ^6"
     },
     "require-dev": {
         "ext-iconv" : "*",
