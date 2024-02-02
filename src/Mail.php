@@ -436,7 +436,7 @@ class Mail extends AbstractPart
 
     public function hasAttachment(): bool
     {
-        return ($this->attachmentCount > 0);
+        return $this->attachmentCount > 0;
     }
 
     public function getAttachmentCount(): int
