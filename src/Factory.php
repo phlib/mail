@@ -361,9 +361,9 @@ class Factory
      *
      * @param string $header Encoded header
      * @param string|null $charset Target charset. Optional. Default will use source charset where available.
-     * @return array {
-     *     @var string $text    Decoded header
-     *     @var string $charset Charset of the decoded header
+     * @return array{
+     *     text: string, // Decoded header
+     *     charset: string, // Charset of the decoded header
      * }
      */
     private function decodeHeader(string $header, ?string $charset = null): array
