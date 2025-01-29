@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Additional whitespace being output in PHP v8.3+ for header values which use
+  encoded-words split across multiple lines.
 
 ## [4.0.4] - 2023-10-16
 ### Changed

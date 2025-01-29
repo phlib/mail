@@ -383,6 +383,18 @@ class Factory
                 }, $header);
             }
 
+            /**
+             * Since PHP v8.3 the reimplementation of mbstring is aligned with RFC 2047,
+             * where consecutive encoded-words MUST be separated by CRLF+SPACE.
+             * However, Mailparse returns the header lines concatenated without the CRLF, leaving only the space.
+             * The space is then output as genuine whitespace whereas it should be ignored.
+             * Reinserting the CRLF avoids this, but means that any deliberate spaces between encoded-words which
+             * were not originally CRLF+SPACE will lose their space; this is unlikely in real-world scenarios.
+             */
+            $header = preg_replace_callback('/(=\?[^\?]+\?[^\?]\?[^\?]+\?=) (=\?[^\?]+\?[^\?]\?[^\?]+\?=)/i', function ($matches) {
+                return $matches[1] . "\r\n " . $matches[2];
+            }, $header);
+
             $header = mb_decode_mimeheader($header);
         }
 
