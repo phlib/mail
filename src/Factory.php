@@ -374,8 +374,25 @@ class Factory
             }
 
             // Workaround for https://bugs.php.net/bug.php?id=68821
-            $header = preg_replace_callback('/(=\?[^\?]+\?Q\?)([^\?]+)(\?=)/i', function ($matches) {
-                return $matches[1] . str_replace('_', '=20', $matches[2]) . $matches[3];
+            // Fixed in PHP v8.3
+            // https://www.php.net/manual/en/migration83.other-changes.php#migration83.other-changes.functions.mbstring
+            // Commit: https://github.com/php/php-src/commit/8995f602584a5267999f51cbc73f8c03eee36074
+            if (PHP_VERSION_ID < 80300) {
+                $header = preg_replace_callback('/(=\?[^\?]+\?Q\?)([^\?]+)(\?=)/i', function ($matches) {
+                    return $matches[1] . str_replace('_', '=20', $matches[2]) . $matches[3];
+                }, $header);
+            }
+
+            /**
+             * Since PHP v8.3 the reimplementation of mbstring is aligned with RFC 2047,
+             * where consecutive encoded-words MUST be separated by CRLF+SPACE.
+             * However, Mailparse returns the header lines concatenated without the CRLF, leaving only the space.
+             * The space is then output as genuine whitespace whereas it should be ignored.
+             * Reinserting the CRLF avoids this, but means that any deliberate spaces between encoded-words which
+             * were not originally CRLF+SPACE will lose their space; this is unlikely in real-world scenarios.
+             */
+            $header = preg_replace_callback('/(=\?[^\?]+\?[^\?]\?[^\?]+\?=) (=\?[^\?]+\?[^\?]\?[^\?]+\?=)/i', function ($matches) {
+                return $matches[1] . "\r\n " . $matches[2];
             }, $header);
 
             $header = mb_decode_mimeheader($header);
